@@ -80,7 +80,7 @@ function NumberPad({
         <Button
           key={key}
           variant="outline"
-          className="h-16 text-2xl font-bold transition-transform active:scale-95"
+          className="h-14 md:h-16 text-xl md:text-2xl font-bold transition-transform active:scale-95"
           onClick={() => onKeyPress(key)}
         >
           {key}
@@ -88,12 +88,12 @@ function NumberPad({
       ))}
        <Button
         variant="outline"
-        className="h-16 text-2xl font-bold transition-transform active:scale-95 flex items-center justify-center"
+        className="h-14 md:h-16 text-xl md:text-2xl font-bold transition-transform active:scale-95 flex items-center justify-center"
         onClick={onDelete}
         onLongPress={onClear}
         aria-label="Delete last digit"
       >
-        <Delete className="w-8 h-8" />
+        <Delete className="w-7 h-7 md:w-8 md:h-8" />
       </Button>
     </div>
   );
@@ -142,20 +142,20 @@ export function AddExpenseSheet() {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button className="fixed bottom-6 right-6 md:bottom-10 md:right-10 h-16 w-16 rounded-full bg-primary shadow-lg hover:bg-primary/90 text-primary-foreground group">
-          <Plus className="h-8 w-8 transition-transform group-active:rotate-45 group-active:scale-125" />
+        <Button className="fixed bottom-20 md:bottom-10 right-4 md:right-10 h-14 w-14 md:h-16 md:w-16 rounded-full bg-primary shadow-lg hover:bg-primary/90 text-primary-foreground group">
+          <Plus className="h-7 w-7 md:h-8 md:w-8 transition-transform group-active:rotate-45 group-active:scale-125" />
           <span className="sr-only">Add Expense</span>
         </Button>
       </SheetTrigger>
-      <SheetContent side="bottom" className="rounded-t-2xl h-[90vh] flex flex-col">
+      <SheetContent side="bottom" className="rounded-t-2xl h-[90vh] md:h-auto md:max-w-md md:right-auto md:left-1/2 md:-translate-x-1/2 flex flex-col">
         <SheetHeader className="text-center">
-          <SheetTitle className="text-2xl">Add a New Expense</SheetTitle>
+          <SheetTitle className="text-xl md:text-2xl">Add a New Expense</SheetTitle>
         </SheetHeader>
         <form onSubmit={handleSubmit} className="flex flex-col flex-grow">
           <div className="flex-grow overflow-y-auto p-1">
               {/* Amount Display */}
               <div className="text-center my-4">
-                  <span className="text-5xl font-bold">
+                  <span className="text-4xl md:text-5xl font-bold">
                   ₹{amount}
                   </span>
               </div>
@@ -163,7 +163,7 @@ export function AddExpenseSheet() {
               {/* Category Selector */}
               <div className="my-6">
                 <Label className="text-center block mb-4 text-sm">Select Category</Label>
-                <div className="grid grid-cols-4 gap-4">
+                <div className="grid grid-cols-4 sm:grid-cols-7 gap-2 md:gap-4">
                     {categories.map((cat) => (
                     <button
                         type="button"
@@ -177,7 +177,7 @@ export function AddExpenseSheet() {
                         onClick={() => setSelectedCategory(cat.name)}
                         aria-pressed={selectedCategory === cat.name}
                     >
-                        <cat.icon className={cn("w-8 h-8 mb-1", cat.color)} />
+                        <cat.icon className={cn("w-7 h-7 md:w-8 md:h-8 mb-1", cat.color)} />
                         <span className="text-xs font-medium">{cat.name}</span>
                     </button>
                     ))}

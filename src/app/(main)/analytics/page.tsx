@@ -11,14 +11,14 @@ export default function AnalyticsPage() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-3xl font-bold flex items-center gap-2">
-            <BarChartHorizontal className="w-8 h-8"/>
+        <h1 className="text-2xl md:text-3xl font-bold flex items-center gap-2">
+            <BarChartHorizontal className="w-7 h-7 md:w-8 md:h-8"/>
             Your Spending Insights
         </h1>
-        <p className="text-muted-foreground text-base">Analyze your spending patterns.</p>
+        <p className="text-muted-foreground text-sm md:text-base">Analyze your spending patterns.</p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
           <QuickStatCard icon={IndianRupee} label="Avg. Daily Spend" value="₹690" />
           <QuickStatCard icon={PieChart} label="Most Spent On" value="Mess" />
           <QuickStatCard icon={CalendarDays} label="Highest Day" value="July 1st" />

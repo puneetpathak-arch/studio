@@ -48,11 +48,11 @@ export default function ScholarshipsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold flex items-center gap-2">
-            <GraduationCap className="w-8 h-8"/>
+        <h1 className="text-2xl md:text-3xl font-bold flex items-center gap-2">
+            <GraduationCap className="w-7 h-7 md:w-8 md:h-8"/>
             Scholarships & Opportunities 🎓
         </h1>
-        <p className="text-base text-muted-foreground">
+        <p className="text-sm md:text-base text-muted-foreground">
           Find financial aid for your education.
         </p>
       </div>
@@ -75,6 +75,7 @@ export default function ScholarshipsPage() {
                 <Button 
                   key={state}
                   variant={selectedStates.includes(state!) ? 'default' : 'outline'}
+                  size="sm"
                   onClick={() => toggleFilter(selectedStates, setSelectedStates, state!)}
                   className="transition-all duration-200"
                 >
@@ -89,7 +90,8 @@ export default function ScholarshipsPage() {
               {categories.map(category => (
                 <Button 
                   key={category}
-                  variant={selectedCategories.includes(category!) ? 'default' : 'outline'}
+                   variant={selectedCategories.includes(category!) ? 'default' : 'outline'}
+                   size="sm"
                   onClick={() => toggleFilter(selectedCategories, setSelectedCategories, category!)}
                    className="transition-all duration-200"
                 >
@@ -109,23 +111,23 @@ export default function ScholarshipsPage() {
       </Card>
       
       {filteredScholarships.length > 0 ? (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filteredScholarships.map((scholarship, index) => (
             <Card key={scholarship.id} className="flex flex-col animate-fade-in-up hover:animate-lift" style={{ animationDelay: `${index * 50}ms` }}>
               <CardHeader>
-                <CardTitle className="text-xl">{scholarship.name}</CardTitle>
+                <CardTitle className="text-lg md:text-xl">{scholarship.name}</CardTitle>
                 <CardDescription>{scholarship.provider}</CardDescription>
               </CardHeader>
               <CardContent className="flex-grow space-y-4">
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-muted-foreground">Amount</span>
-                  <span className="font-semibold">{scholarship.amount}</span>
+                  <span className="font-semibold text-sm">{scholarship.amount}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-muted-foreground">Deadline</span>
-                  <span className="font-semibold">{scholarship.deadline}</span>
+                  <span className="font-semibold text-sm">{scholarship.deadline}</span>
                 </div>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-1">
                   {scholarship.eligibility.state?.map(s => <Badge key={s} variant="secondary">{s}</Badge>)}
                   {scholarship.eligibility.category?.map(c => <Badge key={c} variant="secondary">{c}</Badge>)}
                   {scholarship.eligibility.income && <Badge variant="secondary">Income: {scholarship.eligibility.income}</Badge>}
@@ -144,8 +146,8 @@ export default function ScholarshipsPage() {
       ) : (
          <Card>
             <CardContent className="p-8 text-center text-muted-foreground space-y-4">
-                <Search className="w-16 h-16 mx-auto text-gray-300" />
-                <h3 className="text-lg font-semibold text-foreground">No scholarships found</h3>
+                <Search className="w-12 h-12 md:w-16 md:h-16 mx-auto text-gray-300" />
+                <h3 className="text-base md:text-lg font-semibold text-foreground">No scholarships found</h3>
                 <p className="text-sm">Try adjusting your filters or clearing your search.</p>
                 {hasActiveFilters && (
                     <Button variant="default" onClick={() => {

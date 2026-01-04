@@ -69,7 +69,7 @@ export function GoalsCard() {
           Your progress towards your financial goals.
         </CardDescription>
       </CardHeader>
-      <CardContent className="flex-grow flex items-center px-6">
+      <CardContent className="flex-grow flex items-center px-10 md:px-6">
         {goals.length > 0 ? (
           <Carousel
             opts={{

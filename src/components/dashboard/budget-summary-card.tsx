@@ -33,10 +33,10 @@ export function BudgetSummaryCard() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
           <div className="flex flex-col">
              <div className="flex items-baseline gap-2">
-                <span className="text-5xl font-bold">
+                <span className="text-4xl md:text-5xl font-bold">
                   ₹{budget.spent.toLocaleString()}
                 </span>
-                 <span className="text-lg text-muted-foreground">
+                 <span className="text-base md:text-lg text-muted-foreground">
                   / ₹{budget.total.toLocaleString()}
               </span>
              </div>

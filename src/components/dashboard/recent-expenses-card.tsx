@@ -48,13 +48,13 @@ export function RecentExpensesCard() {
           <ul className="space-y-4">
             {expenses.slice(0, 5).map((expense) => (
               <li key={expense.id} className="flex justify-between items-center">
-                <div>
-                  <p className="font-medium text-base">{expense.description}</p>
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-sm md:text-base truncate">{expense.description}</p>
                   <Badge variant="outline" className={`font-normal text-xs ${categoryColors[expense.category] || categoryColors['Others']}`}>
                     {expense.category}
                   </Badge>
                 </div>
-                <p className="font-bold text-base text-right text-red-600">-₹{expense.amount.toLocaleString()}</p>
+                <p className="font-bold text-sm md:text-base text-right text-red-600 ml-2">-₹{expense.amount.toLocaleString()}</p>
               </li>
             ))}
           </ul>

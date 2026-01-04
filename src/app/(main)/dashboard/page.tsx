@@ -33,11 +33,11 @@ export default function DashboardPage() {
   return (
     <div className="flex flex-col gap-6">
       <div className="animate-fade-in-up">
-        <h1 className="text-3xl font-bold text-primary">{greeting}, {user.name.split(' ')[0]}! {emoji}</h1>
-        <p className="text-muted-foreground text-base">Here's your financial overview for this month.</p>
+        <h1 className="text-2xl md:text-3xl font-bold text-primary">{greeting}, {user.name.split(' ')[0]}! {emoji}</h1>
+        <p className="text-muted-foreground text-sm md:text-base">Here's your financial overview for this month.</p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-3 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
           <QuickStatCard icon={BarChart} label="This Week" value="₹1,860" />
           <QuickStatCard icon={Target} label="Active Goals" value={goals.length.toString()} />
           <QuickStatCard icon={Lightbulb} label="New Tips" value={tips.length.toString()} />
@@ -61,7 +61,7 @@ export default function DashboardPage() {
         </div>
       </div>
       
-       <div className="grid gap-6 lg:grid-cols-2">
+       <div className="grid gap-6 md:grid-cols-2">
          <div className="animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
             <TipsCard />
         </div>
