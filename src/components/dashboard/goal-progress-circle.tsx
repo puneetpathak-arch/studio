@@ -26,11 +26,13 @@ export function GoalProgressCircle({
         config={{}}
         className="absolute inset-0"
       >
-        <PieChart>
+        <PieChart width={120} height={120}>
           <Pie
             data={chartData}
             dataKey="value"
             nameKey="name"
+            cx="50%"
+            cy="50%"
             innerRadius={45}
             outerRadius={60}
             startAngle={90}
@@ -51,7 +53,7 @@ export function GoalProgressCircle({
         </PieChart>
       </ChartContainer>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-2xl font-bold" style={{ color: progressColor }}>{percentage}%</span>
+        <span className="text-xl font-bold" style={{ color: progressColor }}>{percentage}%</span>
         <span className="text-xs text-muted-foreground">
           ₹{savedAmount.toLocaleString()}/₹{targetAmount.toLocaleString()}
         </span>
