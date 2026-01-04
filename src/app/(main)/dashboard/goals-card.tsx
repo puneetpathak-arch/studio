@@ -30,10 +30,10 @@ function GoalCard({ goal, onFundAdded }: { goal: Goal, onFundAdded: (goalId: str
     <Card
       className="flex flex-col h-full border-border"
     >
-      <CardHeader className="pb-4">
+      <CardHeader className="pb-4 h-24 flex justify-center">
         <CardTitle className="flex items-center gap-2 text-lg">
           <goal.icon
-            className="w-6 h-6 text-primary"
+            className="w-6 h-6 text-primary shrink-0"
           />
           <span className="font-bold">{goal.name}</span>
         </CardTitle>
