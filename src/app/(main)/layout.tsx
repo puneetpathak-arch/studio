@@ -2,12 +2,14 @@
 'use client';
 
 import { useState } from 'react';
-import { PiggyBank, LogOut } from "lucide-react";
+import { PiggyBank, LogOut, Plus } from "lucide-react";
 import { MainNav } from "@/components/main-nav";
 import Link from 'next/link';
 import { user } from '@/lib/data';
 import { BottomNav } from '@/components/bottom-nav';
 import { AddExpenseSheet } from '@/components/add-expense-sheet';
+import { Button } from '@/components/ui/button';
+import { SheetTrigger } from '@/components/ui/sheet';
 
 export default function MainLayout({
   children,
@@ -64,12 +66,21 @@ export default function MainLayout({
         </main>
       </div>
 
-      {/* Bottom Navigation for mobile */}
-      <div className="lg:hidden">
-        <AddExpenseSheet>
+      <AddExpenseSheet>
+        {/* Bottom Navigation for mobile */}
+        <div className="lg:hidden">
             <BottomNav />
-        </AddExpenseSheet>
-      </div>
+        </div>
+        {/* Floating Action Button for desktop */}
+        <div className="hidden lg:block fixed bottom-8 right-8 z-50">
+            <SheetTrigger asChild>
+                <Button className="h-16 w-16 rounded-full bg-gradient-to-br from-primary to-accent text-white shadow-lg transition-transform hover:scale-110 active:scale-95">
+                    <Plus className="h-8 w-8" />
+                    <span className="sr-only">Add Expense</span>
+                </Button>
+            </SheetTrigger>
+        </div>
+      </AddExpenseSheet>
     </div>
   );
 }
