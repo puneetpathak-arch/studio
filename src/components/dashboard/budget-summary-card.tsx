@@ -9,9 +9,10 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { budget } from '@/lib/data';
-import { AddExpenseSheet } from '../add-expense-sheet';
 import { BudgetProgressCircle } from './budget-progress-circle';
 import { IndianRupee } from 'lucide-react';
+import { Button } from '../ui/button';
+import Link from 'next/link';
 
 export function BudgetSummaryCard() {
   const percentage = Math.round((budget.spent / budget.total) * 100);
@@ -48,7 +49,9 @@ export function BudgetSummaryCard() {
                 : `You have ₹${remaining.toLocaleString()} remaining.`}
             </p>
              <div className="mt-6">
-                <AddExpenseSheet />
+                <Button asChild variant="outline">
+                    <Link href="#">View Details</Link>
+                </Button>
              </div>
           </div>
           <div className="flex items-center justify-center">

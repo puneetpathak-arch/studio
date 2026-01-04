@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -22,7 +23,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon, PlusCircle } from "lucide-react";
+import { CalendarIcon, Plus } from "lucide-react";
 import { Calendar } from "./ui/calendar";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -57,9 +58,9 @@ export function AddExpenseSheet() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button>
-          <PlusCircle className="mr-2" />
-          Add Expense
+        <Button className="fixed bottom-6 right-6 md:bottom-10 md:right-10 h-16 w-16 rounded-full bg-primary shadow-lg hover:bg-primary/90 text-primary-foreground animate-bounce-short group">
+            <Plus className="h-8 w-8 transition-transform group-active:rotate-45 group-active:scale-125" />
+            <span className="sr-only">Add Expense</span>
         </Button>
       </SheetTrigger>
       <SheetContent>

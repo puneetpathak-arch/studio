@@ -11,6 +11,7 @@ import { SpendingBarChart } from "@/components/analytics/spending-bar-chart";
 import { user, goals, tips, budget } from "@/lib/data";
 import { QuickStatCard } from "@/components/dashboard/quick-stat-card";
 import { BarChart, Target, Lightbulb } from "lucide-react";
+import { AddExpenseSheet } from "@/components/add-expense-sheet";
 
 export default function DashboardPage() {
     const [greeting, setGreeting] = useState('');
@@ -61,6 +62,7 @@ export default function DashboardPage() {
         <CategoryPieChart />
         <SpendingBarChart />
       </div>
+      <AddExpenseSheet />
     </div>
   );
 }
