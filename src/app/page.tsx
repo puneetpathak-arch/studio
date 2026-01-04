@@ -9,7 +9,6 @@ export default function LandingPage() {
   const router = useRouter();
 
   useEffect(() => {
-    // Scroll animations
     const observerOptions = {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
@@ -27,11 +26,10 @@ export default function LandingPage() {
         observer.observe(el);
     });
 
-    // Smooth scrolling
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
+            const target = document.querySelector(this.getAttribute('href') as string);
             if (target) {
                 target.scrollIntoView({
                     behavior: 'smooth',
@@ -46,7 +44,6 @@ export default function LandingPage() {
 
     if (mobileMenuBtn && navLinks) {
         mobileMenuBtn.addEventListener('click', () => {
-            // A simple way to toggle visibility, you might want a more robust solution
             if (navLinks.classList.contains('hidden')) {
                 navLinks.classList.remove('hidden');
                 navLinks.classList.add('flex-col', 'absolute', 'top-16', 'left-0', 'w-full', 'bg-white', 'p-4', 'shadow-lg');
@@ -63,670 +60,48 @@ export default function LandingPage() {
   }
 
   return (
-    <>
-      <style jsx global>{`
-        /* This is a temporary solution to inject styles. Ideally this would be in a separate CSS file. */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            color: #111827;
-            overflow-x: hidden;
-            background: #FFFFFF;
-        }
-
-        /* Navigation */
-        nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            padding: 1.2rem 2rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            animation: slideDown 0.5s ease;
-        }
-
-        @keyframes slideDown {
-            from { transform: translateY(-100%); }
-            to { transform: translateY(0); }
-        }
-
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #6366F1;
-            text-decoration: none;
-        }
-
-        .logo svg {
-            width: 32px;
-            height: 32px;
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: #6B7280;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-
-        .nav-links a:hover {
-            color: #6366F1;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #6366F1, #8B5CF6);
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: transform 0.3s, box-shadow 0.3s;
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
-        }
-
-        /* Hero Section */
-        .hero {
-            padding: 8rem 2rem 4rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="2" fill="white" opacity="0.1"/></svg>');
-            animation: moveBackground 20s linear infinite;
-        }
-
-        @keyframes moveBackground {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(100px, 100px); }
-        }
-
-        .hero-content {
-            max-width: 800px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            font-weight: 800;
-            margin-bottom: 1.5rem;
-            line-height: 1.2;
-            animation: fadeInUp 0.8s ease;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .hero p {
-            font-size: 1.25rem;
-            margin-bottom: 2rem;
-            opacity: 0.95;
-            animation: fadeInUp 0.8s ease 0.2s backwards;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            animation: fadeInUp 0.8s ease 0.4s backwards;
-        }
-
-        .btn-large {
-            padding: 1rem 2.5rem;
-            border-radius: 16px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            cursor: pointer;
-            border: none;
-        }
-
-        .btn-white {
-            background: white;
-            color: #6366F1;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        }
-
-        .btn-white:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 25px rgba(0,0,0,0.15);
-        }
-
-        .btn-outline {
-            background: transparent;
-            color: white;
-            border: 2px solid white;
-        }
-
-        .btn-outline:hover {
-            background: white;
-            color: #6366F1;
-        }
-
-        .hero-image {
-            margin-top: 4rem;
-            animation: fadeInUp 0.8s ease 0.6s backwards;
-        }
-
-        .browser-mockup {
-            max-width: 900px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            animation: floatBrowser 3s ease-in-out infinite;
-        }
-
-        @keyframes floatBrowser {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-        }
-
-        .browser-header {
-            background: #f3f4f6;
-            padding: 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        .browser-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #ef4444;
-        }
-
-        .browser-dot:nth-child(2) { background: #f59e0b; }
-        .browser-dot:nth-child(3) { background: #10b981; }
-
-        .browser-content {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            height: 400px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 4rem;
-        }
-
-        /* Features Section */
-        .features {
-            padding: 6rem 2rem;
-            background: #F9FAFB;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 4rem;
-        }
-
-        .section-header h2 {
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin-bottom: 1rem;
-            color: #111827;
-        }
-
-        .section-header p {
-            font-size: 1.1rem;
-            color: #6B7280;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .features-grid {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .feature-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            transition: all 0.3s;
-            animation: fadeInUp 0.6s ease backwards;
-        }
-
-        .feature-card:nth-child(1) { animation-delay: 0.1s; }
-        .feature-card:nth-child(2) { animation-delay: 0.2s; }
-        .feature-card:nth-child(3) { animation-delay: 0.3s; }
-        .feature-card:nth-child(4) { animation-delay: 0.4s; }
-        .feature-card:nth-child(5) { animation-delay: 0.5s; }
-        .feature-card:nth-child(6) { animation-delay: 0.6s; }
-
-        .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-        }
-
-        .feature-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .feature-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 0.75rem;
-            color: #111827;
-        }
-
-        .feature-card p {
-            color: #6B7280;
-            line-height: 1.6;
-        }
-
-        /* Stats Section */
-        .stats {
-            padding: 4rem 2rem;
-            background: linear-gradient(135deg, #6366F1, #8B5CF6);
-            color: white;
-        }
-
-        .stats-grid {
-            max-width: 1000px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 3rem;
-            text-align: center;
-        }
-
-        .stat-item h3 {
-            font-size: 3rem;
-            font-weight: 800;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-item p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-        }
-
-        /* How It Works */
-        .how-it-works {
-            padding: 6rem 2rem;
-            background: white;
-        }
-
-        .steps {
-            max-width: 1000px;
-            margin: 0 auto;
-            display: grid;
-            gap: 3rem;
-        }
-
-        .step {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-            animation: fadeInUp 0.6s ease backwards;
-        }
-
-        .step:nth-child(1) { animation-delay: 0.1s; }
-        .step:nth-child(2) { animation-delay: 0.2s; }
-        .step:nth-child(3) { animation-delay: 0.3s; }
-
-        .step-number {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            font-weight: 800;
-            flex-shrink: 0;
-        }
-
-        .step-content h3 {
-            font-size: 1.75rem;
-            margin-bottom: 0.5rem;
-            color: #111827;
-        }
-
-        .step-content p {
-            color: #6B7280;
-            line-height: 1.6;
-        }
-
-        /* Testimonials */
-        .testimonials {
-            padding: 6rem 2rem;
-            background: #F9FAFB;
-        }
-
-        .testimonials-grid {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .testimonial-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            animation: fadeInUp 0.6s ease backwards;
-        }
-
-        .testimonial-card:nth-child(1) { animation-delay: 0.1s; }
-        .testimonial-card:nth-child(2) { animation-delay: 0.2s; }
-        .testimonial-card:nth-child(3) { animation-delay: 0.3s; }
-
-        .stars {
-            color: #F59E0B;
-            font-size: 1.25rem;
-            margin-bottom: 1rem;
-        }
-
-        .testimonial-text {
-            color: #6B7280;
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
-        }
-
-        .testimonial-author {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .author-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 700;
-            font-size: 1.25rem;
-        }
-
-        .author-info h4 {
-            font-size: 1rem;
-            color: #111827;
-            margin-bottom: 0.25rem;
-        }
-
-        .author-info p {
-            font-size: 0.875rem;
-            color: #6B7280;
-        }
-
-        /* CTA Section */
-        .cta {
-            padding: 6rem 2rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            text-align: center;
-        }
-
-        .cta h2 {
-            font-size: 3rem;
-            font-weight: 800;
-            margin-bottom: 1rem;
-        }
-
-        .cta p {
-            font-size: 1.25rem;
-            margin-bottom: 2rem;
-            opacity: 0.95;
-        }
-
-        .cta-features {
-            max-width: 600px;
-            margin: 0 auto 2rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            text-align: left;
-        }
-
-        .cta-feature {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-size: 1.1rem;
-        }
-
-        .cta-feature::before {
-            content: '✓';
-            background: rgba(255,255,255,0.2);
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        /* Footer */
-        footer {
-            background: #111827;
-            color: #9CA3AF;
-            padding: 3rem 2rem 1rem;
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .footer-section h4 {
-            color: white;
-            margin-bottom: 1rem;
-            font-size: 1.1rem;
-        }
-
-        .footer-section ul {
-            list-style: none;
-        }
-
-        .footer-section ul li {
-            margin-bottom: 0.5rem;
-        }
-
-        .footer-section a {
-            color: #9CA3AF;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .footer-section a:hover {
-            color: #6366F1;
-        }
-
-        .footer-bottom {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding-top: 2rem;
-            border-top: 1px solid #374151;
-            text-align: center;
-        }
-
-        /* Mobile Menu */
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: #6366F1;
-            cursor: pointer;
-        }
-
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-
-            .mobile-menu-btn {
-                display: block;
-            }
-
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .hero p {
-                font-size: 1.1rem;
-            }
-
-            .section-header h2 {
-                font-size: 2rem;
-            }
-
-            .cta h2 {
-                font-size: 2rem;
-            }
-
-            .step {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .browser-content {
-                height: 300px;
-                font-size: 3rem;
-            }
-        }
-
-        /* Scroll Animations */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.6s, transform 0.6s;
-        }
-
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-      `}</style>
-      <nav>
+    <div className="bg-white text-gray-800">
+      <nav className="fixed top-0 w-full bg-white/95 backdrop-blur-md z-50 py-5 px-8 shadow-sm animate-slide-down">
         <div className="nav-container">
-          <a href="#" className="logo">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <a href="#" className="flex items-center gap-2 text-2xl font-bold text-indigo-500 no-underline">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-8 h-8 animate-float">
               <path d="M20 7h-4v14h-8v-14h-4l8-5 8 5z" />
               <path d="M9 12h6" />
               <path d="M9 16h6" />
             </svg>
             EduFinance
           </a>
-          <div className="nav-links">
-            <a href="#features">Features</a>
-            <a href="#how-it-works">How It Works</a>
-            <a href="#testimonials">Reviews</a>
-            <button onClick={handleGetStarted} className="btn-primary">Get Started</button>
+          <div className="hidden md:flex gap-8 items-center nav-links">
+            <a href="#features" className="text-gray-500 font-medium no-underline transition-colors hover:text-indigo-500">Features</a>
+            <a href="#how-it-works" className="text-gray-500 font-medium no-underline transition-colors hover:text-indigo-500">How It Works</a>
+            <a href="#testimonials" className="text-gray-500 font-medium no-underline transition-colors hover:text-indigo-500">Reviews</a>
+            <button onClick={handleGetStarted} className="btn-primary-gradient no-underline">Get Started</button>
           </div>
-          <button className="mobile-menu-btn">☰</button>
+          <button className="md:hidden bg-none border-none text-2xl text-indigo-500 cursor-pointer mobile-menu-btn">☰</button>
         </div>
       </nav>
 
-      <section className="hero">
-        <div className="hero-content">
-          <h1>Master Your Money,<br />Focus on Your Future</h1>
-          <p>The smart finance web app designed specifically for students. Track expenses, save smarter, and discover scholarships—all in your browser.</p>
-          <div className="hero-buttons">
-            <button onClick={handleGetStarted} className="btn-large btn-white">
+      <section className="pt-32 pb-16 px-8 bg-gradient-to-r from-blue-500 to-purple-600 text-white text-center relative overflow-hidden">
+        <div className="absolute top-0 left-0 right-0 bottom-0 bg-[url('data:image/svg+xml,%3csvg%20width%3d%27100%27%20height%3d%27100%27%20xmlns%3d%27http%3a//www.w3.org/2000/svg%27%3e%3ccircle%20cx%3d%2750%27%20cy%3d%2750%27%20r%3d%272%27%20fill%3d%27white%27%20opacity%3d%270.1%27/%3e%3c/svg%3e')] animate-move-background"></div>
+        <div className="max-w-3xl mx-auto relative z-10">
+          <h1 className="text-6xl font-extrabold mb-6 leading-tight animate-fade-in-up">Master Your Money,<br />Focus on Your Future</h1>
+          <p className="text-xl mb-8 opacity-95 animate-fade-in-up" style={{animationDelay: '0.2s'}}>The smart finance web app designed specifically for students. Track expenses, save smarter, and discover scholarships—all in your browser.</p>
+          <div className="flex gap-4 justify-center flex-wrap animate-fade-in-up" style={{animationDelay: '0.4s'}}>
+            <button onClick={handleGetStarted} className="py-4 px-10 rounded-2xl text-lg font-semibold no-underline transition-all inline-flex items-center gap-2 cursor-pointer border-none bg-white text-indigo-500 shadow-lg hover:-translate-y-1 hover:shadow-xl">
               <span>🚀</span> Launch App
             </button>
-            <a href="#features" className="btn-large btn-outline">
+            <a href="#features" className="py-4 px-10 rounded-2xl text-lg font-semibold no-underline transition-all inline-flex items-center gap-2 cursor-pointer border-2 border-white bg-transparent text-white hover:bg-white hover:text-indigo-500">
               Learn More
             </a>
           </div>
-          <div className="hero-image">
-            <div className="browser-mockup">
-              <div className="browser-header">
-                <div className="browser-dot"></div>
-                <div className="browser-dot"></div>
-                <div className="browser-dot"></div>
+          <div className="mt-16 animate-fade-in-up" style={{animationDelay: '0.6s'}}>
+            <div className="max-w-4xl mx-auto bg-white rounded-xl overflow-hidden shadow-2xl animate-float-browser">
+              <div className="bg-gray-100 p-3 flex items-center gap-2 border-b border-gray-200">
+                <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
+                <div className="w-3 h-3 rounded-full bg-green-500"></div>
               </div>
-              <div className="browser-content">
+              <div className="bg-gradient-to-r from-blue-500 to-purple-600 h-96 flex items-center justify-center text-white text-6xl">
                 💰
               </div>
             </div>
@@ -734,194 +109,206 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className="features" id="features">
-        <div className="section-header fade-in">
-          <h2>Everything You Need to Succeed Financially</h2>
-          <p>Powerful features designed to help students take control of their finances and build healthy money habits.</p>
+      <section className="py-24 px-8 bg-gray-50" id="features">
+        <div className="text-center mb-16 fade-in">
+          <h2 className="text-4xl font-extrabold mb-4 text-gray-800">Everything You Need to Succeed Financially</h2>
+          <p className="text-lg text-gray-500 max-w-2xl mx-auto">Powerful features designed to help students take control of their finances and build healthy money habits.</p>
         </div>
-        <div className="features-grid">
-          <div className="feature-card">
-            <div className="feature-icon">📊</div>
-            <h3>Smart Expense Tracking</h3>
-            <p>Effortlessly log expenses in seconds with our intuitive interface. Categorize spending and see where your money goes.</p>
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="bg-white p-8 rounded-2xl shadow-lg transition-all animate-fade-in-up hover:-translate-y-2 hover:shadow-2xl">
+            <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mb-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white">📊</div>
+            <h3 className="text-2xl mb-3 text-gray-800">Smart Expense Tracking</h3>
+            <p className="text-gray-500 leading-relaxed">Effortlessly log expenses in seconds with our intuitive interface. Categorize spending and see where your money goes.</p>
           </div>
-          <div className="feature-card">
-            <div className="feature-icon">🎯</div>
+          <div className="bg-white p-8 rounded-2xl shadow-lg transition-all animate-fade-in-up hover:-translate-y-2 hover:shadow-2xl" style={{animationDelay: '0.2s'}}>
+            <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mb-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white">🎯</div>
             <h3>Budget Goals</h3>
-            <p>Set monthly budgets and savings goals. Track your progress with beautiful visualizations and stay motivated.</p>
+            <p className="text-gray-500 leading-relaxed">Set monthly budgets and savings goals. Track your progress with beautiful visualizations and stay motivated.</p>
           </div>
-          <div className="feature-card">
-            <div className="feature-icon">📈</div>
+          <div className="bg-white p-8 rounded-2xl shadow-lg transition-all animate-fade-in-up hover:-translate-y-2 hover:shadow-2xl" style={{animationDelay: '0.3s'}}>
+            <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mb-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white">📈</div>
             <h3>Visual Analytics</h3>
-            <p>Understand your spending patterns with interactive charts and insights. Make data-driven financial decisions.</p>
+            <p className="text-gray-500 leading-relaxed">Understand your spending patterns with interactive charts and insights. Make data-driven financial decisions.</p>
           </div>
-          <div className="feature-card">
-            <div className="feature-icon">🤖</div>
+          <div className="bg-white p-8 rounded-2xl shadow-lg transition-all animate-fade-in-up hover:-translate-y-2 hover:shadow-2xl" style={{animationDelay: '0.4s'}}>
+            <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mb-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white">🤖</div>
             <h3>AI-Powered Tips</h3>
-            <p>Get personalized saving suggestions based on your spending habits. Let AI help you save smarter.</p>
+            <p className="text-gray-500 leading-relaxed">Get personalized saving suggestions based on your spending habits. Let AI help you save smarter.</p>
           </div>
-          <div className="feature-card">
-            <div className="feature-icon">🎓</div>
+          <div className="bg-white p-8 rounded-2xl shadow-lg transition-all animate-fade-in-up hover:-translate-y-2 hover:shadow-2xl" style={{animationDelay: '0.5s'}}>
+            <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mb-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white">🎓</div>
             <h3>Scholarship Finder</h3>
-            <p>Discover financial aid opportunities tailored to your profile. Filter by state, income, and category.</p>
+            <p className="text-gray-500 leading-relaxed">Discover financial aid opportunities tailored to your profile. Filter by state, income, and category.</p>
           </div>
-          <div className="feature-card">
-            <div className="feature-icon">🔔</div>
+          <div className="bg-white p-8 rounded-2xl shadow-lg transition-all animate-fade-in-up hover:-translate-y-2 hover:shadow-2xl" style={{animationDelay: '0.6s'}}>
+            <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mb-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white">🔔</div>
             <h3>Smart Alerts</h3>
-            <p>Stay on track with intelligent notifications when you're approaching budget limits. Never overspend again.</p>
+            <p className="text-gray-500 leading-relaxed">Stay on track with intelligent notifications when you're approaching budget limits. Never overspend again.</p>
           </div>
         </div>
       </section>
 
-      <section className="stats">
-        <div className="stats-grid">
-          <div className="stat-item">
-            <h3>50K+</h3>
-            <p>Active Students</p>
+      <section className="py-16 px-8 bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
+        <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 text-center">
+          <div>
+            <h3 className="text-5xl font-extrabold mb-2">50K+</h3>
+            <p className="text-lg opacity-90">Active Students</p>
           </div>
-          <div className="stat-item">
-            <h3>₹10Cr+</h3>
-            <p>Money Saved</p>
+          <div>
+            <h3 className="text-5xl font-extrabold mb-2">₹10Cr+</h3>
+            <p className="text-lg opacity-90">Money Saved</p>
           </div>
-          <div className="stat-item">
-            <h3>5K+</h3>
-            <p>Scholarships Listed</p>
+          <div>
+            <h3 className="text-5xl font-extrabold mb-2">5K+</h3>
+            <p className="text-lg opacity-90">Scholarships Listed</p>
           </div>
-          <div className="stat-item">
-            <h3>4.8⭐</h3>
-            <p>User Rating</p>
-          </div>
-        </div>
-      </section>
-
-      <section className="how-it-works" id="how-it-works">
-        <div className="section-header fade-in">
-          <h2>Get Started in 3 Simple Steps</h2>
-          <p>Start your journey to financial wellness in minutes</p>
-        </div>
-        <div className="steps">
-          <div className="step">
-            <div className="step-number">1</div>
-            <div className="step-content">
-              <h3>Sign Up Securely</h3>
-              <p>Create your account using just your phone number and OTP verification. No lengthy forms, no hassle. Access from any device, anywhere.</p>
-            </div>
-          </div>
-          <div className="step">
-            <div className="step-number">2</div>
-            <div className="step-content">
-              <h3>Set Your Budget</h3>
-              <p>Tell us your monthly budget and financial goals. Our smart system will help you stay on track and suggest realistic savings targets.</p>
-            </div>
-          </div>
-          <div className="step">
-            <div className="step-number">3</div>
-            <div className="step-content">
-              <h3>Track & Save</h3>
-              <p>Start logging expenses with a single click. Watch your savings grow as our AI provides personalized tips to help you spend smarter.</p>
-            </div>
+          <div>
+            <h3 className="text-5xl font-extrabold mb-2">4.8⭐</h3>
+            <p className="text-lg opacity-90">User Rating</p>
           </div>
         </div>
       </section>
 
-      <section className="testimonials" id="testimonials">
-        <div className="section-header fade-in">
-          <h2>Loved by Students Everywhere</h2>
-          <p>See what students are saying about EduFinance</p>
+      <section className="py-24 px-8 bg-white" id="how-it-works">
+        <div className="text-center mb-16 fade-in">
+          <h2 className="text-4xl font-extrabold mb-4 text-gray-800">Get Started in 3 Simple Steps</h2>
+          <p className="text-lg text-gray-500 max-w-xl mx-auto">Start your journey to financial wellness in minutes</p>
         </div>
-        <div className="testimonials-grid">
-          <div className="testimonial-card">
-            <div className="stars">⭐⭐⭐⭐⭐</div>
-            <p className="testimonial-text">"EduFinance completely changed how I manage my money. I saved ₹15,000 in just 3 months! The AI suggestions are spot-on."</p>
-            <div className="testimonial-author">
-              <div className="author-avatar">P</div>
-              <div className="author-info">
-                <h4>Priya Sharma</h4>
-                <p>IIT Delhi</p>
+        <div className="max-w-5xl mx-auto grid gap-12">
+          <div className="flex flex-col md:flex-row gap-8 items-center animate-fade-in-up">
+            <div className="w-20 h-20 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 text-white flex items-center justify-center text-4xl font-extrabold flex-shrink-0">1</div>
+            <div className="text-center md:text-left">
+              <h3 className="text-3xl mb-2 text-gray-800">Sign Up Securely</h3>
+              <p className="text-gray-500 leading-relaxed">Create your account using just your phone number and OTP verification. No lengthy forms, no hassle. Access from any device, anywhere.</p>
+            </div>
+          </div>
+          <div className="flex flex-col md:flex-row-reverse gap-8 items-center animate-fade-in-up" style={{animationDelay: '0.2s'}}>
+            <div className="w-20 h-20 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 text-white flex items-center justify-center text-4xl font-extrabold flex-shrink-0">2</div>
+            <div className="text-center md:text-right">
+              <h3 className="text-3xl mb-2 text-gray-800">Set Your Budget</h3>
+              <p className="text-gray-500 leading-relaxed">Tell us your monthly budget and financial goals. Our smart system will help you stay on track and suggest realistic savings targets.</p>
+            </div>
+          </div>
+          <div className="flex flex-col md:flex-row gap-8 items-center animate-fade-in-up" style={{animationDelay: '0.3s'}}>
+            <div className="w-20 h-20 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 text-white flex items-center justify-center text-4xl font-extrabold flex-shrink-0">3</div>
+            <div className="text-center md:text-left">
+              <h3 className="text-3xl mb-2 text-gray-800">Track & Save</h3>
+              <p className="text-gray-500 leading-relaxed">Start logging expenses with a single click. Watch your savings grow as our AI provides personalized tips to help you spend smarter.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-24 px-8 bg-gray-50" id="testimonials">
+        <div className="text-center mb-16 fade-in">
+          <h2 className="text-4xl font-extrabold mb-4 text-gray-800">Loved by Students Everywhere</h2>
+          <p className="text-lg text-gray-500 max-w-xl mx-auto">See what students are saying about EduFinance</p>
+        </div>
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="bg-white p-8 rounded-2xl shadow-lg animate-fade-in-up">
+            <div className="text-yellow-400 text-2xl mb-4">⭐⭐⭐⭐⭐</div>
+            <p className="text-gray-500 leading-relaxed mb-6">"EduFinance completely changed how I manage my money. I saved ₹15,000 in just 3 months! The AI suggestions are spot-on."</p>
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl">P</div>
+              <div>
+                <h4 className="text-base text-gray-800 mb-1">Priya Sharma</h4>
+                <p className="text-sm text-gray-500">IIT Delhi</p>
               </div>
             </div>
           </div>
-          <div className="testimonial-card">
-            <div className="stars">⭐⭐⭐⭐⭐</div>
-            <p className="testimonial-text">"The scholarship finder is a game-changer! I found 3 scholarships I qualified for but never knew existed. Amazing web app!"</p>
-            <div className="testimonial-author">
-              <div className="author-avatar">A</div>
-              <div className="author-info">
-                <h4>Arjun Patel</h4>
-                <p>NIT Trichy</p>
+          <div className="bg-white p-8 rounded-2xl shadow-lg animate-fade-in-up" style={{animationDelay: '0.2s'}}>
+            <div className="text-yellow-400 text-2xl mb-4">⭐⭐⭐⭐⭐</div>
+            <p className="text-gray-500 leading-relaxed mb-6">"The scholarship finder is a game-changer! I found 3 scholarships I qualified for but never knew existed. Amazing web app!"</p>
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl">A</div>
+              <div>
+                <h4 className="text-base text-gray-800 mb-1">Arjun Patel</h4>
+                <p className="text-sm text-gray-500">NIT Trichy</p>
               </div>
             </div>
           </div>
-          <div className="testimonial-card">
-            <div className="stars">⭐⭐⭐⭐⭐</div>
-            <p className="testimonial-text">"Beautiful interface and so easy to use! Works perfectly on my laptop and phone. Finally, a finance app that doesn't feel like homework."</p>
-            <div className="testimonial-author">
-              <div className="author-avatar">S</div>
-              <div className="author-info">
-                <h4>Sneha Reddy</h4>
-                <p>BITS Pilani</p>
+          <div className="bg-white p-8 rounded-2xl shadow-lg animate-fade-in-up" style={{animationDelay: '0.3s'}}>
+            <div className="text-yellow-400 text-2xl mb-4">⭐⭐⭐⭐⭐</div>
+            <p className="text-gray-500 leading-relaxed mb-6">"Beautiful interface and so easy to use! Works perfectly on my laptop and phone. Finally, a finance app that doesn't feel like homework."</p>
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl">S</div>
+              <div>
+                <h4 className="text-base text-gray-800 mb-1">Sneha Reddy</h4>
+                <p className="text-sm text-gray-500">BITS Pilani</p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="cta" id="start">
-        <h2>Ready to Take Control of Your Finances?</h2>
-        <p>Join thousands of students who are already saving smarter with EduFinance</p>
-        <div className="cta-features">
-          <div className="cta-feature">No download required - works in your browser</div>
-          <div className="cta-feature">Access from any device, anywhere</div>
-          <div className="cta-feature">Secure and private - your data is protected</div>
-          <div className="cta-feature">Free to use - start tracking today</div>
+      <section className="py-24 px-8 bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-center" id="start">
+        <h2 className="text-5xl font-extrabold mb-4">Ready to Take Control of Your Finances?</h2>
+        <p className="text-xl mb-8 opacity-95">Join thousands of students who are already saving smarter with EduFinance</p>
+        <div className="max-w-md mx-auto mb-8 flex flex-col gap-4 text-left">
+          <div className="flex items-center gap-3 text-lg">
+            <span className="bg-white/20 w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0">✓</span>
+            No download required - works in your browser
+          </div>
+          <div className="flex items-center gap-3 text-lg">
+            <span className="bg-white/20 w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0">✓</span>
+            Access from any device, anywhere
+          </div>
+          <div className="flex items-center gap-3 text-lg">
+            <span className="bg-white/20 w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0">✓</span>
+            Secure and private - your data is protected
+          </div>
+          <div className="flex items-center gap-3 text-lg">
+            <span className="bg-white/20 w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0">✓</span>
+            Free to use - start tracking today
+          </div>
         </div>
-        <div className="hero-buttons">
-          <button onClick={handleGetStarted} className="btn-large btn-white">
+        <div className="flex gap-4 justify-center">
+          <button onClick={handleGetStarted} className="py-4 px-10 rounded-2xl text-lg font-semibold no-underline transition-all inline-flex items-center gap-2 cursor-pointer border-none bg-white text-indigo-500 shadow-lg hover:-translate-y-1 hover:shadow-xl">
             <span>🚀</span> Get Started Now
           </button>
-          <button className="btn-large btn-outline">
+          <button className="py-4 px-10 rounded-2xl text-lg font-semibold no-underline transition-all inline-flex items-center gap-2 cursor-pointer border-2 border-white bg-transparent text-white hover:bg-white hover:text-indigo-500">
             <span>▶️</span> Watch Demo
           </button>
         </div>
       </section>
 
-      <footer>
-        <div className="footer-content">
-          <div className="footer-section">
-            <h4>EduFinance</h4>
+      <footer className="bg-gray-800 text-gray-400 py-12 px-8">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+          <div>
+            <h4 className="text-white mb-4 text-lg">EduFinance</h4>
             <p>Your personal guide to financial wellness in college. Accessible from anywhere, on any device.</p>
           </div>
-          <div className="footer-section">
-            <h4>Product</h4>
-            <ul>
-              <li><a href="#features">Features</a></li>
-              <li><a href="#how-it-works">How It Works</a></li>
-              <li><button onClick={handleGetStarted}>Get Started</button></li>
-              <li><a href="#">Demo</a></li>
+          <div>
+            <h4 className="text-white mb-4 text-lg">Product</h4>
+            <ul className="list-none">
+              <li className="mb-2"><a href="#features" className="text-gray-400 no-underline transition-colors hover:text-indigo-400">Features</a></li>
+              <li className="mb-2"><a href="#how-it-works" className="text-gray-400 no-underline transition-colors hover:text-indigo-400">How It Works</a></li>
+              <li className="mb-2"><button onClick={handleGetStarted} className="text-gray-400 no-underline transition-colors hover:text-indigo-400 bg-transparent border-none p-0 cursor-pointer">Get Started</button></li>
+              <li><a href="#" className="text-gray-400 no-underline transition-colors hover:text-indigo-400">Demo</a></li>
             </ul>
           </div>
-          <div className="footer-section">
-            <h4>Company</h4>
-            <ul>
-              <li><a href="#">About Us</a></li>
-              <li><a href="#">Blog</a></li>
-              <li><a href="#">Careers</a></li>
-              <li><a href="#">Contact</a></li>
+          <div>
+            <h4 className="text-white mb-4 text-lg">Company</h4>
+            <ul className="list-none">
+              <li className="mb-2"><a href="#" className="text-gray-400 no-underline transition-colors hover:text-indigo-400">About Us</a></li>
+              <li className="mb-2"><a href="#" className="text-gray-400 no-underline transition-colors hover:text-indigo-400">Blog</a></li>
+              <li className="mb-2"><a href="#" className="text-gray-400 no-underline transition-colors hover:text-indigo-400">Careers</a></li>
+              <li><a href="#" className="text-gray-400 no-underline transition-colors hover:text-indigo-400">Contact</a></li>
             </ul>
           </div>
-          <div className="footer-section">
-            <h4>Legal</h4>
-            <ul>
-              <li><a href="#">Privacy Policy</a></li>
-              <li><a href="#">Terms of Service</a></li>
-              <li><a href="#">Security</a></li>
+          <div>
+            <h4 className="text-white mb-4 text-lg">Legal</h4>
+            <ul className="list-none">
+              <li className="mb-2"><a href="#" className="text-gray-400 no-underline transition-colors hover:text-indigo-400">Privacy Policy</a></li>
+              <li className="mb-2"><a href="#" className="text-gray-400 no-underline transition-colors hover:text-indigo-400">Terms of Service</a></li>
+              <li><a href="#" className="text-gray-400 no-underline transition-colors hover:text-indigo-400">Security</a></li>
             </ul>
           </div>
         </div>
-        <div className="footer-bottom">
+        <div className="max-w-7xl mx-auto pt-8 border-t border-gray-700 text-center">
           <p>&copy; 2026 EduFinance. All rights reserved. Made with 💜 for students.</p>
         </div>
       </footer>
-    </>
+    </div>
   );
 }
