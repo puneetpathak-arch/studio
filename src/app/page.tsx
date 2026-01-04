@@ -21,45 +21,37 @@ import {
 } from 'firebase/auth';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/firebase';
+import { cn } from '@/lib/utils';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('rohan.sharma@iitd.ac.in');
   const [password, setPassword] = useState('password');
   const [loading, setLoading] = useState(false);
   const [action, setAction] = useState<'login' | 'signup' | null>(null);
+  const [error, setError] = useState(false);
   const router = useRouter();
   const auth = useAuth();
   const { toast } = useToast();
 
-  const handleLogin = async () => {
+  const handleAuth = async (authAction: 'login' | 'signup') => {
     if (!auth) return;
     setLoading(true);
-    setAction('login');
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      router.push('/dashboard');
-    } catch (error: any) {
-      toast({
-        variant: 'destructive',
-        title: 'Login Failed',
-        description: error.message,
-      });
-      setLoading(false);
-      setAction(null);
-    }
-  };
+    setAction(authAction);
+    setError(false);
 
-  const handleSignUp = async () => {
-    if (!auth) return;
-    setLoading(true);
-    setAction('signup');
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      if (authAction === 'login') {
+        await signInWithEmailAndPassword(auth, email, password);
+      } else {
+        await createUserWithEmailAndPassword(auth, email, password);
+      }
       router.push('/dashboard');
     } catch (error: any) {
+      setError(true);
+      setTimeout(() => setError(false), 500); // Reset error state for re-animation
       toast({
         variant: 'destructive',
-        title: 'Sign Up Failed',
+        title: `${authAction === 'login' ? 'Login' : 'Sign Up'} Failed`,
         description: error.message,
       });
       setLoading(false);
@@ -69,7 +61,10 @@ export default function LoginPage() {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-background">
-      <Card className="w-full max-w-md mx-4 shadow-2xl">
+      <Card className={cn(
+          "w-full max-w-md mx-4 shadow-2xl transition-transform",
+          error && "animate-shake"
+          )}>
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
             <PiggyBank className="w-12 h-12 text-primary" />
@@ -107,7 +102,7 @@ export default function LoginPage() {
             </div>
             <div className="flex flex-col sm:flex-row gap-2">
               <Button
-                onClick={handleLogin}
+                onClick={() => handleAuth('login')}
                 disabled={loading || !auth}
                 className="w-full"
                 size="lg"
@@ -122,7 +117,7 @@ export default function LoginPage() {
                 )}
               </Button>
               <Button
-                onClick={handleSignUp}
+                onClick={() => handleAuth('signup')}
                 disabled={loading || !auth}
                 className="w-full"
                 size="lg"

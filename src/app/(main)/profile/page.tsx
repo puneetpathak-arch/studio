@@ -19,7 +19,7 @@ export default function ProfilePage() {
   return (
     <div className="flex flex-col items-center gap-8">
       <div className="flex flex-col items-center gap-4 animate-fade-in-up">
-        <div className="relative group">
+        <div className="relative group transition-transform hover:scale-105">
             <Avatar className="h-32 w-32 border-4 border-primary ring-4 ring-primary/20">
                 <AvatarImage src={user.avatarUrl} alt={`@${user.name}`} />
                 <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>

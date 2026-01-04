@@ -111,7 +111,7 @@ export default function ScholarshipsPage() {
       {filteredScholarships.length > 0 ? (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {filteredScholarships.map((scholarship, index) => (
-            <Card key={scholarship.id} className="flex flex-col animate-fade-in-up" style={{ animationDelay: `${index * 50}ms` }}>
+            <Card key={scholarship.id} className="flex flex-col animate-fade-in-up hover:animate-lift" style={{ animationDelay: `${index * 50}ms` }}>
               <CardHeader>
                 <CardTitle>{scholarship.name}</CardTitle>
                 <CardDescription>{scholarship.provider}</CardDescription>
