@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { DollarSign, GraduationCap, LayoutDashboard, User } from "lucide-react";
+import { GraduationCap, LayoutDashboard, User } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import {
