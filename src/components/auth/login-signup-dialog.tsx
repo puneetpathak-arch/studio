@@ -21,7 +21,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Smartphone, UserPlus, LogIn, Mail } from 'lucide-react';
+import { UserPlus, LogIn, Mail, KeyRound } from 'lucide-react';
 
 export function LoginSignupDialog({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
@@ -61,13 +61,20 @@ export function LoginSignupDialog({ children }: { children: React.ReactNode }) {
           <TabsContent value="login">
             <div className="space-y-4 py-4">
                 <div className="space-y-2">
-                    <Label htmlFor="phone-login">Phone Number</Label>
+                    <Label htmlFor="email-login">Email</Label>
                     <div className="relative">
-                        <Smartphone className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                        <Input id="phone-login" type="tel" placeholder="+91 98765 43210" className="pl-10" />
+                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                        <Input id="email-login" type="email" placeholder="student@example.com" className="pl-10" />
                     </div>
                 </div>
-                <Button onClick={handleAuthAction} className="w-full">Send OTP</Button>
+                 <div className="space-y-2">
+                    <Label htmlFor="password-login">Password</Label>
+                    <div className="relative">
+                        <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                        <Input id="password-login" type="password" placeholder="••••••••" className="pl-10" />
+                    </div>
+                </div>
+                <Button onClick={handleAuthAction} className="w-full">Log In</Button>
             </div>
           </TabsContent>
           <TabsContent value="signup">
@@ -77,10 +84,17 @@ export function LoginSignupDialog({ children }: { children: React.ReactNode }) {
                      <Input id="name-signup" placeholder="Rohan Sharma" />
                 </div>
                 <div className="space-y-2">
-                    <Label htmlFor="phone-signup">Phone Number</Label>
+                    <Label htmlFor="email-signup">Email</Label>
                     <div className="relative">
-                        <Smartphone className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                        <Input id="phone-signup" type="tel" placeholder="+91 98765 43210" className="pl-10" />
+                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                        <Input id="email-signup" type="email" placeholder="student@example.com" className="pl-10" />
+                    </div>
+                </div>
+                 <div className="space-y-2">
+                    <Label htmlFor="password-signup">Password</Label>
+                    <div className="relative">
+                        <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                        <Input id="password-signup" type="password" placeholder="••••••••" className="pl-10" />
                     </div>
                 </div>
                 <Button onClick={handleAuthAction} className="w-full">Create Account</Button>
@@ -91,5 +105,3 @@ export function LoginSignupDialog({ children }: { children: React.ReactNode }) {
     </Dialog>
   );
 }
-
-    
