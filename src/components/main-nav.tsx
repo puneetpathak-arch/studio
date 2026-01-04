@@ -35,8 +35,8 @@ export function MainNav() {
               className="group-data-[collapsible=icon]:justify-center"
               size="default"
             >
-              <item.icon className={cn("text-sidebar-primary h-5 w-5", pathname.startsWith(item.href) && "text-sidebar-primary-foreground")}/>
-              <span className={cn(pathname.startsWith(item.href) && "text-sidebar-primary-foreground")}>{item.label}</span>
+              <item.icon className={cn("text-primary h-5 w-5", pathname.startsWith(item.href) && "text-primary-foreground")}/>
+              <span className={cn(pathname.startsWith(item.href) && "text-primary-foreground")}>{item.label}</span>
             </SidebarMenuButton>
           </Link>
         </SidebarMenuItem>
