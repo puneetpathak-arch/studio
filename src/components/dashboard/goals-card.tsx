@@ -77,7 +77,7 @@ export function GoalsCard() {
           >
             <CarouselContent>
               {goals.map((goal) => (
-                <CarouselItem key={goal.id} className="md:basis-1/2 lg:basis-1/1">
+                <CarouselItem key={goal.id} className="md:basis-1/2 lg:basis-1/2">
                   <div className="p-1">
                     <GoalCard goal={goal} />
                   </div>
