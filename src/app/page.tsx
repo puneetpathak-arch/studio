@@ -3,11 +3,9 @@
 
 import { useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { LoginSignupDialog } from '@/components/auth/login-signup-dialog';
 
 export default function LandingPage() {
-  const router = useRouter();
-
   useEffect(() => {
     const observerOptions = {
         threshold: 0.1,
@@ -55,12 +53,17 @@ export default function LandingPage() {
 
   }, []);
 
-  const handleGetStarted = () => {
-      router.push('/dashboard');
-  }
-
   return (
     <div className="bg-white text-gray-800">
+      <style jsx global>{`
+        /* Landing Page Styles */
+        .nav-container {
+            @apply max-w-7xl mx-auto flex justify-between items-center;
+        }
+        .btn-primary-gradient {
+            @apply bg-gradient-to-r from-primary to-accent text-white py-3 px-6 rounded-xl font-semibold transition-transform duration-300 shadow-[0_4px_15px_rgba(99,102,241,0.3)] hover:scale-105 hover:shadow-[0_6px_20px_rgba(99,102,241,0.4)];
+        }
+      `}</style>
       <nav className="fixed top-0 w-full bg-white/95 backdrop-blur-md z-50 py-5 px-8 shadow-sm animate-slide-down">
         <div className="nav-container">
           <a href="#" className="flex items-center gap-2 text-2xl font-bold text-indigo-500 no-underline">
@@ -75,21 +78,25 @@ export default function LandingPage() {
             <a href="#features" className="text-gray-500 font-medium no-underline transition-colors hover:text-indigo-500">Features</a>
             <a href="#how-it-works" className="text-gray-500 font-medium no-underline transition-colors hover:text-indigo-500">How It Works</a>
             <a href="#testimonials" className="text-gray-500 font-medium no-underline transition-colors hover:text-indigo-500">Reviews</a>
-            <button onClick={handleGetStarted} className="btn-primary-gradient no-underline">Get Started</button>
+            <LoginSignupDialog>
+              <button className="btn-primary-gradient no-underline">Get Started</button>
+            </LoginSignupDialog>
           </div>
           <button className="md:hidden bg-none border-none text-2xl text-indigo-500 cursor-pointer mobile-menu-btn">☰</button>
         </div>
       </nav>
 
       <section className="pt-32 pb-16 px-8 bg-gradient-to-r from-blue-500 to-purple-600 text-white text-center relative overflow-hidden">
-        <div className="absolute top-0 left-0 right-0 bottom-0 bg-[url('data:image/svg+xml,%3csvg%20width%3d%27100%27%20height%3d%27100%27%20xmlns%3d%27http%3a//www.w3.org/2000/svg%27%3e%3ccircle%20cx%3d%2750%27%20cy%3d%2750%27%20r%3d%272%27%20fill%3d%27white%27%20opacity%3d%270.1%27/%3e%3c/svg%3e')] animate-move-background"></div>
+        <div className="absolute top-0 left-0 right-0 bottom-0 bg-[url('data:image/svg+xml,%3csvg%20width=%27100%27%20height=%27100%27%20xmlns=%27http://www.w3.org/2000/svg%27%3e%3ccircle%20cx=%2750%27%20cy=%2750%27%20r=%272%27%20fill=%27white%27%20opacity=%270.1%27/%3e%3c/svg%3e')] animate-move-background"></div>
         <div className="max-w-3xl mx-auto relative z-10">
           <h1 className="text-6xl font-extrabold mb-6 leading-tight animate-fade-in-up">Master Your Money,<br />Focus on Your Future</h1>
           <p className="text-xl mb-8 opacity-95 animate-fade-in-up" style={{animationDelay: '0.2s'}}>The smart finance web app designed specifically for students. Track expenses, save smarter, and discover scholarships—all in your browser.</p>
           <div className="flex gap-4 justify-center flex-wrap animate-fade-in-up" style={{animationDelay: '0.4s'}}>
-            <button onClick={handleGetStarted} className="py-4 px-10 rounded-2xl text-lg font-semibold no-underline transition-all inline-flex items-center gap-2 cursor-pointer border-none bg-white text-indigo-500 shadow-lg hover:-translate-y-1 hover:shadow-xl">
-              <span>🚀</span> Launch App
-            </button>
+             <LoginSignupDialog>
+                <button className="py-4 px-10 rounded-2xl text-lg font-semibold no-underline transition-all inline-flex items-center gap-2 cursor-pointer border-none bg-white text-indigo-500 shadow-lg hover:-translate-y-1 hover:shadow-xl">
+                    <span>🚀</span> Launch App
+                </button>
+            </LoginSignupDialog>
             <a href="#features" className="py-4 px-10 rounded-2xl text-lg font-semibold no-underline transition-all inline-flex items-center gap-2 cursor-pointer border-2 border-white bg-transparent text-white hover:bg-white hover:text-indigo-500">
               Learn More
             </a>
@@ -263,9 +270,11 @@ export default function LandingPage() {
           </div>
         </div>
         <div className="flex gap-4 justify-center">
-          <button onClick={handleGetStarted} className="py-4 px-10 rounded-2xl text-lg font-semibold no-underline transition-all inline-flex items-center gap-2 cursor-pointer border-none bg-white text-indigo-500 shadow-lg hover:-translate-y-1 hover:shadow-xl">
-            <span>🚀</span> Get Started Now
-          </button>
+          <LoginSignupDialog>
+            <button className="py-4 px-10 rounded-2xl text-lg font-semibold no-underline transition-all inline-flex items-center gap-2 cursor-pointer border-none bg-white text-indigo-500 shadow-lg hover:-translate-y-1 hover:shadow-xl">
+                <span>🚀</span> Get Started Now
+            </button>
+          </LoginSignupDialog>
           <button className="py-4 px-10 rounded-2xl text-lg font-semibold no-underline transition-all inline-flex items-center gap-2 cursor-pointer border-2 border-white bg-transparent text-white hover:bg-white hover:text-indigo-500">
             <span>▶️</span> Watch Demo
           </button>
@@ -283,7 +292,11 @@ export default function LandingPage() {
             <ul className="list-none">
               <li className="mb-2"><a href="#features" className="text-gray-400 no-underline transition-colors hover:text-indigo-400">Features</a></li>
               <li className="mb-2"><a href="#how-it-works" className="text-gray-400 no-underline transition-colors hover:text-indigo-400">How It Works</a></li>
-              <li className="mb-2"><button onClick={handleGetStarted} className="text-gray-400 no-underline transition-colors hover:text-indigo-400 bg-transparent border-none p-0 cursor-pointer">Get Started</button></li>
+              <li className="mb-2">
+                <LoginSignupDialog>
+                    <button className="text-gray-400 no-underline transition-colors hover:text-indigo-400 bg-transparent border-none p-0 cursor-pointer text-left">Get Started</button>
+                </LoginSignupDialog>
+              </li>
               <li><a href="#" className="text-gray-400 no-underline transition-colors hover:text-indigo-400">Demo</a></li>
             </ul>
           </div>
@@ -312,3 +325,5 @@ export default function LandingPage() {
     </div>
   );
 }
+
+    
