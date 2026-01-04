@@ -3,10 +3,10 @@ import type { FirebaseOptions } from 'firebase/app';
 
 // TODO: Replace with your actual Firebase project configuration.
 export const firebaseConfig: FirebaseOptions = {
-  apiKey: "API_KEY",
-  authDomain: "PROJECT_ID.firebaseapp.com",
-  projectId: "PROJECT_ID",
-  storageBucket: "PROJECT_ID.appspot.com",
-  messagingSenderId: "SENDER_ID",
-  appId: "APP_ID",
+  apiKey: "AIzaSyBXQk--GzKsWLtYkcFKTmlvsnGqYm4Igtg",
+  authDomain: "studio-4071809277-d90a6.firebaseapp.com",
+  projectId: "studio-4071809277-d90a6",
+  storageBucket: "studio-4071809277-d90a6.appspot.com",
+  messagingSenderId: "826379487315",
+  appId: "1:826379487315:web:521dfa5c46d3986c271ea6"
 };
