@@ -18,9 +18,9 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
-import { GoalProgressCircle } from '@/components/dashboard/goal-progress-circle';
 import type { Goal } from '@/lib/types';
 import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
 
 function GoalCard({ goal }: { goal: Goal }) {
   const percentage = Math.round((goal.savedAmount / goal.targetAmount) * 100);
@@ -28,7 +28,7 @@ function GoalCard({ goal }: { goal: Goal }) {
     <Card
       className="flex flex-col h-full border-border"
     >
-      <CardHeader className="pb-2">
+      <CardHeader className="pb-4">
         <CardTitle className="flex items-center gap-2 text-lg">
           <goal.icon
             className="w-6 h-6 text-primary"
@@ -36,16 +36,18 @@ function GoalCard({ goal }: { goal: Goal }) {
           <span className="font-bold">{goal.name}</span>
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex-grow flex flex-col items-center justify-center gap-4">
-        <div className="w-[120px] h-[120px]">
-            <GoalProgressCircle
-              percentage={percentage}
-              savedAmount={goal.savedAmount}
-              targetAmount={goal.targetAmount}
-              color={goal.color}
-            />
+      <CardContent className="flex-grow flex flex-col justify-center gap-4">
+        <div className="space-y-2">
+            <div className='flex justify-between items-baseline'>
+                <span className='text-sm text-muted-foreground'>Progress</span>
+                <span className="font-bold text-primary">{percentage}%</span>
+            </div>
+          <Progress value={percentage} />
+          <div className="text-sm text-muted-foreground text-right">
+            <span className="font-semibold text-foreground">₹{goal.savedAmount.toLocaleString()}</span> / ₹{goal.targetAmount.toLocaleString()}
+          </div>
         </div>
-        <Button size="sm" variant="outline">Add Funds</Button>
+        <Button size="sm" variant="outline" className="w-full">Add Funds</Button>
       </CardContent>
     </Card>
   );
@@ -67,7 +69,7 @@ export function GoalsCard() {
           Your progress towards your financial goals.
         </CardDescription>
       </CardHeader>
-      <CardContent className="flex-grow flex items-center px-12">
+      <CardContent className="flex-grow flex items-center px-6">
         {goals.length > 0 ? (
           <Carousel
             opts={{
@@ -75,9 +77,9 @@ export function GoalsCard() {
             }}
             className="w-full"
           >
-            <CarouselContent>
+            <CarouselContent className="-ml-2">
               {goals.map((goal) => (
-                <CarouselItem key={goal.id} className="basis-full">
+                <CarouselItem key={goal.id} className="basis-full md:basis-1/2 pl-2">
                   <div className="p-1 h-full">
                     <GoalCard goal={goal} />
                   </div>
