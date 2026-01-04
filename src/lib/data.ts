@@ -1,3 +1,4 @@
+
 import type { User, Expense, Budget, Goal, Scholarship, Tip } from './types';
 import { Bus, PiggyBank, IndianRupee, Headphones, Plane } from 'lucide-react';
 
@@ -79,5 +80,30 @@ export const scholarships: Scholarship[] = [
             category: ['General', 'OBC', 'SC', 'ST'],
         },
         link: 'http://scholarshipportal.mp.nic.in/MMVY/HomePage.aspx'
+    },
+     {
+        id: 's4',
+        name: 'Pragati Scholarship for Girl Students',
+        provider: 'AICTE',
+        amount: '₹50,000 p.a.',
+        deadline: '2024-10-31',
+        eligibility: {
+            state: ['All India'],
+            category: ['Girl Students'],
+        },
+        link: 'https://www.aicte-pragati-saksham-gov.in/'
+    },
+    {
+        id: 's5',
+        name: 'Chief Minister\'s Scholarship Scheme',
+        provider: 'Government of Haryana',
+        amount: 'Upto ₹12,000 p.a.',
+        deadline: '2024-09-15',
+        eligibility: {
+            state: ['Haryana'],
+            category: ['General', 'SC', 'OBC'],
+            income: '₹2.5 Lakh p.a.'
+        },
+        link: 'https://harchhatravratti.highereduhry.ac.in/'
     }
 ];
