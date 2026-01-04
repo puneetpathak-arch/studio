@@ -50,7 +50,7 @@
   .dark {
     --background: 222 47% 11%;
     --foreground: 210 40% 98%;
-    --card: 222 84% 4.9%;
+    --card: 222 84% 4.9% / 0.9;
     --card-foreground: 210 40% 98%;
     --popover: 222 84% 4.9%;
     --popover-foreground: 210 40% 98%;
@@ -90,6 +90,11 @@
   body {
     @apply bg-background text-foreground;
   }
+  
+  .dark body {
+    background-image: radial-gradient(circle at 20% 80%, hsl(217.2 91.2% 59.8% / 0.1), transparent 30%), radial-gradient(circle at 80% 30%, hsl(262 83% 66% / 0.1), transparent 30%);
+  }
+
   h1 {
     @apply text-3xl font-bold;
   }
