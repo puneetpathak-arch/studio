@@ -1,3 +1,4 @@
+
 export type User = {
   name: string;
   college: string;
@@ -53,3 +54,12 @@ export type Tip = {
   text: string;
   icon: React.ElementType;
 };
+
+export type Notification = {
+    id: string;
+    type: 'budget-warning' | 'budget-over' | 'new-tip' | 'goal-achieved';
+    title: string;
+    description: string;
+    timestamp: string;
+    read: boolean;
+}

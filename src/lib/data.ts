@@ -1,5 +1,5 @@
 
-import type { User, Expense, Budget, Goal, Scholarship, Tip } from './types';
+import type { User, Expense, Budget, Goal, Scholarship, Tip, Notification } from './types';
 import { Bus, PiggyBank, IndianRupee, Headphones, Plane } from 'lucide-react';
 
 export const user: User = {
@@ -107,3 +107,38 @@ export const scholarships: Scholarship[] = [
         link: 'https://harchhatravratti.highereduhry.ac.in/'
     }
 ];
+
+export const notifications: Notification[] = [
+    {
+        id: 'n1',
+        type: 'budget-warning',
+        title: 'Budget Alert: 80% Spent',
+        description: 'You\'ve spent ₹12,000 of your ₹15,000 monthly budget.',
+        timestamp: '2 hours ago',
+        read: false,
+    },
+    {
+        id: 'n2',
+        type: 'new-tip',
+        title: 'New Savings Tip Available',
+        description: 'We found a new way for you to save on daily expenses. Tap to view.',
+        timestamp: '1 day ago',
+        read: false,
+    },
+    {
+        id: 'n3',
+        type: 'goal-achieved',
+        title: '🎉 Goal Reached: New Headphones',
+        description: 'Congratulations! You\'ve saved ₹8,000 for your new headphones.',
+        timestamp: '3 days ago',
+        read: true,
+    },
+    {
+        id: 'n4',
+        type: 'budget-over',
+        title: 'Over Budget!',
+        description: 'You have exceeded your monthly Canteen budget by ₹250.',
+        timestamp: '5 days ago',
+        read: true,
+    }
+]
