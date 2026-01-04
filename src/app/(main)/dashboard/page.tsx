@@ -32,8 +32,8 @@ export default function DashboardPage() {
   return (
     <div className="flex flex-col gap-6">
       <div className="animate-fade-in-up">
-        <h1 className="text-2xl md:text-3xl font-bold text-primary">{greeting}, {user.name.split(' ')[0]}! {emoji}</h1>
-        <p className="text-muted-foreground text-sm md:text-base">Here's your financial overview for this month.</p>
+        <h1 className="text-4xl md:text-5xl font-bold text-primary">{greeting}, {user.name.split(' ')[0]}! {emoji}</h1>
+        <p className="text-muted-foreground text-base md:text-lg mt-2">Here's your financial overview for this month.</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
