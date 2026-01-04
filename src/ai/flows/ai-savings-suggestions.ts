@@ -52,7 +52,7 @@ For each area, provide:
 2.  **suggestion**: A practical, actionable tip to reduce that spending (e.g., "Packing lunch from the mess twice a week could cut costs.").
 3.  **potentialMonthlySavings**: A realistic, calculated estimate of how much money (in ₹) the student could save per month if they follow the tip.
 
-Also consider the contextual `knownTips` to guide your suggestions.
+Also consider the contextual knownTips to guide your suggestions.
 
 Spending Data: {{{spendingData}}}
 
