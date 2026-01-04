@@ -23,6 +23,7 @@ export function RecentExpensesCard() {
       </CardHeader>
       <CardContent>
         <ScrollArea className="h-[200px]">
+        {expenses.length > 0 ? (
           <ul className="space-y-4">
             {expenses.slice(0, 5).map((expense) => (
               <li key={expense.id} className="flex justify-between items-center">
@@ -36,6 +37,11 @@ export function RecentExpensesCard() {
               </li>
             ))}
           </ul>
+          ) : (
+            <div className="flex items-center justify-center h-full">
+              <p className="text-muted-foreground">No expenses yet.</p>
+            </div>
+          )}
         </ScrollArea>
       </CardContent>
     </Card>
