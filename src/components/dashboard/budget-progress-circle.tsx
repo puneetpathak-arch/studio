@@ -30,6 +30,7 @@ export function BudgetProgressCircle({ percentage }: BudgetProgressCircleProps) 
         innerRadius={60}
         outerRadius={75}
         barSize={16}
+        cx="50%"
         cy="50%"
       >
         <RadialBar
