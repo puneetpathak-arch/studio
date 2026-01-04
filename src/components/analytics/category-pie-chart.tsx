@@ -42,10 +42,10 @@ export function CategoryPieChart() {
         <CardTitle>Category-wise Spending</CardTitle>
         <CardDescription>Current month's spending distribution</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="h-[250px] flex items-center">
         <ChartContainer
           config={chartConfig}
-          className="mx-auto aspect-square h-[250px]"
+          className="h-full w-1/2"
         >
           <PieChart>
             <ChartTooltip
@@ -59,8 +59,8 @@ export function CategoryPieChart() {
               data={chartData}
               dataKey="amount"
               nameKey="category"
-              innerRadius={80}
-              outerRadius={100}
+              innerRadius={60}
+              outerRadius={80}
               paddingAngle={2}
               isAnimationActive={true}
               animationDuration={1000}
@@ -69,12 +69,12 @@ export function CategoryPieChart() {
                     <Cell key={`cell-${entry.category}`} fill={entry.fill} />
                 ))}
             </Pie>
-             <ChartLegend
-                content={<ChartLegendContent nameKey="category" />}
-                className="-translate-y-2 flex-wrap gap-2 [&>*]:basis-1/4 [&>*]:justify-center"
-            />
           </PieChart>
         </ChartContainer>
+         <ChartLegend
+            content={<ChartLegendContent nameKey="category" className="flex flex-col gap-2"/>}
+            className="w-1/2"
+        />
       </CardContent>
     </Card>
   )
