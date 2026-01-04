@@ -26,7 +26,7 @@ function GoalCard({ goal }: { goal: Goal }) {
   const percentage = Math.round((goal.savedAmount / goal.targetAmount) * 100);
   return (
     <Card
-      className="flex flex-col h-full border-primary"
+      className="flex flex-col h-full border-border"
     >
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 text-lg">
@@ -75,7 +75,7 @@ export function GoalsCard() {
           >
             <CarouselContent>
               {goals.map((goal) => (
-                <CarouselItem key={goal.id} className="md:basis-full lg:basis-full">
+                <CarouselItem key={goal.id} className="basis-full">
                   <div className="p-1 h-full">
                     <GoalCard goal={goal} />
                   </div>
