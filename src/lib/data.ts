@@ -7,24 +7,33 @@ export const user: User = {
   avatarUrl: 'https://picsum.photos/seed/100/100/100',
 };
 
-export const expenses: Expense[] = [];
+export const expenses: Expense[] = [
+  { id: '1', description: 'Mess Bill', amount: 3500, category: 'Mess', date: '2024-07-01' },
+  { id: '2', description: 'Metro Card Recharge', amount: 500, category: 'Travel', date: '2024-07-03' },
+  { id: '3', description: 'Momos at Bytes', amount: 120, category: 'Canteen', date: '2024-07-05' },
+  { id: '4', description: 'Netflix Subscription', amount: 199, category: 'Recharge/Subscriptions', date: '2024-07-06' },
+  { id: '5', description: 'End-sem Exam Fee', amount: 1200, category: 'Fees/Exam', date: '2024-07-08' },
+];
 
 export const budget: Budget = {
   total: 15000,
-  spent: 0,
+  spent: 5519,
   categoryBudgets: [
-    { category: 'Mess', total: 4000, spent: 0 },
-    { category: 'Canteen', total: 1500, spent: 0 },
-    { category: 'Travel', total: 1000, spent: 0 },
+    { category: 'Mess', total: 4000, spent: 3500 },
+    { category: 'Canteen', total: 1500, spent: 120 },
+    { category: 'Travel', total: 1000, spent: 500 },
     { category: 'Rent/Hostel', total: 5000, spent: 0 },
     { category: 'Groceries', total: 1000, spent: 0 },
-    { category: 'Fees/Exam', total: 1500, spent: 0 },
-    { category: 'Recharge/Subscriptions', total: 500, spent: 0 },
+    { category: 'Fees/Exam', total: 1500, spent: 1200 },
+    { category: 'Recharge/Subscriptions', total: 500, spent: 199 },
     { category: 'Others', total: 500, spent: 0 },
   ],
 };
 
-export const goals: Goal[] = [];
+export const goals: Goal[] = [
+    { id: 'g1', name: 'New Noise-Cancelling Headphones', targetAmount: 8000, savedAmount: 2500, deadline: '2024-10-31' },
+    { id: 'g2', name: 'Goa Trip with Friends', targetAmount: 12000, savedAmount: 3000, deadline: '2024-12-15' },
+];
 
 export const tips: Tip[] = [
     { id: 't1', text: 'Your travel spend is higher than usual. Consider using the bus.', icon: Bus },
@@ -32,4 +41,43 @@ export const tips: Tip[] = [
     { id: 't3', text: 'You have saved ₹200 this week compared to last week. Keep it up!', icon: IndianRupee },
 ];
 
-export const scholarships: Scholarship[] = [];
+export const scholarships: Scholarship[] = [
+    {
+        id: 's1',
+        name: 'Post Matric Scholarship for SC Students',
+        provider: 'Ministry of Social Justice & Empowerment',
+        amount: 'Upto ₹13,500 p.a.',
+        deadline: '2024-08-31',
+        eligibility: {
+            state: ['All India'],
+            category: ['SC'],
+            income: '₹2.5 Lakh p.a.'
+        },
+        link: 'https://scholarships.gov.in/'
+    },
+    {
+        id: 's2',
+        name: 'Merit Cum Means Scholarship for Professional and Technical Courses',
+        provider: 'Ministry of Minority Affairs',
+        amount: '₹20,000 p.a. + Fees',
+        deadline: '2024-09-30',
+        eligibility: {
+            state: ['All India'],
+            category: ['Minority'],
+            income: '₹2.5 Lakh p.a.'
+        },
+        link: 'https://scholarships.gov.in/'
+    },
+    {
+        id: 's3',
+        name: 'Mukhyamantri Medhavi Vidyarthi Yojana (MMVY)',
+        provider: 'Government of Madhya Pradesh',
+        amount: 'Full Course Fee',
+        deadline: '2024-08-15',
+        eligibility: {
+            state: ['Madhya Pradesh'],
+            category: ['General', 'OBC', 'SC', 'ST'],
+        },
+        link: 'http://scholarshipportal.mp.nic.in/MMVY/HomePage.aspx'
+    }
+];

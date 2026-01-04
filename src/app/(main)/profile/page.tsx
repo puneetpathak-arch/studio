@@ -51,7 +51,7 @@ export default function ProfilePage() {
                 </div>
                  <div className="space-y-2">
                     <Label htmlFor="email">Email</Label>
-                    <Input id="email" type="email" defaultValue="rohan.sharma@iitd.ac.in" disabled />
+                    <Input id="email" type="email" defaultValue="student@example.com" disabled />
                 </div>
                  <div className="space-y-2">
                     <Label htmlFor="budget">Default Monthly Budget (₹)</Label>
