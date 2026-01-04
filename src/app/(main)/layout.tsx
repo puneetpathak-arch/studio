@@ -45,7 +45,10 @@ export default function MainLayout({
       </Sidebar>
       <SidebarInset>
         <DashboardHeader onBudget={onBudget} />
-        <main className="flex-1 p-4 md:p-6 pb-20 md:pb-6">{children}</main>
+        <main className="flex-1 p-4 md:p-6 pb-20 md:pb-6 relative overflow-hidden">
+          <div className="absolute inset-0 -z-10 bg-gradient-to-br from-primary/10 via-background to-accent/10 animate-move-background"></div>
+          {children}
+        </main>
       </SidebarInset>
     </SidebarProvider>
   );

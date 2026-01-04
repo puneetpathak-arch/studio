@@ -138,8 +138,9 @@ export default {
             '50%': { transform: 'translateY(-10px)' },
         },
         'move-background': {
-            '0%': { transform: 'translate(0, 0)' },
-            '100%': { transform: 'translate(100px, 100px)' },
+            '0%': { backgroundPosition: '0% 50%' },
+            '50%': { backgroundPosition: '100% 50%' },
+            '100%': { backgroundPosition: '0% 50%' },
         },
         'float-browser': {
             '0%, 100%': { transform: 'translateY(0px)' },
@@ -155,7 +156,7 @@ export default {
         'shake': 'shake 0.5s ease-in-out',
         'slide-down': 'slide-down 0.5s ease',
         'float': 'float 3s ease-in-out infinite',
-        'move-background': 'move-background 20s linear infinite',
+        'move-background': 'move-background 15s ease-in-out infinite',
         'float-browser': 'floatBrowser 3s ease-in-out infinite',
       },
     },
