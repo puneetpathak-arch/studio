@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -12,14 +13,22 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const SavingsSuggestionsInputSchema = z.object({
-  spendingData: z.string().describe('A JSON string containing the student\'s spending data, including categories, amounts, and dates.'),
-  knownTips: z.string().describe('A JSON string containing an array of known tips and tricks for student savings.'),
+  spendingData: z.string().describe("A JSON string of the student's recent expenses."),
+  knownTips: z.string().describe('A JSON string of generic saving tips to provide context.'),
 });
 
 export type SavingsSuggestionsInput = z.infer<typeof SavingsSuggestionsInputSchema>;
 
+const SuggestionSchema = z.object({
+  insight: z.string().describe("A short, insightful summary of a spending pattern. E.g., 'You're spending a lot on canteens.'"),
+  suggestion: z.string().describe("An actionable suggestion based on the insight. E.g., 'Try cooking 2 meals a week to save.'"),
+  potentialMonthlySavings: z.number().describe('An estimated amount in ₹ that could be saved per month by following the suggestion.'),
+});
+export type Suggestion = z.infer<typeof SuggestionSchema>;
+
+
 const SavingsSuggestionsOutputSchema = z.object({
-  suggestions: z.array(z.string()).describe('An array of personalized savings suggestions for the student.'),
+  suggestions: z.array(SuggestionSchema).describe('An array of 2-3 personalized savings suggestions for the student.'),
 });
 
 export type SavingsSuggestionsOutput = z.infer<typeof SavingsSuggestionsOutputSchema>;
@@ -32,13 +41,24 @@ const savingsSuggestionsPrompt = ai.definePrompt({
   name: 'savingsSuggestionsPrompt',
   input: {schema: SavingsSuggestionsInputSchema},
   output: {schema: SavingsSuggestionsOutputSchema},
-  prompt: `You are a financial advisor for college students in India. Analyze the student's spending habits provided in the spendingData, and suggest potential savings opportunities based on your knowledge and the provided knownTips. Be specific and provide actionable advice.
+  prompt: `You are a financial advisor for college students in India. Your goal is to provide actionable, personalized savings tips.
+
+Analyze the student's spending habits provided in the JSON spending data.
+
+Based on the data, identify 2-3 specific patterns or areas for potential savings.
+
+For each area, provide:
+1.  **insight**: A brief, data-driven observation (e.g., "Your spending on Canteen food is frequent.").
+2.  **suggestion**: A practical, actionable tip to reduce that spending (e.g., "Packing lunch from the mess twice a week could cut costs.").
+3.  **potentialMonthlySavings**: A realistic, calculated estimate of how much money (in ₹) the student could save per month if they follow the tip.
+
+Also consider the contextual `knownTips` to guide your suggestions.
 
 Spending Data: {{{spendingData}}}
 
 Known Tips and Tricks: {{{knownTips}}}
 
-Output an array of personalized savings suggestions.  The array should be well formatted as a JSON string.
+Generate a JSON object containing an array of 2-3 suggestion objects.
 `,
 });
 
@@ -50,19 +70,7 @@ const savingsSuggestionsFlow = ai.defineFlow(
   },
   async input => {
     try {
-      // Parse the spending data and known tips from JSON strings
-      const spendingData = JSON.parse(input.spendingData);
-      const knownTips = JSON.parse(input.knownTips);
-
-      // It would be ideal to do some preprocessing of the data here to make it easier for the LLM to work with.
-      // However, since we cannot do computation in Handlebars, we will pass the raw data to the prompt.
-
-      const {output} = await savingsSuggestionsPrompt({
-        ...input,
-        spendingData: JSON.stringify(spendingData),
-        knownTips: JSON.stringify(knownTips),
-      });
-
+      const {output} = await savingsSuggestionsPrompt(input);
       return output!;
     } catch (error) {
       console.error('Error in savingsSuggestionsFlow:', error);

@@ -1,5 +1,5 @@
 
-import { PiggyBank } from "lucide-react";
+import { PiggyBank, Sparkles } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
