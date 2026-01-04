@@ -1,11 +1,11 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Expense } from "@/lib/types";
 import { Badge } from "../ui/badge";
 import { ScrollArea } from "../ui/scroll-area";
 import { Button } from "../ui/button";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
+import { Skeleton } from "../ui/skeleton";
 
 const categoryColors: { [key: string]: string } = {
     'Mess': 'bg-red-100 text-red-800 border-red-200',
@@ -25,7 +25,7 @@ const categoryColors: { [key: string]: string } = {
     'Others': 'bg-gray-100 text-gray-800 border-gray-200',
 };
 
-export function RecentExpensesCard({ expenses }: { expenses: Expense[] }) {
+export function RecentExpensesCard({ expenses, loading }: { expenses: Expense[] | null, loading: boolean }) {
   return (
     <Card className="bg-card/60 backdrop-blur-xl">
       <CardHeader>
@@ -44,7 +44,11 @@ export function RecentExpensesCard({ expenses }: { expenses: Expense[] }) {
       </CardHeader>
       <CardContent>
         <ScrollArea className="h-[240px]">
-        {expenses.length > 0 ? (
+        {loading ? (
+            <div className="space-y-4">
+                {[...Array(5)].map((_, i) => <Skeleton key={i} className="h-10 w-full" />)}
+            </div>
+        ) : expenses && expenses.length > 0 ? (
           <ul className="space-y-4">
             {expenses.slice(0, 5).map((expense) => (
               <li key={expense.id} className="flex justify-between items-center">

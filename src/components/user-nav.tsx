@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -12,11 +11,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { user, notifications } from "@/lib/data";
+import { notifications } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { Bell, AlertTriangle, BadgePercent, Trophy } from "lucide-react";
+import { Bell, AlertTriangle, BadgePercent, Trophy, LogOut } from "lucide-react";
 import type { Notification } from "@/lib/types";
+import { useUser, useAuth } from "@/firebase";
+import { signOut } from "firebase/auth";
+import { useRouter } from "next/navigation";
 
 interface UserNavProps {
     onBudget: boolean;
@@ -93,6 +95,17 @@ function NotificationsDropdown() {
 }
 
 export function UserNav({ onBudget }: UserNavProps) {
+  const { user } = useUser();
+  const auth = useAuth();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    if (auth) {
+      await signOut(auth);
+      router.push('/');
+    }
+  };
+
   return (
     <div className="flex items-center gap-2">
         <NotificationsDropdown />
@@ -100,17 +113,17 @@ export function UserNav({ onBudget }: UserNavProps) {
         <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-8 w-8 rounded-full" aria-label="Open user menu">
             <Avatar className={cn("h-9 w-9", onBudget && "ring-2 ring-green-500 ring-offset-2 ring-offset-background")}>
-                <AvatarImage src={user.avatarUrl} alt={`@${user.name}`} />
-                <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                <AvatarImage src={user?.photoURL || undefined} alt={`@${user?.displayName}`} />
+                <AvatarFallback>{user?.displayName?.charAt(0) || user?.email?.charAt(0).toUpperCase()}</AvatarFallback>
             </Avatar>
             </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56" align="end" forceMount>
             <DropdownMenuLabel className="font-normal">
             <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">{user.name}</p>
+                <p className="text-sm font-medium leading-none">{user?.displayName}</p>
                 <p className="text-xs leading-none text-muted-foreground">
-                {user.college}
+                {user?.email}
                 </p>
             </div>
             </DropdownMenuLabel>
@@ -127,8 +140,9 @@ export function UserNav({ onBudget }: UserNavProps) {
             </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-            <Link href="/" className="w-full">Log out</Link>
+            <DropdownMenuItem onClick={handleLogout}>
+                <LogOut className="mr-2 h-4 w-4" />
+                <span>Log out</span>
             </DropdownMenuItem>
         </DropdownMenuContent>
         </DropdownMenu>

@@ -1,29 +1,85 @@
-
 'use client';
 
-import { user } from "@/lib/data";
+import { useState, useEffect } from "react";
+import { useUser } from "@/firebase";
+import { getBudget, updateBudget, updateUserProfile } from "@/services/firestore";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { User as UserIcon, Edit, Wallet, Bell } from "lucide-react";
+import { User as UserIcon, Edit, Wallet, Bell, LogOut, Loader2 } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
-import { useState } from "react";
 import { Switch } from "@/components/ui/switch";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
+import type { Budget } from "@/lib/types";
 
 export default function ProfilePage() {
-    const [budget, setBudget] = useState(15000);
+    const { user, loading: userLoading } = useUser();
+    const [name, setName] = useState('');
+    const [college, setCollege] = useState('');
+    const [budget, setBudget] = useState<Budget | null>(null);
+    const [budgetAmount, setBudgetAmount] = useState(15000);
+    const [loading, setLoading] = useState(true);
+    const { toast } = useToast();
+
+    useEffect(() => {
+        if (user) {
+            setName(user.displayName || '');
+            const fetchProfileData = async () => {
+                setLoading(true);
+                const userBudget = await getBudget(user.uid);
+                // I'll add a call to get user profile data (like college) here later
+                setBudget(userBudget);
+                setBudgetAmount(userBudget.total);
+                setLoading(false);
+            };
+            fetchProfileData();
+        } else if (!userLoading) {
+            setLoading(false);
+        }
+    }, [user, userLoading]);
+
+    const handleSaveChanges = async () => {
+        if (!user) return;
+        setLoading(true);
+        try {
+            await updateUserProfile(user.uid, { displayName: name });
+            if (budget) {
+                const updatedBudgetData = { ...budget, total: budgetAmount };
+                await updateBudget(user.uid, updatedBudgetData);
+            }
+            toast({
+                title: "Profile Updated",
+                description: "Your changes have been saved successfully.",
+            });
+        } catch (error) {
+            toast({
+                variant: "destructive",
+                title: "Error",
+                description: "Failed to save changes.",
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
+    
+    if (userLoading || loading) {
+        return (
+          <div className="flex justify-center items-center h-64">
+            <Loader2 className="w-8 h-8 animate-spin" />
+          </div>
+        );
+    }
 
   return (
     <div className="flex flex-col items-center gap-8">
       <div className="flex flex-col items-center gap-4 animate-fade-in-up">
         <div className="relative group transition-transform hover:scale-105">
             <Avatar className="h-24 w-24 md:h-32 md:w-32 border-4 border-primary ring-4 ring-primary/20">
-                <AvatarImage src={user.avatarUrl} alt={`@${user.name}`} />
-                <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                <AvatarImage src={user?.photoURL || undefined} alt={`@${user?.displayName}`} />
+                <AvatarFallback>{name.charAt(0) || 'U'}</AvatarFallback>
             </Avatar>
             <Button variant="outline" size="icon" className="absolute bottom-1 right-1 h-8 w-8 md:h-9 md:w-9 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
                 <Edit className="w-4 h-4"/>
@@ -31,8 +87,8 @@ export default function ProfilePage() {
             </Button>
         </div>
         <div className="text-center">
-            <h1 className="text-xl md:text-2xl font-bold">{user.name}</h1>
-            <p className="text-sm md:text-base text-muted-foreground">{user.college}</p>
+            <h1 className="text-xl md:text-2xl font-bold">{name}</h1>
+            <p className="text-sm md:text-base text-muted-foreground">{college || 'Your College'}</p>
         </div>
       </div>
 
@@ -47,15 +103,15 @@ export default function ProfilePage() {
                 <div className="grid md:grid-cols-2 gap-4 md:gap-6">
                     <div className="space-y-2">
                         <Label htmlFor="name" className="text-sm">Full Name</Label>
-                        <Input id="name" defaultValue={user.name} />
+                        <Input id="name" value={name} onChange={(e) => setName(e.target.value)} />
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor="college" className="text-sm">College</Label>
-                        <Input id="college" defaultValue={user.college} />
+                        <Input id="college" value={college} onChange={(e) => setCollege(e.target.value)} placeholder="e.g. IIT Delhi" />
                     </div>
                      <div className="space-y-2 md:col-span-2">
                         <Label htmlFor="email" className="text-sm">Email</Label>
-                        <Input id="email" type="email" defaultValue="student@example.com" disabled />
+                        <Input id="email" type="email" value={user?.email || ''} disabled />
                     </div>
                 </div>
             </div>
@@ -69,15 +125,15 @@ export default function ProfilePage() {
                 <div className="space-y-2">
                     <div className="flex justify-between items-center">
                         <Label htmlFor="budget" className="text-sm">Default Monthly Budget</Label>
-                        <span className="font-bold text-base md:text-lg text-primary">₹{budget.toLocaleString()}</span>
+                        <span className="font-bold text-base md:text-lg text-primary">₹{budgetAmount.toLocaleString()}</span>
                     </div>
                     <Slider
                         id="budget"
                         min={5000}
                         max={50000}
                         step={1000}
-                        value={[budget]}
-                        onValueChange={(value) => setBudget(value[0])}
+                        value={[budgetAmount]}
+                        onValueChange={(value) => setBudgetAmount(value[0])}
                         aria-label="Default Monthly Budget"
                     />
                 </div>
@@ -98,7 +154,10 @@ export default function ProfilePage() {
                 </div>
             </div>
 
-             <Button size="lg" className="w-full">Save Changes</Button>
+             <Button size="lg" className="w-full" onClick={handleSaveChanges} disabled={loading}>
+                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Save Changes
+             </Button>
         </CardContent>
       </Card>
       

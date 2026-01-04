@@ -1,15 +1,20 @@
-
 'use client';
 
-import { useState } from 'react';
-import { PiggyBank, LogOut, Menu, X, Plus } from "lucide-react";
+import * as React from 'react';
+import { useRouter } from 'next/navigation';
+import { PiggyBank, LogOut } from "lucide-react";
 import { MainNav } from "@/components/main-nav";
 import Link from 'next/link';
-import { user } from '@/lib/data';
+import { user as mockUser } from '@/lib/data';
 import { AddExpenseSheet } from '@/components/add-expense-sheet';
 import { Button } from '@/components/ui/button';
 import { BottomNav } from '@/components/bottom-nav';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useAuth, useUser } from '@/firebase';
+import { signOut } from 'firebase/auth';
+import { addExpense } from '@/services/firestore';
+import type { Expense } from '@/lib/types';
+import { useEffect } from 'react';
 
 
 export default function MainLayout({
@@ -17,8 +22,43 @@ export default function MainLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const isMobile = useIsMobile();
+  const { user, loading } = useUser();
+  const auth = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/');
+    }
+  }, [user, loading, router]);
+
+
+  const handleLogout = async () => {
+    if (auth) {
+      await signOut(auth);
+      router.push('/');
+    }
+  };
+
+  const handleAddExpense = async (newExpense: Omit<Expense, 'id' | 'date'>) => {
+    if (!user) return;
+    await addExpense(user.uid, newExpense);
+    // You might want to refresh the expenses list here or use a real-time listener
+  };
+
+  if (loading) {
+    // You can return a loading spinner here
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <PiggyBank className="w-16 h-16 animate-bounce text-primary"/>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null; // or a redirect component
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-violet-100 via-pink-100 to-orange-100 flex relative overflow-hidden">
@@ -48,29 +88,27 @@ export default function MainLayout({
         </div>
 
         <nav className="flex-grow space-y-2 relative z-10">
-            <MainNav onNavItemClick={() => isMobileMenuOpen && setIsMobileMenuOpen(false)} />
+            <MainNav onNavItemClick={() => {}} />
         </nav>
 
         <div className="relative z-10 mt-auto">
           <div className="flex items-center gap-3 mb-4 px-2 pt-6 border-t border-slate-700/50">
             <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-full flex items-center justify-center font-bold text-lg shadow-lg shadow-purple-500/50">
-              {user.name.charAt(0)}
+              {user.displayName?.charAt(0) || user.email?.charAt(0).toUpperCase()}
             </div>
             <div className="flex-1">
-              <p className="font-semibold text-sm">{user.name}</p>
-              <p className="text-gray-400 text-xs">student@example.com</p>
+              <p className="font-semibold text-sm">{user.displayName || user.email}</p>
+              <p className="text-gray-400 text-xs">{user.email}</p>
             </div>
           </div>
-           <Link href="/">
-            <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-red-500/10 hover:text-red-400 transition-all">
+           <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-red-500/10 hover:text-red-400 transition-all">
                 <LogOut size={20} />
                 <span className="font-medium">Log out</span>
             </button>
-           </Link>
         </div>
       </aside>
       
-      {isMobile && <BottomNav />}
+      {isMobile && <BottomNav onAddExpense={handleAddExpense} />}
 
       <div className="flex-1 flex flex-col">
         <main className="flex-1 p-4 md:p-6 lg:p-8 pb-24 lg:pb-8">

@@ -1,37 +1,10 @@
-
-import type { User, Expense, Budget, Goal, Scholarship, Tip, Notification } from './types';
-import { Bus, PiggyBank, IndianRupee, Headphones, Plane } from 'lucide-react';
+import type { User, Scholarship, Tip, Notification } from './types';
 
 export const user: User = {
   name: 'Rohan Sharma',
   college: 'IIT Delhi',
   avatarUrl: 'https://picsum.photos/seed/100/100/100',
 };
-
-export const expenses: Expense[] = [];
-
-const calculateSpent = (category: Expense['category']) => {
-    return expenses.filter(e => e.category === category).reduce((acc, e) => acc + e.amount, 0);
-}
-
-export const budget: Budget = {
-  total: 15000,
-  spent: 0,
-  categoryBudgets: [
-    { category: 'Mess', total: 4000, spent: 0 },
-    { category: 'Canteen', total: 1500, spent: 0 },
-    { category: 'Travel', total: 1000, spent: 0 },
-    { category: 'Rent/Hostel', total: 5000, spent: 0 },
-    { category: 'Education', total: 1000, spent: 0 },
-    { category: 'Fees/Exam', total: 1500, spent: 0 },
-    { category: 'Recharge/Subscriptions', total: 500, spent: 0 },
-    { category: 'Entertainment', total: 1000, spent: 0 },
-    { category: 'Shopping', total: 1000, spent: 0 },
-    { category: 'Others', total: 500, spent: 0 },
-  ],
-};
-
-export const goals: Goal[] = [];
 
 export const tips: Tip[] = [];
 
@@ -102,3 +75,6 @@ export const scholarships: Scholarship[] = [
 ];
 
 export const notifications: Notification[] = []
+
+// Keep initial goals for demonstration purposes, they will be fetched from Firestore
+export { goals } from './initial-data';

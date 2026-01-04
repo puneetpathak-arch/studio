@@ -1,16 +1,21 @@
-
 export type User = {
   name: string;
   college: string;
   avatarUrl: string;
 };
 
+export type UserProfile = {
+    email?: string | null;
+    displayName?: string | null;
+    college?: string;
+}
+
 export type Expense = {
   id: string;
   description: string;
   amount: number;
   category: 'Food' | 'Transport' | 'Education' | 'Entertainment' | 'Healthcare' | 'Shopping' | 'Other' | 'Mess' | 'Canteen' | 'Groceries' | 'Travel' | 'Rent/Hostel' | 'Fees/Exam' | 'Recharge/Subscriptions' | 'Others';
-  date: string;
+  date: string; // ISO string
 };
 
 export type Budget = {
@@ -30,7 +35,7 @@ export type Goal = {
   name: string;
   targetAmount: number;
   savedAmount: number;
-  deadline: string;
+  deadline: string; // ISO string
   icon: React.ElementType;
   color: 'chart-1' | 'chart-2' | 'chart-3' | 'chart-4' | 'chart-5';
 };

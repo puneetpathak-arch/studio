@@ -1,7 +1,6 @@
-
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Card,
   CardContent,
@@ -12,12 +11,14 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { goals as initialGoals } from '@/lib/data';
 import type { Goal } from '@/lib/types';
 import { Target, Plus } from 'lucide-react';
 import { AddGoalDialog } from '@/components/goals/add-goal-dialog';
 import { AddFundsDialog } from '@/components/goals/add-funds-dialog';
 import { useToast } from '@/hooks/use-toast';
+import { useUser } from '@/firebase';
+import { getGoals, addGoal, addFundsToGoal } from '@/services/firestore';
+import { Skeleton } from '@/components/ui/skeleton';
 
 function GoalCard({ goal, onFundAdded }: { goal: Goal; onFundAdded: (goalId: string, amount: number) => void; }) {
   const percentage = Math.min(100, Math.round((goal.savedAmount / goal.targetAmount) * 100));
@@ -55,24 +56,45 @@ function GoalCard({ goal, onFundAdded }: { goal: Goal; onFundAdded: (goalId: str
 }
 
 export default function GoalsPage() {
-  const [goals, setGoals] = useState<Goal[]>(initialGoals);
+  const { user } = useUser();
+  const [goals, setGoals] = useState<Goal[]>([]);
+  const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
-  const handleAddGoal = (newGoal: Omit<Goal, 'id' | 'savedAmount' | 'color'>) => {
-    const goalWithId: Goal = {
-      ...newGoal,
-      id: `g${goals.length + 1}`,
+  useEffect(() => {
+    if (user) {
+      const fetchGoals = async () => {
+        setLoading(true);
+        const userGoals = await getGoals(user.uid);
+        setGoals(userGoals);
+        setLoading(false);
+      };
+      fetchGoals();
+    } else {
+        setLoading(false);
+    }
+  }, [user]);
+
+  const handleAddGoal = async (newGoalData: Omit<Goal, 'id' | 'savedAmount' | 'color'>) => {
+    if (!user) return;
+
+    const newId = await addGoal(user.uid, newGoalData);
+    const newGoal: Goal = {
+      ...newGoalData,
+      id: newId,
       savedAmount: 0,
       color: `chart-${(goals.length % 5) + 1}` as Goal['color'],
     };
-    setGoals(prevGoals => [...prevGoals, goalWithId]);
+    setGoals(prevGoals => [...prevGoals, newGoal]);
     toast({
       title: "Goal Added!",
-      description: `Your new goal "${goalWithId.name}" has been created.`,
+      description: `Your new goal "${newGoal.name}" has been created.`,
     })
   };
 
-  const handleFundAdded = (goalId: string, amount: number) => {
+  const handleFundAdded = async (goalId: string, amount: number) => {
+    if (!user) return;
+    await addFundsToGoal(user.uid, goalId, amount);
     setGoals(prevGoals =>
       prevGoals.map(g =>
         g.id === goalId ? { ...g, savedAmount: g.savedAmount + amount } : g
@@ -100,7 +122,11 @@ export default function GoalsPage() {
         </AddGoalDialog>
       </div>
 
-      {goals.length > 0 ? (
+      {loading ? (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
+            {[...Array(3)].map((_, i) => <Skeleton key={i} className="h-[300px] w-full" />)}
+          </div>
+      ) : goals.length > 0 ? (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
           {goals.map((goal, index) => (
             <div key={goal.id} className="animate-fade-in-up" style={{ animationDelay: `${index * 50}ms` }}>

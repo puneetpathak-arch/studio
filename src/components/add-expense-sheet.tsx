@@ -1,9 +1,8 @@
-
 "use client";
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import {
   Sheet,
@@ -19,7 +18,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Popover,
   PopoverContent,
@@ -67,7 +65,6 @@ function NumberPad({
 }: {
   onKeyPress: (key: string) => void;
   onDelete: () => void;
-  onClear: () => void;
 }) {
   const keys = [ "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "0"];
 
@@ -126,8 +123,6 @@ function ExpenseForm({
             return newAmount === "" ? "0" : newAmount;
         });
     };
-    
-    const handleClear = () => setAmount("0");
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
@@ -147,8 +142,8 @@ function ExpenseForm({
         });
 
         toast({
-        title: "Expense Added",
-        description: `₹${amount} for ${selectedCategory} has been recorded.`,
+            title: "Expense Added",
+            description: `₹${amount} for ${selectedCategory} has been recorded.`,
         });
 
         setAmount("0");
@@ -194,7 +189,7 @@ function ExpenseForm({
 
               {/* Number Pad */}
               <div className="my-6 max-w-xs mx-auto">
-                <NumberPad onKeyPress={handleKeyPress} onDelete={handleDelete} onClear={handleClear} />
+                <NumberPad onKeyPress={handleKeyPress} onDelete={handleDelete} />
               </div>
 
                {/* Optional Fields */}
