@@ -76,6 +76,7 @@ function NumberPad({
       {keys.map((key) => (
         <Button
           key={key}
+          type="button"
           variant="outline"
           className="h-14 md:h-16 text-xl md:text-2xl font-bold transition-transform active:scale-95"
           onClick={() => onKeyPress(key)}
@@ -84,6 +85,7 @@ function NumberPad({
         </Button>
       ))}
        <Button
+        type="button"
         variant="outline"
         className="h-14 md:h-16 text-xl md:text-2xl font-bold transition-transform active:scale-95 flex items-center justify-center"
         onClick={onDelete}
@@ -106,11 +108,19 @@ export function AddExpenseSheet({ children }: { children?: React.ReactNode }) {
 
   const handleKeyPress = (key: string) => {
     if (key === "." && amount.includes(".")) return;
-    setAmount((prev) => (prev === "0" && key !== "." ? key : prev + key));
+
+    if (amount === "0" && key !== ".") {
+        setAmount(key);
+    } else {
+        setAmount((prev) => prev + key);
+    }
   };
 
   const handleDelete = () => {
-    setAmount((prev) => (prev.length > 1 ? prev.slice(0, -1) : "0"));
+    setAmount((prev) => {
+        const newAmount = prev.slice(0, -1);
+        return newAmount === "" ? "0" : newAmount;
+    });
   };
   
   const handleClear = () => setAmount("0");
@@ -193,6 +203,7 @@ export function AddExpenseSheet({ children }: { children?: React.ReactNode }) {
                     <PopoverTrigger asChild>
                       <Button
                         id="date-popover-trigger"
+                        type="button"
                         variant={"outline"}
                         className={cn(
                           "w-full justify-start text-left font-normal",
