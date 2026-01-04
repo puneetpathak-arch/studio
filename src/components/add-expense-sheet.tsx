@@ -7,18 +7,17 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Sheet,
-  SheetClose,
   SheetContent,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
+  SheetTrigger,
 } from "@/components/ui/sheet";
 import {
   Dialog,
   DialogContent,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -107,32 +106,56 @@ function NumberPad({
 }
 
 function ExpenseForm({
-    amount,
-    selectedCategory,
-    setSelectedCategory,
-    date,
-    setDate,
-    notes,
-    setNotes,
-    handleKeyPress,
-    handleDelete,
-    handleClear,
-    handleSubmit,
-    onClose,
+    setOpen,
  } : {
-    amount: string,
-    selectedCategory: Category | null,
-    setSelectedCategory: (category: Category) => void,
-    date: Date | undefined,
-    setDate: (date: Date | undefined) => void,
-    notes: string,
-    setNotes: (notes: string) => void,
-    handleKeyPress: (key: string) => void,
-    handleDelete: () => void,
-    handleClear: () => void,
-    handleSubmit: (event: React.FormEvent) => void,
-    onClose: () => void,
+    setOpen: (open: boolean) => void;
 }) {
+    const [amount, setAmount] = useState("0");
+    const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+    const [date, setDate] = useState<Date | undefined>(new Date());
+    const [notes, setNotes] = useState("");
+    const { toast } = useToast();
+
+    const handleKeyPress = (key: string) => {
+        if (key === "." && amount.includes(".")) return;
+        if (amount.length > 9) return;
+        
+        setAmount((prev) => {
+            if (prev === "0" && key !== ".") return key;
+            return prev + key;
+        });
+    };
+
+    const handleDelete = () => {
+        setAmount((prev) => {
+            const newAmount = prev.slice(0, -1);
+            return newAmount === "" ? "0" : newAmount;
+        });
+    };
+    
+    const handleClear = () => setAmount("0");
+
+    const handleSubmit = (event: React.FormEvent) => {
+        event.preventDefault();
+        if (parseFloat(amount) <= 0 || !selectedCategory) {
+            toast({
+                variant: "destructive",
+                title: "Missing Information",
+                description: "Please enter an amount and select a category.",
+            });
+            return;
+        }
+        toast({
+        title: "Expense Added",
+        description: `₹${amount} for ${selectedCategory} has been recorded.`,
+        });
+        setAmount("0");
+        setSelectedCategory(null);
+        setNotes("");
+        setDate(new Date());
+        setOpen(false); // Close the sheet/dialog
+    };
+    
     return (
         <form onSubmit={handleSubmit} className="flex flex-col flex-grow h-full">
             <div className="flex-grow overflow-y-auto p-1">
@@ -215,93 +238,33 @@ function ExpenseForm({
     )
 }
 
-export function AddExpenseSheet({ children }: { children?: React.ReactNode }) {
-  const [amount, setAmount] = useState("0");
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
-  const [date, setDate] = useState<Date | undefined>(new Date());
-  const [notes, setNotes] = useState("");
-  const { toast } = useToast();
+export function AddExpenseSheet({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const isMobile = useIsMobile();
-
-  const handleKeyPress = (key: string) => {
-    if (key === "." && amount.includes(".")) return;
-    if (amount.length > 9) return;
-    
-    setAmount((prev) => {
-        if (prev === "0" && key !== ".") return key;
-        return prev + key;
-    });
-  };
-
-  const handleDelete = () => {
-    setAmount((prev) => {
-        const newAmount = prev.slice(0, -1);
-        return newAmount === "" ? "0" : newAmount;
-    });
-  };
-  
-  const handleClear = () => setAmount("0");
-
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    if (parseFloat(amount) <= 0 || !selectedCategory) {
-        toast({
-            variant: "destructive",
-            title: "Missing Information",
-            description: "Please enter an amount and select a category.",
-        });
-        return;
-    }
-    toast({
-      title: "Expense Added",
-      description: `₹${amount} for ${selectedCategory} has been recorded.`,
-    });
-    setAmount("0");
-    setSelectedCategory(null);
-    setNotes("");
-    setDate(new Date());
-    setOpen(false); // Close the sheet/dialog
-  };
-
-  const formProps = {
-    amount,
-    selectedCategory,
-    setSelectedCategory,
-    date,
-    setDate,
-    notes,
-    setNotes,
-    handleKeyPress,
-    handleDelete,
-    handleClear,
-    handleSubmit,
-    onClose: () => setOpen(false)
-  };
   
   if (isMobile) {
     return (
         <Sheet open={open} onOpenChange={setOpen}>
-        {children}
-        <SheetContent side="bottom" className="rounded-t-2xl h-[90dvh] p-0 flex flex-col">
-            <SheetHeader className="p-6 pb-0 text-center">
-                <SheetTitle className="text-xl md:text-2xl">Add a New Expense</SheetTitle>
-            </SheetHeader>
-            <ExpenseForm {...formProps} />
-        </SheetContent>
+            <SheetTrigger asChild>{children}</SheetTrigger>
+            <SheetContent side="bottom" className="rounded-t-2xl h-[90dvh] p-0 flex flex-col">
+                <SheetHeader className="p-6 pb-0 text-center">
+                    <SheetTitle className="text-xl md:text-2xl">Add a New Expense</SheetTitle>
+                </SheetHeader>
+                <ExpenseForm setOpen={setOpen} />
+            </SheetContent>
         </Sheet>
     );
   }
   
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      {children}
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="max-w-md p-0">
           <DialogHeader className="p-6 pb-0">
              <DialogTitle>Add a New Expense</DialogTitle>
           </DialogHeader>
           <div className="max-h-[80vh] overflow-y-auto">
-            <ExpenseForm {...formProps} />
+            <ExpenseForm setOpen={setOpen} />
           </div>
       </DialogContent>
     </Dialog>
