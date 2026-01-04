@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -41,15 +41,31 @@ const goalIcons: { name: string; icon: LucideIcon }[] = [
 interface AddGoalDialogProps {
     onAddGoal: (newGoal: Omit<Goal, 'id' | 'savedAmount' | 'color'>) => void;
     children?: React.ReactNode;
+    open?: boolean;
+    onOpenChange?: (open: boolean) => void;
+    initialData?: Partial<Omit<Goal, 'id' | 'savedAmount' | 'color'>>;
 }
 
-export function AddGoalDialog({ onAddGoal, children }: AddGoalDialogProps) {
-  const [open, setOpen] = useState(false);
+export function AddGoalDialog({ onAddGoal, children, open: controlledOpen, onOpenChange, initialData }: AddGoalDialogProps) {
+  const [internalOpen, setInternalOpen] = useState(false);
   const [goalName, setGoalName] = useState('');
   const [targetAmount, setTargetAmount] = useState('');
   const [deadline, setDeadline] = useState<Date>();
   const [selectedIcon, setSelectedIcon] = useState<LucideIcon>(() => Laptop);
   const { toast } = useToast();
+
+  const open = controlledOpen ?? internalOpen;
+  const setOpen = onOpenChange ?? setInternalOpen;
+
+  useEffect(() => {
+    if (open && initialData) {
+        setGoalName(initialData.name || '');
+        setTargetAmount(initialData.targetAmount?.toString() || '');
+        setDeadline(initialData.deadline ? new Date(initialData.deadline) : undefined);
+        setSelectedIcon(initialData.icon || (() => Laptop));
+    }
+  }, [open, initialData]);
+
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,14 +95,7 @@ export function AddGoalDialog({ onAddGoal, children }: AddGoalDialogProps) {
   
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {children || (
-          <Button>
-            <Plus className="mr-2 h-4 w-4" />
-            Add New Goal
-          </Button>
-        )}
-      </DialogTrigger>
+      {children && <DialogTrigger asChild>{children}</DialogTrigger>}
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Create a New Savings Goal</DialogTitle>

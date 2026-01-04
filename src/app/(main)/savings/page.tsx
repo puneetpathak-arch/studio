@@ -14,21 +14,26 @@ import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Loader2, Sparkles, Terminal, ArrowRight } from 'lucide-react';
 import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from '@/components/ui/carousel';
-import {
   getSavingsSuggestions,
   type Suggestion,
 } from '@/ai/flows/ai-savings-suggestions';
 import { expenses, tips as knownTips } from '@/lib/data';
+import { AddGoalDialog } from '@/components/goals/add-goal-dialog';
+import type { Goal } from '@/lib/types';
+import { useToast } from '@/hooks/use-toast';
+import { goals } from '@/lib/data';
 
-function SuggestionCard({ suggestion }: { suggestion: Suggestion }) {
+function SuggestionCard({
+  suggestion,
+  onDismiss,
+  onAddGoal,
+}: {
+  suggestion: Suggestion;
+  onDismiss: () => void;
+  onAddGoal: () => void;
+}) {
   return (
-    <Card className="flex flex-col h-full bg-gradient-to-br from-primary via-purple-500 to-indigo-600 text-primary-foreground shadow-2xl relative overflow-hidden">
+    <Card className="flex flex-col bg-gradient-to-br from-primary via-purple-500 to-indigo-600 text-primary-foreground shadow-2xl relative overflow-hidden animate-fade-in-up">
       <CardHeader>
         <CardTitle className="flex items-center justify-between text-xl">
           <span>{suggestion.insight}</span>
@@ -49,10 +54,10 @@ function SuggestionCard({ suggestion }: { suggestion: Suggestion }) {
         </div>
       </CardContent>
       <CardFooter className="flex-col sm:flex-row gap-2">
-        <Button variant="secondary" className="w-full">
+        <Button variant="secondary" className="w-full" onClick={onAddGoal}>
           Create Savings Goal
         </Button>
-        <Button variant="ghost" className="w-full hover:bg-white/10">
+        <Button variant="ghost" className="w-full hover:bg-white/10" onClick={onDismiss}>
           Dismiss
         </Button>
       </CardFooter>
@@ -64,6 +69,10 @@ export default function SavingsPage() {
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isAddGoalDialogOpen, setIsAddGoalDialogOpen] = useState(false);
+  const [initialGoalData, setInitialGoalData] = useState<Partial<Omit<Goal, 'id' | 'savedAmount' | 'color'>> | undefined>();
+  const [allGoals, setAllGoals] = useState<Goal[]>(goals);
+  const { toast } = useToast();
 
   const handleGenerateSuggestions = async () => {
     setLoading(true);
@@ -81,6 +90,34 @@ export default function SavingsPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleDismiss = (indexToDismiss: number) => {
+    setSuggestions(currentSuggestions =>
+      currentSuggestions.filter((_, index) => index !== indexToDismiss)
+    );
+  };
+
+  const handleAddGoalClick = (suggestion: Suggestion) => {
+    setInitialGoalData({
+      name: suggestion.insight,
+      targetAmount: suggestion.potentialMonthlySavings,
+    });
+    setIsAddGoalDialogOpen(true);
+  };
+
+  const handleAddGoal = (newGoal: Omit<Goal, 'id' | 'savedAmount' | 'color'>) => {
+    const goalWithId: Goal = {
+      ...newGoal,
+      id: `g${allGoals.length + 1}`,
+      savedAmount: 0,
+      color: `chart-${(allGoals.length % 5) + 1}` as Goal['color'],
+    };
+    setAllGoals(prevGoals => [...prevGoals, goalWithId]);
+    toast({
+      title: "Goal Added!",
+      description: `Your new goal "${goalWithId.name}" has been created.`,
+    });
   };
 
   return (
@@ -108,26 +145,18 @@ export default function SavingsPage() {
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         ) : suggestions.length > 0 ? (
-          <Carousel
-            opts={{
-              align: 'start',
-            }}
-            className="w-full"
-          >
-            <CarouselContent>
-              {suggestions.map((suggestion, index) => (
-                <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/2">
-                  <div className="p-1 h-full">
-                    <SuggestionCard suggestion={suggestion} />
-                  </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious className="hidden sm:flex" />
-            <CarouselNext className="hidden sm:flex" />
-          </Carousel>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {suggestions.map((suggestion, index) => (
+              <SuggestionCard
+                key={index}
+                suggestion={suggestion}
+                onDismiss={() => handleDismiss(index)}
+                onAddGoal={() => handleAddGoalClick(suggestion)}
+              />
+            ))}
+          </div>
         ) : (
-          <Card className="text-center p-8">
+          <Card className="text-center p-8 animate-fade-in-up">
             <CardHeader>
               <CardTitle className="flex items-center justify-center gap-2 text-xl">
                 Get Personalized Savings Tips
@@ -145,6 +174,12 @@ export default function SavingsPage() {
           </Card>
         )}
       </div>
+      <AddGoalDialog
+        open={isAddGoalDialogOpen}
+        onOpenChange={setIsAddGoalDialogOpen}
+        onAddGoal={handleAddGoal}
+        initialData={initialGoalData}
+       />
     </div>
   );
 }
