@@ -41,7 +41,7 @@ function GoalCard({ goal }: { goal: Goal }) {
           percentage={percentage}
           savedAmount={goal.savedAmount}
           targetAmount={goal.targetAmount}
-          color={'chart-1'}
+          color={goal.color}
         />
         <Button size="sm" variant="outline">Add Funds</Button>
       </CardContent>
@@ -65,13 +65,13 @@ export function GoalsCard() {
           Your progress towards your financial goals.
         </CardDescription>
       </CardHeader>
-      <CardContent className="flex-grow flex items-center">
+      <CardContent className="flex-grow flex items-center px-12">
         {goals.length > 0 ? (
           <Carousel
             opts={{
               align: 'start',
             }}
-            className="w-full px-12"
+            className="w-full"
           >
             <CarouselContent>
               {goals.map((goal) => (
