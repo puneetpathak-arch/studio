@@ -33,34 +33,42 @@ export default function DashboardPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
+      <div className="animate-fade-in-up">
         <h1 className="text-3xl font-bold font-headline">{greeting}, {user.name.split(' ')[0]}! {emoji}</h1>
         <p className="text-muted-foreground">Here's your financial overview for this month.</p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-3 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
           <QuickStatCard icon={BarChart} label="This Week" value="₹1,860" />
           <QuickStatCard icon={Target} label="Active Goals" value={goals.length.toString()} />
           <QuickStatCard icon={Lightbulb} label="New Tips" value={tips.length.toString()} />
       </div>
       
       <div className="grid gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
             <BudgetSummaryCard />
         </div>
-        <GoalsCard />
+        <div className="animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+            <GoalsCard />
+        </div>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
-        <RecentExpensesCard />
-        <div className="lg:col-span-2">
+         <div className="animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+            <RecentExpensesCard />
+        </div>
+        <div className="lg:col-span-2 animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
             <AiSavingsCard />
         </div>
       </div>
       
        <div className="grid gap-6 lg:grid-cols-2">
-        <CategoryPieChart />
-        <SpendingBarChart />
+         <div className="animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
+            <CategoryPieChart />
+        </div>
+        <div className="animate-fade-in-up" style={{ animationDelay: '0.7s' }}>
+            <SpendingBarChart />
+        </div>
       </div>
       <AddExpenseSheet />
     </div>
