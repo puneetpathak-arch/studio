@@ -1,3 +1,4 @@
+
 "use client"
 
 import * as React from "react"
@@ -16,17 +17,18 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../ui
 const chartData = budget.categoryBudgets.filter(b => b.spent > 0).map(b => ({
   category: b.category,
   amount: b.spent,
+  fill: `hsl(var(--chart-${budget.categoryBudgets.findIndex(cb => cb.category === b.category) + 1}))`
 }));
 
 const chartConfig = {
   amount: {
-    label: "Amount",
+    label: "Amount (₹)",
   },
   ...Object.fromEntries(
-    chartData.map((item, index) => [
-      item.category,
+    budget.categoryBudgets.map((b, index) => [
+      b.category,
       {
-        label: item.category,
+        label: b.category,
         color: `hsl(var(--chart-${index + 1}))`,
       },
     ])
@@ -47,18 +49,24 @@ export function CategoryPieChart() {
         >
           <PieChart>
             <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
+                cursor={true}
+                content={<ChartTooltipContent 
+                    formatter={(value, name) => [`₹${(value as number).toLocaleString()}`, name]}
+                    indicator="dot"
+                />}
             />
             <Pie
               data={chartData}
               dataKey="amount"
               nameKey="category"
-              innerRadius={60}
-              strokeWidth={5}
+              innerRadius={80}
+              outerRadius={100}
+              paddingAngle={2}
+              isAnimationActive={true}
+              animationDuration={1000}
             >
-                {chartData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={chartConfig[entry.category]?.color} />
+                {chartData.map((entry) => (
+                    <Cell key={`cell-${entry.category}`} fill={entry.fill} />
                 ))}
             </Pie>
              <ChartLegend
