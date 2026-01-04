@@ -1,3 +1,4 @@
+
 import { user } from "@/lib/data";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -53,7 +54,7 @@ export default function ProfilePage() {
                     <Input id="email" type="email" defaultValue="rohan.sharma@iitd.ac.in" disabled />
                 </div>
                  <div className="space-y-2">
-                    <Label htmlFor="budget">Default Monthly Budget</Label>
+                    <Label htmlFor="budget">Default Monthly Budget (₹)</Label>
                     <Input id="budget" type="number" defaultValue="15000" />
                 </div>
             </div>
