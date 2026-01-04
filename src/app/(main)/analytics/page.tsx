@@ -1,20 +1,13 @@
-
 'use client';
 
-import { useState, useEffect } from 'react';
 import { SpendingBarChart } from "@/components/analytics/spending-bar-chart";
 import { BarChartHorizontal, IndianRupee, PieChart, TrendingUp, CalendarDays } from "lucide-react";
 import { QuickStatCard } from "@/components/dashboard/quick-stat-card";
-import type { CategoryPieChart as CategoryPieChartType } from '@/components/analytics/category-pie-chart';
+import { CategoryPieChart } from '@/components/analytics/category-pie-chart';
+import { ClientOnly } from "@/components/client-only";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function AnalyticsPage() {
-  const [CategoryPieChart, setCategoryPieChart] = useState<typeof CategoryPieChartType | null>(null);
-
-  useEffect(() => {
-    import('@/components/analytics/category-pie-chart').then(mod => {
-      setCategoryPieChart(() => mod.CategoryPieChart);
-    });
-  }, []);
 
   return (
     <div className="flex flex-col gap-6">
@@ -35,7 +28,9 @@ export default function AnalyticsPage() {
       
        <div className="grid gap-6 md:grid-cols-2">
          <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-            {CategoryPieChart ? <CategoryPieChart /> : <div className="h-[350px] w-full bg-muted/50 rounded-lg animate-pulse" />}
+            <ClientOnly fallback={<Skeleton className="h-[350px] w-full" />}>
+                <CategoryPieChart />
+            </ClientOnly>
         </div>
         <div className="animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
             <SpendingBarChart />
