@@ -42,7 +42,7 @@ export function SpendingBarChart() {
               tickFormatter={(value) => value.slice(0, 6)}
             />
              <YAxis
-                tickFormatter={(value) => `₹${value / 1000}k`}
+                tickFormatter={(value) => `₹${Number(value) / 1000}k`}
              />
             <ChartTooltip content={<ChartTooltipContent />} />
             <Bar dataKey="spending" fill="var(--color-spending)" radius={4} />
