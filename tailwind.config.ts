@@ -136,6 +136,11 @@ export default {
             '0%, 100%': { transform: 'translateY(0px)' },
             '50%': { transform: 'translateY(-20px)' },
         },
+        'bounce-on-load': {
+            '0%, 20%, 50%, 80%, 100%': { transform: 'translateY(0)' },
+            '40%': { transform: 'translateY(-15px)' },
+            '60%': { transform: 'translateY(-8px)' }
+        }
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
@@ -148,6 +153,7 @@ export default {
         'float': 'float 3s ease-in-out infinite',
         'move-background': 'move-background 15s ease-in-out infinite',
         'float-browser': 'float-browser 3s ease-in-out infinite',
+        'bounce-on-load': 'bounce-on-load 1s ease-out 0.5s',
       },
     },
   },

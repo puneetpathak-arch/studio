@@ -9,7 +9,6 @@ import { AiSavingsCard } from "@/components/dashboard/ai-savings-card";
 import { user, goals, tips } from "@/lib/data";
 import { QuickStatCard } from "@/components/dashboard/quick-stat-card";
 import { BarChart, Target, Lightbulb } from "lucide-react";
-import { AddExpenseSheet } from "@/components/add-expense-sheet";
 import { TipsCard } from "@/components/dashboard/tips-card";
 
 export default function DashboardPage() {
@@ -69,7 +68,6 @@ export default function DashboardPage() {
             
         </div>
       </div>
-      <AddExpenseSheet />
     </div>
   );
 }

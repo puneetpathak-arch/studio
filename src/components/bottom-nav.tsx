@@ -1,37 +1,68 @@
 
 'use client';
 
+import { forwardRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BarChartHorizontal, GraduationCap, LayoutDashboard, User, Target } from 'lucide-react';
+import { LayoutDashboard, BarChartHorizontal, GraduationCap, User, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { navItems } from './main-nav';
+import { SheetTrigger } from './ui/sheet';
 
+const navItems = [
+  { href: '/dashboard', icon: LayoutDashboard, label: 'Home' },
+  { href: '/analytics', icon: BarChartHorizontal, label: 'Analytics' },
+  { href: 'add_expense', icon: Plus, label: 'Add' },
+  { href: '/scholarships', icon: GraduationCap, label: 'Scholarships' },
+  { href: '/profile', icon: User, label: 'Profile' },
+];
 
-export function BottomNav() {
+export const BottomNav = forwardRef<HTMLDivElement>((props, ref) => {
   const pathname = usePathname();
 
   return (
-    <div className="fixed bottom-0 left-0 z-50 w-full h-16 bg-background border-t">
-      <div className="grid h-full max-w-lg grid-cols-5 mx-auto font-medium">
-        {navItems.filter(item => item.href !== '/savings').slice(0, 5).map((item) => {
-          const isActive = pathname.startsWith(item.href);
+    <div ref={ref} className="fixed bottom-0 left-0 z-50 w-full h-20 bg-card border-t shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
+      <div className="grid h-full grid-cols-5 mx-auto">
+        {navItems.map((item) => {
+          const isActive = (item.href === '/dashboard' && pathname === item.href) || (item.href !== '/dashboard' && pathname.startsWith(item.href));
+          
+          if (item.href === 'add_expense') {
+            return (
+              <div key={item.href} className="flex items-center justify-center">
+                <SheetTrigger asChild>
+                    <button className="relative -top-6 flex items-center justify-center h-16 w-16 bg-gradient-to-br from-primary to-accent text-white rounded-full shadow-lg transition-transform active:scale-90 animate-bounce-on-load">
+                        <item.icon className="w-8 h-8" />
+                        <span className="sr-only">{item.label}</span>
+                    </button>
+                </SheetTrigger>
+              </div>
+            );
+          }
+
           return (
             <Link
               key={item.href}
               href={item.href}
-              className={cn(
-                'inline-flex flex-col items-center justify-center px-2 hover:bg-muted',
-                isActive ? 'text-primary' : 'text-muted-foreground'
-              )}
-              aria-current={isActive ? 'page' : undefined}
+              className="inline-flex flex-col items-center justify-center px-2 text-center text-muted-foreground hover:bg-muted/50 transition-colors group"
             >
-              <item.icon className="w-6 h-6 mb-1" />
-              <span className="text-xs text-center">{item.label}</span>
+              <div className={cn(
+                  "p-2 rounded-full transition-transform duration-300 group-active:scale-90",
+                  isActive && "scale-110 -translate-y-1 bg-primary/10"
+              )}>
+                 <item.icon className={cn("w-6 h-6 mb-1 transition-colors", isActive && 'text-primary')} />
+              </div>
+              <span className={cn(
+                  "text-xs transition-colors",
+                  isActive ? 'font-bold text-primary' : 'text-muted-foreground'
+              )}>
+                {item.label}
+              </span>
+               {isActive && <div className="absolute bottom-2 h-1 w-1 rounded-full bg-primary" />}
             </Link>
           );
         })}
       </div>
     </div>
   );
-}
+});
+
+BottomNav.displayName = 'BottomNav';

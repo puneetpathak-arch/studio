@@ -12,7 +12,6 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
 } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -22,7 +21,6 @@ import {
 } from "@/components/ui/popover";
 import {
   CalendarIcon,
-  Plus,
   Pizza,
   Car,
   BookOpen,
@@ -37,7 +35,6 @@ import { Calendar } from "./ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
-import type { Expense } from "@/lib/types";
 
 type Category =
   | "Food"
@@ -99,7 +96,7 @@ function NumberPad({
   );
 }
 
-export function AddExpenseSheet() {
+export function AddExpenseSheet({ children }: { children?: React.ReactNode }) {
   const [amount, setAmount] = useState("0");
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -141,12 +138,7 @@ export function AddExpenseSheet() {
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger asChild>
-        <Button className="fixed bottom-20 md:bottom-10 right-4 md:right-10 h-14 w-14 md:h-16 md:w-16 rounded-full bg-primary shadow-lg hover:bg-primary/90 text-primary-foreground group">
-          <Plus className="h-7 w-7 md:h-8 md:w-8 transition-transform group-active:rotate-45 group-active:scale-125" />
-          <span className="sr-only">Add Expense</span>
-        </Button>
-      </SheetTrigger>
+      {children}
       <SheetContent side="bottom" className="rounded-t-2xl h-[90vh] md:h-auto md:max-w-md md:right-auto md:left-1/2 md:-translate-x-1/2 flex flex-col">
         <SheetHeader className="text-center">
           <SheetTitle className="text-xl md:text-2xl">Add a New Expense</SheetTitle>
