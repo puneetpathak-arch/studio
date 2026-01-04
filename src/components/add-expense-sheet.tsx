@@ -160,7 +160,7 @@ function ExpenseForm({
     
     return (
         <form onSubmit={handleSubmit} className="flex flex-col flex-grow h-full">
-            <div className="flex-grow overflow-y-auto p-1">
+            <div className="flex-grow overflow-y-auto p-4">
               {/* Amount Display */}
               <div className="text-center my-4">
                   <span className="text-4xl md:text-5xl font-bold">
@@ -233,7 +233,7 @@ function ExpenseForm({
               </div>
           </div>
 
-          <div className="p-6 border-t">
+          <div className="p-6 border-t bg-background">
             <Button type="submit" size="lg" className="w-full">Save Expense</Button>
           </div>
         </form>
@@ -258,10 +258,10 @@ export function AddExpenseSheet({ children, onExpenseAdded }: { children: React.
             : "max-w-md p-0"
         )}
       >
-        <DialogHeader className={cn(isMobile ? "p-6 pb-0 text-center" : "p-6 pb-0")}>
-            <DialogTitle className={cn(isMobile ? "text-xl md:text-2xl" : "")}>Add a New Expense</DialogTitle>
-        </DialogHeader>
-        <div className={cn(!isMobile && "max-h-[80vh] overflow-y-auto")}>
+        <SheetHeader className={cn(isMobile ? "p-6 pb-0 text-center" : "p-6 pb-0")}>
+            <SheetTitle className={cn(isMobile ? "text-xl md:text-2xl" : "")}>Add a New Expense</SheetTitle>
+        </SheetHeader>
+        <div className={cn("flex-grow overflow-hidden", !isMobile && "max-h-[80vh] overflow-y-auto")}>
             <ExpenseForm setOpen={setOpen} onExpenseAdded={onExpenseAdded} />
         </div>
       </CompContent>
