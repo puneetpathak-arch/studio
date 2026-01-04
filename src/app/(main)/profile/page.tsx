@@ -30,8 +30,8 @@ export default function ProfilePage() {
             </Button>
         </div>
         <div className="text-center">
-            <h1 className="text-3xl font-bold font-headline">{user.name}</h1>
-            <p className="text-muted-foreground">{user.college}</p>
+            <h1 className="text-2xl font-bold">{user.name}</h1>
+            <p className="text-base text-muted-foreground">{user.college}</p>
         </div>
       </div>
 
@@ -45,15 +45,15 @@ export default function ProfilePage() {
                 </CardTitle>
                 <div className="grid md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                        <Label htmlFor="name">Full Name</Label>
+                        <Label htmlFor="name" className="text-sm">Full Name</Label>
                         <Input id="name" defaultValue={user.name} />
                     </div>
                     <div className="space-y-2">
-                        <Label htmlFor="college">College</Label>
+                        <Label htmlFor="college" className="text-sm">College</Label>
                         <Input id="college" defaultValue={user.college} />
                     </div>
                      <div className="space-y-2 md:col-span-2">
-                        <Label htmlFor="email">Email</Label>
+                        <Label htmlFor="email" className="text-sm">Email</Label>
                         <Input id="email" type="email" defaultValue="student@example.com" disabled />
                     </div>
                 </div>
@@ -67,7 +67,7 @@ export default function ProfilePage() {
                 </CardTitle>
                 <div className="space-y-2">
                     <div className="flex justify-between items-center">
-                        <Label htmlFor="budget">Default Monthly Budget</Label>
+                        <Label htmlFor="budget" className="text-sm">Default Monthly Budget</Label>
                         <span className="font-bold text-lg text-primary">₹{budget.toLocaleString()}</span>
                     </div>
                     <Slider

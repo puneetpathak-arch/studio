@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from "react";
 import { BudgetSummaryCard } from "@/components/dashboard/budget-summary-card";
-import { GoalsCard } from "@/components/dashboard/goals-card";
+import { GoalsCard } from "@/app/(main)/dashboard/goals-card";
 import { RecentExpensesCard } from "@/components/dashboard/recent-expenses-card";
 import { AiSavingsCard } from "@/components/dashboard/ai-savings-card";
 import { user, goals, tips } from "@/lib/data";
@@ -33,8 +33,8 @@ export default function DashboardPage() {
   return (
     <div className="flex flex-col gap-6">
       <div className="animate-fade-in-up">
-        <h1 className="text-3xl font-bold font-headline">{greeting}, {user.name.split(' ')[0]}! {emoji}</h1>
-        <p className="text-muted-foreground">Here's your financial overview for this month.</p>
+        <h1 className="text-3xl font-bold">{greeting}, {user.name.split(' ')[0]}! {emoji}</h1>
+        <p className="text-muted-foreground text-base">Here's your financial overview for this month.</p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-3 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>

@@ -54,13 +54,13 @@ const categories: {
   color: string;
   bgColor: string;
 }[] = [
-  { name: "Food", icon: Pizza, color: "text-orange-500", bgColor: "bg-orange-100" },
-  { name: "Transport", icon: Car, color: "text-blue-500", bgColor: "bg-blue-100" },
-  { name: "Education", icon: BookOpen, color: "text-purple-500", bgColor: "bg-purple-100" },
-  { name: "Entertainment", icon: Clapperboard, color: "text-red-500", bgColor: "bg-red-100" },
-  { name: "Healthcare", icon: HeartPulse, color: "text-green-500", bgColor: "bg-green-100" },
-  { name: "Shopping", icon: ShoppingBag, color: "text-pink-500", bgColor: "bg-pink-100" },
-  { name: "Other", icon: MoreHorizontal, color: "text-gray-500", bgColor: "bg-gray-100" },
+  { name: "Food", icon: Pizza, color: "text-orange-600", bgColor: "bg-orange-100" },
+  { name: "Transport", icon: Car, color: "text-blue-600", bgColor: "bg-blue-100" },
+  { name: "Education", icon: BookOpen, color: "text-purple-600", bgColor: "bg-purple-100" },
+  { name: "Entertainment", icon: Clapperboard, color: "text-red-600", bgColor: "bg-red-100" },
+  { name: "Healthcare", icon: HeartPulse, color: "text-green-600", bgColor: "bg-green-100" },
+  { name: "Shopping", icon: ShoppingBag, color: "text-pink-600", bgColor: "bg-pink-100" },
+  { name: "Other", icon: MoreHorizontal, color: "text-gray-600", bgColor: "bg-gray-100" },
 ];
 
 function NumberPad({
@@ -147,29 +147,29 @@ export function AddExpenseSheet() {
           <span className="sr-only">Add Expense</span>
         </Button>
       </SheetTrigger>
-      <SheetContent side="bottom" className="rounded-t-lg h-[90vh] flex flex-col">
+      <SheetContent side="bottom" className="rounded-t-[1.5rem] h-[90vh] flex flex-col">
         <SheetHeader className="text-center">
-          <SheetTitle>Add a New Expense</SheetTitle>
+          <SheetTitle className="text-2xl">Add a New Expense</SheetTitle>
         </SheetHeader>
         <form onSubmit={handleSubmit} className="flex flex-col flex-grow">
           <div className="flex-grow overflow-y-auto p-1">
               {/* Amount Display */}
               <div className="text-center my-4">
-                  <span className="text-6xl font-bold">
+                  <span className="text-5xl font-bold">
                   ₹{amount}
                   </span>
               </div>
               
               {/* Category Selector */}
               <div className="my-6">
-                <Label className="text-center block mb-4">Select Category</Label>
+                <Label className="text-center block mb-4 text-sm">Select Category</Label>
                 <div className="grid grid-cols-4 gap-4">
                     {categories.map((cat) => (
                     <button
                         type="button"
                         key={cat.name}
                         className={cn(
-                        "flex flex-col items-center justify-center p-2 rounded-lg border-2 transition-all",
+                        "flex flex-col items-center justify-center p-2 rounded-xl border-2 transition-all",
                         selectedCategory === cat.name
                             ? `${cat.bgColor} ${cat.color.replace('text-', 'border-')} scale-110 shadow-lg`
                             : "bg-muted/50 border-transparent opacity-70"
@@ -192,11 +192,11 @@ export function AddExpenseSheet() {
                {/* Optional Fields */}
               <div className="space-y-4 my-6">
                  <div className="grid w-full items-center gap-1.5">
-                    <Label htmlFor="description">Note (Optional)</Label>
+                    <Label htmlFor="description" className="text-sm">Note (Optional)</Label>
                     <Textarea id="description" placeholder="What was this for?" value={notes} onChange={(e) => setNotes(e.target.value)} />
                 </div>
                 <div className="grid w-full items-center gap-1.5">
-                  <Label htmlFor="date-popover-trigger">Date</Label>
+                  <Label htmlFor="date-popover-trigger" className="text-sm">Date</Label>
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button

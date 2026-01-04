@@ -30,7 +30,7 @@ function SuggestionCard({ suggestion }: { suggestion: Suggestion }) {
   return (
     <Card className="flex flex-col h-full bg-gradient-to-br from-primary via-purple-500 to-indigo-600 text-primary-foreground shadow-2xl relative overflow-hidden">
       <CardHeader>
-        <CardTitle className="flex items-center justify-between">
+        <CardTitle className="flex items-center justify-between text-xl">
           <span>{suggestion.insight}</span>
           <Sparkles className="w-6 h-6 text-yellow-300" />
         </CardTitle>
@@ -86,11 +86,11 @@ export default function SavingsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold font-headline flex items-center gap-2">
+        <h1 className="text-3xl font-bold flex items-center gap-2">
           <Sparkles className="w-8 h-8 text-primary" />
           Smart Savings Tips 🤖
         </h1>
-        <p className="text-muted-foreground">
+        <p className="text-base text-muted-foreground">
           Your personal AI financial advisor.
         </p>
       </div>
@@ -129,7 +129,7 @@ export default function SavingsPage() {
         ) : (
           <Card className="text-center p-8">
             <CardHeader>
-              <CardTitle className="flex items-center justify-center gap-2">
+              <CardTitle className="flex items-center justify-center gap-2 text-xl">
                 Get Personalized Savings Tips
               </CardTitle>
               <CardDescription>

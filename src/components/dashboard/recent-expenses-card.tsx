@@ -10,11 +10,18 @@ import { ArrowRight } from "lucide-react";
 const categoryColors: { [key: string]: string } = {
     'Mess': 'bg-red-100 text-red-800 border-red-200',
     'Canteen': 'bg-orange-100 text-orange-800 border-orange-200',
+    'Food': 'bg-orange-100 text-orange-800 border-orange-200',
+    'Transport': 'bg-blue-100 text-blue-800 border-blue-200',
+    'Education': 'bg-purple-100 text-purple-800 border-purple-200',
+    'Entertainment': 'bg-red-100 text-red-800 border-red-200',
+    'Healthcare': 'bg-green-100 text-green-800 border-green-200',
+    'Shopping': 'bg-pink-100 text-pink-800 border-pink-200',
     'Groceries': 'bg-yellow-100 text-yellow-800 border-yellow-200',
     'Travel': 'bg-green-100 text-green-800 border-green-200',
     'Rent/Hostel': 'bg-blue-100 text-blue-800 border-blue-200',
     'Fees/Exam': 'bg-indigo-100 text-indigo-800 border-indigo-200',
     'Recharge/Subscriptions': 'bg-purple-100 text-purple-800 border-purple-200',
+    'Other': 'bg-gray-100 text-gray-800 border-gray-200',
     'Others': 'bg-gray-100 text-gray-800 border-gray-200',
 };
 
@@ -24,7 +31,7 @@ export function RecentExpensesCard() {
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle>Recent Activity</CardTitle>
+            <CardTitle className="text-xl">Recent Activity</CardTitle>
             <CardDescription>Your last 5 transactions.</CardDescription>
           </div>
            <Button variant="ghost" size="sm" asChild>
@@ -42,12 +49,12 @@ export function RecentExpensesCard() {
             {expenses.slice(0, 5).map((expense) => (
               <li key={expense.id} className="flex justify-between items-center">
                 <div>
-                  <p className="font-medium">{expense.description}</p>
-                  <Badge variant="outline" className={`font-normal ${categoryColors[expense.category] || categoryColors['Others']}`}>
+                  <p className="font-medium text-base">{expense.description}</p>
+                  <Badge variant="outline" className={`font-normal text-xs ${categoryColors[expense.category] || categoryColors['Others']}`}>
                     {expense.category}
                   </Badge>
                 </div>
-                <p className="font-bold text-right text-red-600">-₹{expense.amount.toLocaleString()}</p>
+                <p className="font-bold text-base text-right text-red-600">-₹{expense.amount.toLocaleString()}</p>
               </li>
             ))}
           </ul>

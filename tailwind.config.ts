@@ -15,6 +15,16 @@ export default {
         headline: ['"Poppins"', 'sans-serif'],
         code: ['monospace'],
       },
+      fontSize: {
+        'tiny': '0.75rem', // 12px
+        'sm': '0.875rem', // 14px
+        'base': '1rem', // 16px
+        'xl': '1.25rem', // 20px
+        '2xl': '1.5rem', // 24px
+        '3xl': '2rem', // 32px
+        '4xl': '2.5rem', // 40px
+        '5xl': '3rem', // 48px
+      },
       colors: {
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
@@ -68,9 +78,10 @@ export default {
         },
       },
       borderRadius: {
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 4px)',
-        sm: 'calc(var(--radius) - 8px)',
+        'xl': 'calc(var(--radius) + 4px)', // 16px
+        'lg': 'var(--radius)', // 12px
+        'md': 'calc(var(--radius) - 4px)', // 8px
+        'sm': 'calc(var(--radius) - 6px)', // 6px
       },
       keyframes: {
         'accordion-down': {

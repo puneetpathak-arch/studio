@@ -48,11 +48,11 @@ export default function ScholarshipsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold font-headline flex items-center gap-2">
+        <h1 className="text-3xl font-bold flex items-center gap-2">
             <GraduationCap className="w-8 h-8"/>
             Scholarships & Opportunities 🎓
         </h1>
-        <p className="text-muted-foreground">
+        <p className="text-base text-muted-foreground">
           Find financial aid for your education.
         </p>
       </div>
@@ -113,7 +113,7 @@ export default function ScholarshipsPage() {
           {filteredScholarships.map((scholarship, index) => (
             <Card key={scholarship.id} className="flex flex-col animate-fade-in-up hover:animate-lift" style={{ animationDelay: `${index * 50}ms` }}>
               <CardHeader>
-                <CardTitle>{scholarship.name}</CardTitle>
+                <CardTitle className="text-xl">{scholarship.name}</CardTitle>
                 <CardDescription>{scholarship.provider}</CardDescription>
               </CardHeader>
               <CardContent className="flex-grow space-y-4">

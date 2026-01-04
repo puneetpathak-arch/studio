@@ -30,10 +30,10 @@ const iconMap: { [key in Notification['type']]: React.ElementType } = {
 };
 
 const colorMap: { [key in Notification['type']]: string } = {
-    "budget-warning": "text-orange-500",
-    "budget-over": "text-red-600",
-    "new-tip": "text-blue-500",
-    "goal-achieved": "text-green-600",
+    "budget-warning": "text-orange-500", // Warning
+    "budget-over": "text-red-500",       // Error
+    "new-tip": "text-blue-500",          // Info
+    "goal-achieved": "text-green-500",     // Success
 }
 
 
@@ -48,7 +48,7 @@ function NotificationsDropdown() {
                     {unreadCount > 0 && (
                         <span className="absolute top-1 right-1 flex h-3 w-3">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500" aria-hidden="true"></span>
+                            <span className="relative inline-flex rounded-full h-3 w-3 bg-destructive" aria-hidden="true"></span>
                         </span>
                     )}
                 </Button>
