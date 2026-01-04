@@ -54,12 +54,8 @@ export function BudgetSummaryCard() {
                 </Button>
              </div>
           </div>
-          <div className="flex items-center justify-center gap-2">
+          <div className="flex items-center justify-center">
             <BudgetProgressCircle percentage={percentage} />
-             <div className="flex flex-col items-center justify-center">
-                <span className="text-3xl font-bold" style={{ color: 'hsl(var(--chart-1))' }}>{percentage}%</span>
-                <span className="text-sm text-muted-foreground">Spent</span>
-            </div>
           </div>
         </div>
       </CardContent>
