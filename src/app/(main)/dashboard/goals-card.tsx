@@ -36,7 +36,7 @@ function GoalCard({ goal }: { goal: Goal }) {
           <span className="font-bold">{goal.name}</span>
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex-grow flex flex-col items-center justify-center gap-4">
+      <CardContent className="flex-grow flex flex-col items-center justify-center gap-4 relative overflow-hidden">
         <GoalProgressCircle
           percentage={percentage}
           savedAmount={goal.savedAmount}
