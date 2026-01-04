@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/carousel';
 import { GoalProgressCircle } from './goal-progress-circle';
 import type { Goal } from '@/lib/types';
-import { Button } from '../ui/button';
+import { Button } from '@/components/ui/button';
 
 function GoalCard({ goal }: { goal: Goal }) {
   const percentage = Math.round((goal.savedAmount / goal.targetAmount) * 100);
@@ -77,7 +77,7 @@ export function GoalsCard() {
           >
             <CarouselContent>
               {goals.map((goal) => (
-                <CarouselItem key={goal.id} className="md:basis-1/2 lg:basis-full">
+                <CarouselItem key={goal.id} className="md:basis-full lg:basis-full">
                   <div className="p-1 h-full">
                     <GoalCard goal={goal} />
                   </div>
