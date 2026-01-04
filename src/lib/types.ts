@@ -8,7 +8,7 @@ export type Expense = {
   id: string;
   description: string;
   amount: number;
-  category: 'Mess' | 'Canteen' | 'Groceries' | 'Travel' | 'Rent/Hostel' | 'Fees/Exam' | 'Recharge/Subscriptions' | 'Others';
+  category: 'Food' | 'Transport' | 'Education' | 'Entertainment' | 'Healthcare' | 'Shopping' | 'Other' | 'Mess' | 'Canteen' | 'Groceries' | 'Travel' | 'Rent/Hostel' | 'Fees/Exam' | 'Recharge/Subscriptions' | 'Others';
   date: string;
 };
 
