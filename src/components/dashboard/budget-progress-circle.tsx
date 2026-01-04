@@ -21,21 +21,21 @@ export function BudgetProgressCircle({ percentage }: BudgetProgressCircleProps) 
           color: color,
         }
       }}
-      className="mx-auto aspect-square h-[120px] w-[120px]"
+      className="mx-auto aspect-square h-[150px] w-[150px]"
     >
       <RadialBarChart
         data={chartData}
         startAngle={-270}
         endAngle={90}
-        innerRadius={70}
-        outerRadius={80}
-        barSize={10}
+        innerRadius={55}
+        outerRadius={70}
+        barSize={16}
         cy="50%"
       >
         <RadialBar
           dataKey="value"
           background={{ fill: 'hsl(var(--muted))' }}
-          cornerRadius={5}
+          cornerRadius={8}
           isAnimationActive={true}
           animationDuration={1500}
         />
