@@ -13,6 +13,13 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Popover,
@@ -35,6 +42,7 @@ import { Calendar } from "./ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 type Category =
   | "Food"
@@ -98,63 +106,36 @@ function NumberPad({
   );
 }
 
-export function AddExpenseSheet({ children }: { children?: React.ReactNode }) {
-  const [amount, setAmount] = useState("0");
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
-  const [date, setDate] = useState<Date | undefined>(new Date());
-  const [notes, setNotes] = useState("");
-  const { toast } = useToast();
-  const [open, setOpen] = useState(false);
-
-  const handleKeyPress = (key: string) => {
-    if (key === "." && amount.includes(".")) return;
-
-    if (amount === "0" && key !== ".") {
-        setAmount(key);
-    } else {
-        setAmount((prev) => prev + key);
-    }
-  };
-
-  const handleDelete = () => {
-    setAmount((prev) => {
-        const newAmount = prev.slice(0, -1);
-        return newAmount === "" ? "0" : newAmount;
-    });
-  };
-  
-  const handleClear = () => setAmount("0");
-
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    if (parseFloat(amount) === 0 || !selectedCategory) {
-        toast({
-            variant: "destructive",
-            title: "Missing Information",
-            description: "Please enter an amount and select a category.",
-        });
-        return;
-    }
-    toast({
-      title: "Expense Added",
-      description: `₹${amount} for ${selectedCategory} has been recorded.`,
-    });
-    setAmount("0");
-    setSelectedCategory(null);
-    setNotes("");
-    setDate(new Date());
-    setOpen(false); // Close the sheet
-  };
-
-  return (
-    <Sheet open={open} onOpenChange={setOpen}>
-      {children}
-      <SheetContent side="bottom" className="rounded-t-2xl h-[90vh] md:h-auto md:max-w-md md:right-auto md:left-1/2 md:-translate-x-1/2 flex flex-col">
-        <SheetHeader className="text-center">
-          <SheetTitle className="text-xl md:text-2xl">Add a New Expense</SheetTitle>
-        </SheetHeader>
-        <form onSubmit={handleSubmit} className="flex flex-col flex-grow">
-          <div className="flex-grow overflow-y-auto p-1">
+function ExpenseForm({
+    amount,
+    selectedCategory,
+    setSelectedCategory,
+    date,
+    setDate,
+    notes,
+    setNotes,
+    handleKeyPress,
+    handleDelete,
+    handleClear,
+    handleSubmit,
+    onClose,
+ } : {
+    amount: string,
+    selectedCategory: Category | null,
+    setSelectedCategory: (category: Category) => void,
+    date: Date | undefined,
+    setDate: (date: Date | undefined) => void,
+    notes: string,
+    setNotes: (notes: string) => void,
+    handleKeyPress: (key: string) => void,
+    handleDelete: () => void,
+    handleClear: () => void,
+    handleSubmit: (event: React.FormEvent) => void,
+    onClose: () => void,
+}) {
+    return (
+        <form onSubmit={handleSubmit} className="flex flex-col flex-grow h-full">
+            <div className="flex-grow overflow-y-auto p-1">
               {/* Amount Display */}
               <div className="text-center my-4">
                   <span className="text-4xl md:text-5xl font-bold">
@@ -165,13 +146,13 @@ export function AddExpenseSheet({ children }: { children?: React.ReactNode }) {
               {/* Category Selector */}
               <div className="my-6">
                 <Label className="text-center block mb-4 text-sm">Select Category</Label>
-                <div className="grid grid-cols-4 sm:grid-cols-7 gap-2 md:gap-4">
+                <div className="grid grid-cols-4 sm:grid-cols-7 gap-2 md:gap-4 justify-center">
                     {categories.map((cat) => (
                     <button
                         type="button"
                         key={cat.name}
                         className={cn(
-                        "flex flex-col items-center justify-center p-2 rounded-xl border-2 transition-all",
+                        "flex flex-col items-center justify-center p-2 rounded-xl border-2 transition-all w-20 h-20",
                         selectedCategory === cat.name
                             ? `${cat.bgColor} ${cat.color.replace('text-', 'border-')} scale-110 shadow-lg`
                             : "bg-muted/50 border-transparent opacity-70"
@@ -180,19 +161,19 @@ export function AddExpenseSheet({ children }: { children?: React.ReactNode }) {
                         aria-pressed={selectedCategory === cat.name}
                     >
                         <cat.icon className={cn("w-7 h-7 md:w-8 md:h-8 mb-1", cat.color)} />
-                        <span className="text-xs font-medium">{cat.name}</span>
+                        <span className="text-xs font-medium text-center">{cat.name}</span>
                     </button>
                     ))}
                 </div>
               </div>
 
               {/* Number Pad */}
-              <div className="my-6">
+              <div className="my-6 max-w-xs mx-auto">
                 <NumberPad onKeyPress={handleKeyPress} onDelete={handleDelete} onClear={handleClear} />
               </div>
 
                {/* Optional Fields */}
-              <div className="space-y-4 my-6">
+              <div className="space-y-4 my-6 max-w-xs mx-auto">
                  <div className="grid w-full items-center gap-1.5">
                     <Label htmlFor="description" className="text-sm">Note (Optional)</Label>
                     <Textarea id="description" placeholder="What was this for?" value={notes} onChange={(e) => setNotes(e.target.value)} />
@@ -227,11 +208,102 @@ export function AddExpenseSheet({ children }: { children?: React.ReactNode }) {
               </div>
           </div>
 
-          <SheetFooter className="mt-auto">
-              <Button type="submit" size="lg" className="w-full">Save Expense</Button>
-          </SheetFooter>
+          <div className="p-6 border-t">
+            <Button type="submit" size="lg" className="w-full">Save Expense</Button>
+          </div>
         </form>
-      </SheetContent>
-    </Sheet>
-  );
+    )
+}
+
+export function AddExpenseSheet({ children }: { children?: React.ReactNode }) {
+  const [amount, setAmount] = useState("0");
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [notes, setNotes] = useState("");
+  const { toast } = useToast();
+  const [open, setOpen] = useState(false);
+  const isMobile = useIsMobile();
+
+  const handleKeyPress = (key: string) => {
+    if (key === "." && amount.includes(".")) return;
+    if (amount.length > 9) return;
+    
+    setAmount((prev) => {
+        if (prev === "0" && key !== ".") return key;
+        return prev + key;
+    });
+  };
+
+  const handleDelete = () => {
+    setAmount((prev) => {
+        const newAmount = prev.slice(0, -1);
+        return newAmount === "" ? "0" : newAmount;
+    });
+  };
+  
+  const handleClear = () => setAmount("0");
+
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (parseFloat(amount) <= 0 || !selectedCategory) {
+        toast({
+            variant: "destructive",
+            title: "Missing Information",
+            description: "Please enter an amount and select a category.",
+        });
+        return;
+    }
+    toast({
+      title: "Expense Added",
+      description: `₹${amount} for ${selectedCategory} has been recorded.`,
+    });
+    setAmount("0");
+    setSelectedCategory(null);
+    setNotes("");
+    setDate(new Date());
+    setOpen(false); // Close the sheet/dialog
+  };
+
+  const formProps = {
+    amount,
+    selectedCategory,
+    setSelectedCategory,
+    date,
+    setDate,
+    notes,
+    setNotes,
+    handleKeyPress,
+    handleDelete,
+    handleClear,
+    handleSubmit,
+    onClose: () => setOpen(false)
+  };
+  
+  if (isMobile) {
+    return (
+        <Sheet open={open} onOpenChange={setOpen}>
+        {children}
+        <SheetContent side="bottom" className="rounded-t-2xl h-[90dvh] p-0 flex flex-col">
+            <SheetHeader className="p-6 pb-0 text-center">
+                <SheetTitle className="text-xl md:text-2xl">Add a New Expense</SheetTitle>
+            </SheetHeader>
+            <ExpenseForm {...formProps} />
+        </SheetContent>
+        </Sheet>
+    );
+  }
+  
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      {children}
+      <DialogContent className="max-w-md p-0">
+          <DialogHeader className="p-6 pb-0">
+             <DialogTitle>Add a New Expense</DialogTitle>
+          </DialogHeader>
+          <div className="max-h-[80vh] overflow-y-auto">
+            <ExpenseForm {...formProps} />
+          </div>
+      </DialogContent>
+    </Dialog>
+  )
 }

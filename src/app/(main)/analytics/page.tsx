@@ -25,7 +25,7 @@ export default function AnalyticsPage() {
           <QuickStatCard icon={TrendingUp} label="Trend" value="-15%" gradient="from-red-50 to-orange-50" iconBg="from-red-500 to-orange-600" className="text-green-600"/>
       </div>
       
-       <div className="grid gap-6 lg:grid-cols-2">
+       <div className="grid gap-6 md:grid-cols-2">
          <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
             <CategoryPieChart />
         </div>

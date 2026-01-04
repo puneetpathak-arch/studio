@@ -10,6 +10,9 @@ import { user, goals, tips } from "@/lib/data";
 import { QuickStatCard } from "@/components/dashboard/quick-stat-card";
 import { TrendingUp, Target, Sparkles, BarChart, Lightbulb } from "lucide-react";
 import { TipsCard } from "@/components/dashboard/tips-card";
+import { AddExpenseSheet } from "@/components/add-expense-sheet";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 
 export default function DashboardPage() {
     const [greeting, setGreeting] = useState('');
@@ -32,7 +35,7 @@ export default function DashboardPage() {
          <div className="absolute -right-20 -top-20 w-64 h-64 bg-yellow-400/20 rounded-full blur-3xl animate-pulse"></div>
          <div className="absolute -left-20 -bottom-20 w-64 h-64 bg-cyan-400/20 rounded-full blur-3xl animate-pulse-slow"></div>
          <div className="relative z-10">
-            <h1 className="text-4xl font-bold mb-2 drop-shadow-lg">
+            <h1 className="text-3xl md:text-4xl font-bold mb-2 drop-shadow-lg">
                 {greeting}, {user.name.split(' ')[0]}! 👋
             </h1>
             <p className="text-indigo-100 text-lg">Here's your financial overview for this month.</p>
@@ -45,20 +48,20 @@ export default function DashboardPage() {
           <QuickStatCard icon={Target} label="Active Goals" value={goals.length.toString()} gradient="from-green-50 to-emerald-50" iconBg="from-green-500 to-emerald-600" />
       </div>
       
-      <div className="grid gap-6 lg:grid-cols-5">
-        <div className="lg:col-span-3">
+      <div className="grid gap-6 md:grid-cols-5">
+        <div className="md:col-span-3">
             <BudgetSummaryCard />
         </div>
-        <div className="lg:col-span-2">
+        <div className="md:col-span-2">
             <GoalsCard />
         </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-5">
-         <div className="lg:col-span-3">
+      <div className="grid gap-6 md:grid-cols-5">
+         <div className="md:col-span-3">
             <RecentExpensesCard />
         </div>
-        <div className="lg:col-span-2">
+        <div className="md:col-span-2">
             <AiSavingsCard />
         </div>
       </div>
@@ -68,6 +71,13 @@ export default function DashboardPage() {
             <TipsCard />
         </div>
       </div>
+       <div className="lg:hidden fixed bottom-24 right-6 z-50">
+          <AddExpenseSheet>
+            <Button size="icon" className="h-14 w-14 rounded-full shadow-lg">
+              <Plus className="h-6 w-6" />
+            </Button>
+          </AddExpenseSheet>
+        </div>
     </div>
   );
 }

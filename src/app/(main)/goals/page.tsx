@@ -92,11 +92,16 @@ export default function GoalsPage() {
                 Track and manage your financial goals.
             </p>
         </div>
-        <AddGoalDialog onAddGoal={handleAddGoal} />
+        <AddGoalDialog onAddGoal={handleAddGoal}>
+             <Button>
+                <Plus className="mr-2 h-4 w-4" />
+                Add New Goal
+            </Button>
+        </AddGoalDialog>
       </div>
 
       {goals.length > 0 ? (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
           {goals.map((goal, index) => (
             <div key={goal.id} className="animate-fade-in-up" style={{ animationDelay: `${index * 50}ms` }}>
               <GoalCard goal={goal} onFundAdded={handleFundAdded} />
