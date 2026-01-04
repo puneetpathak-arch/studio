@@ -42,10 +42,10 @@ export function CategoryPieChart() {
         <CardTitle>Category-wise Spending</CardTitle>
         <CardDescription>Current month's spending distribution</CardDescription>
       </CardHeader>
-      <CardContent className="h-[250px] flex items-center">
+      <CardContent className="h-[250px] flex items-center justify-center">
         <ChartContainer
           config={chartConfig}
-          className="h-full w-1/2"
+          className="h-full w-full flex items-center"
         >
           <PieChart>
             <ChartTooltip
@@ -70,11 +70,11 @@ export function CategoryPieChart() {
                 ))}
             </Pie>
           </PieChart>
+          <ChartLegend
+              content={<ChartLegendContent nameKey="category" className="flex flex-col gap-2"/>}
+              className="w-1/2"
+          />
         </ChartContainer>
-         <ChartLegend
-            content={<ChartLegendContent nameKey="category" className="flex flex-col gap-2"/>}
-            className="w-1/2"
-        />
       </CardContent>
     </Card>
   )
