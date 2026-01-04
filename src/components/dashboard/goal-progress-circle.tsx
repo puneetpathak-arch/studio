@@ -15,7 +15,6 @@ export function GoalProgressCircle({
   percentage,
   savedAmount,
   targetAmount,
-  color,
 }: GoalProgressCircleProps) {
   const chartData = [{ value: percentage }, { value: 100 - percentage }];
 
@@ -37,7 +36,7 @@ export function GoalProgressCircle({
         >
           <cell
             key="value"
-            fill="hsl(var(--foreground))"
+            fill="hsl(var(--primary))"
             className="transition-all duration-500"
           />
           <cell
