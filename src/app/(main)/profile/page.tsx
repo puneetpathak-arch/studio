@@ -7,17 +7,15 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { User as UserIcon, Edit, Wallet, Bell, Palette, Moon, Sun, Laptop } from "lucide-react";
+import { User as UserIcon, Edit, Wallet, Bell } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { useState } from "react";
 import { Switch } from "@/components/ui/switch";
 import Link from "next/link";
-import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 
 export default function ProfilePage() {
     const [budget, setBudget] = useState(15000);
-    const { theme, setTheme } = useTheme();
 
   return (
     <div className="flex flex-col items-center gap-8">
@@ -97,24 +95,6 @@ export default function ProfilePage() {
                         <p className="text-xs md:text-sm text-muted-foreground">Receive alerts for budget limits and tips.</p>
                     </div>
                     <Switch defaultChecked aria-labelledby="notifications-label" />
-                </div>
-
-                <div className="flex items-center justify-between rounded-lg border p-3 md:p-4">
-                    <div>
-                        <h4 className="font-medium text-sm md:text-base" id="theme-label">Theme</h4>
-                        <p className="text-xs md:text-sm text-muted-foreground">Choose your preferred app appearance.</p>
-                    </div>
-                    <div className="flex items-center gap-1 sm:gap-2">
-                        <Button variant={theme === 'light' ? 'default' : 'outline'} size="icon" className="h-8 w-8 sm:h-9 sm:w-9" onClick={() => setTheme('light')}>
-                            <Sun className="h-4 w-4 sm:h-5 sm:w-5" />
-                        </Button>
-                         <Button variant={theme === 'dark' ? 'default' : 'outline'} size="icon" className="h-8 w-8 sm:h-9 sm:w-9" onClick={() => setTheme('dark')}>
-                            <Moon className="h-4 w-4 sm:h-5 sm:w-5" />
-                        </Button>
-                         <Button variant={theme === 'system' ? 'default' : 'outline'} size="icon" className="h-8 w-8 sm:h-9 sm:w-9" onClick={() => setTheme('system')}>
-                            <Laptop className="h-4 w-4 sm:h-5 sm:w-5" />
-                        </Button>
-                    </div>
                 </div>
             </div>
 
