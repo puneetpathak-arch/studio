@@ -64,7 +64,6 @@ const categories: {
 function NumberPad({
   onKeyPress,
   onDelete,
-  onClear,
 }: {
   onKeyPress: (key: string) => void;
   onDelete: () => void;
@@ -90,7 +89,6 @@ function NumberPad({
         variant="outline"
         className="h-14 md:h-16 text-xl md:text-2xl font-bold transition-transform active:scale-95 flex items-center justify-center"
         onClick={onDelete}
-        onLongPress={onClear}
         aria-label="Delete last digit"
       >
         <Delete className="w-7 h-7 md:w-8 md:h-8" />
@@ -246,31 +244,27 @@ export function AddExpenseSheet({ children, onExpenseAdded }: { children: React.
   const [open, setOpen] = useState(false);
   const isMobile = useIsMobile();
   
-  if (isMobile) {
-    return (
-        <Sheet open={open} onOpenChange={setOpen}>
-            <SheetTrigger asChild>{children}</SheetTrigger>
-            <SheetContent side="bottom" className="rounded-t-2xl h-[90dvh] p-0 flex flex-col">
-                <SheetHeader className="p-6 pb-0 text-center">
-                    <SheetTitle className="text-xl md:text-2xl">Add a New Expense</SheetTitle>
-                </SheetHeader>
-                <ExpenseForm setOpen={setOpen} onExpenseAdded={onExpenseAdded} />
-            </SheetContent>
-        </Sheet>
-    );
-  }
+  const Comp = isMobile ? Sheet : Dialog;
+  const CompContent = isMobile ? SheetContent : DialogContent;
   
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="max-w-md p-0">
-          <DialogHeader className="p-6 pb-0">
-             <DialogTitle>Add a New Expense</DialogTitle>
-          </DialogHeader>
-          <div className="max-h-[80vh] overflow-y-auto">
+    <Comp open={open} onOpenChange={setOpen}>
+      <SheetTrigger asChild>{children}</SheetTrigger>
+      <CompContent 
+        side="bottom" 
+        className={cn(
+            isMobile 
+            ? "rounded-t-2xl h-[90dvh] p-0 flex flex-col" 
+            : "max-w-md p-0"
+        )}
+      >
+        <DialogHeader className={cn(isMobile ? "p-6 pb-0 text-center" : "p-6 pb-0")}>
+            <DialogTitle className={cn(isMobile ? "text-xl md:text-2xl" : "")}>Add a New Expense</DialogTitle>
+        </DialogHeader>
+        <div className={cn(!isMobile && "max-h-[80vh] overflow-y-auto")}>
             <ExpenseForm setOpen={setOpen} onExpenseAdded={onExpenseAdded} />
-          </div>
-      </DialogContent>
-    </Dialog>
+        </div>
+      </CompContent>
+    </Comp>
   )
 }
