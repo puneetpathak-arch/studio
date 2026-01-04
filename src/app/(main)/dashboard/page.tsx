@@ -1,19 +1,39 @@
 
+'use client';
+
+import { useState, useEffect } from "react";
 import { BudgetSummaryCard } from "@/components/dashboard/budget-summary-card";
 import { GoalsCard } from "@/components/dashboard/goals-card";
 import { RecentExpensesCard } from "@/components/dashboard/recent-expenses-card";
 import { AiSavingsCard } from "@/components/dashboard/ai-savings-card";
 import { CategoryPieChart } from "@/components/analytics/category-pie-chart";
 import { SpendingBarChart } from "@/components/analytics/spending-bar-chart";
-import { user, goals, tips } from "@/lib/data";
+import { user, goals, tips, budget } from "@/lib/data";
 import { QuickStatCard } from "@/components/dashboard/quick-stat-card";
 import { BarChart, Target, Lightbulb } from "lucide-react";
 
 export default function DashboardPage() {
+    const [greeting, setGreeting] = useState('');
+    const [emoji, setEmoji] = useState('');
+
+    useEffect(() => {
+        const hour = new Date().getHours();
+        if (hour < 12) {
+            setGreeting('Good Morning');
+            setEmoji('☀️');
+        } else if (hour < 17) {
+            setGreeting('Good Afternoon');
+            setEmoji('👋');
+        } else {
+            setGreeting('Good Evening');
+            setEmoji('🌙');
+        }
+    }, []);
+
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-3xl font-bold font-headline">Welcome back, {user.name.split(' ')[0]}!</h1>
+        <h1 className="text-3xl font-bold font-headline">{greeting}, {user.name.split(' ')[0]}! {emoji}</h1>
         <p className="text-muted-foreground">Here's your financial overview for this month.</p>
       </div>
 

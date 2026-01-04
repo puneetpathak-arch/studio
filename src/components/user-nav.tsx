@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -12,14 +13,19 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { user } from "@/lib/data";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 
-export function UserNav() {
+interface UserNavProps {
+    onBudget: boolean;
+}
+
+export function UserNav({ onBudget }: UserNavProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-          <Avatar className="h-9 w-9">
+          <Avatar className={cn("h-9 w-9", onBudget && "ring-2 ring-green-500 ring-offset-2 ring-offset-background")}>
             <AvatarImage src={user.avatarUrl} alt={`@${user.name}`} />
             <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
           </Avatar>
