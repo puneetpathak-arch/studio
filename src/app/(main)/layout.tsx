@@ -77,18 +77,6 @@ export default function MainLayout({
             {children}
         </main>
       </div>
-
-       {!isMobile && (
-        <div className="fixed bottom-8 right-8 z-50">
-          <AddExpenseSheet>
-            <Button size="lg" className="h-16 w-16 rounded-full shadow-2xl bg-gradient-to-br from-primary to-accent hover:scale-110 transition-transform">
-              <Plus className="h-7 w-7" />
-               <span className="sr-only">Add Expense</span>
-            </Button>
-          </AddExpenseSheet>
-        </div>
-      )}
-
     </div>
   );
 }
