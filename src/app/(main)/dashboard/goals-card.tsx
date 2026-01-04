@@ -71,7 +71,7 @@ export function GoalsCard() {
             opts={{
               align: 'start',
             }}
-            className="w-full"
+            className="w-full px-12"
           >
             <CarouselContent>
               {goals.map((goal) => (
