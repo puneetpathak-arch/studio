@@ -75,11 +75,9 @@ export function LoginSignupDialog({ children }: { children: React.ReactNode }) {
       const userCredential = await createUserWithEmailAndPassword(auth, signupEmail, signupPassword);
       const user = userCredential.user;
       
-      // Update profile with name
-      await updateProfile(user, { displayName: signupName });
-
-      // Create user document in Firestore
-      await createUserDocument(user.uid, {
+      // Don't await these promises. Let them run in the background.
+      updateProfile(user, { displayName: signupName });
+      createUserDocument(user.uid, {
         email: user.email,
         displayName: signupName,
       });
@@ -159,7 +157,7 @@ export function LoginSignupDialog({ children }: { children: React.ReactNode }) {
                     <div className="space-y-2">
                         <Label htmlFor="email-signup">Email</Label>
                         <div className="relative">
-                            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                            <Mail className="absolute left-3 top-1/2 -translate-y-1-2 h-5 w-5 text-muted-foreground" />
                             <Input id="email-signup" type="email" placeholder="student@example.com" className="pl-10" value={signupEmail} onChange={e => setSignupEmail(e.target.value)} required />
                         </div>
                     </div>

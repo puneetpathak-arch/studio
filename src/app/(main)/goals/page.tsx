@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   Card,
   CardContent,
@@ -13,21 +13,27 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import type { Goal } from '@/lib/types';
 import { Target, Plus } from 'lucide-react';
-import { AddGoalDialog } from '@/components/goals/add-goal-dialog';
+import { AddGoalDialog, goalIcons } from '@/components/goals/add-goal-dialog';
 import { AddFundsDialog } from '@/components/goals/add-funds-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { useUser } from '@/firebase';
 import { getGoals, addGoal, addFundsToGoal } from '@/services/firestore';
 import { Skeleton } from '@/components/ui/skeleton';
+import type { LucideIcon } from 'lucide-react';
 
 function GoalCard({ goal, onFundAdded }: { goal: Goal; onFundAdded: (goalId: string, amount: number) => void; }) {
   const percentage = Math.min(100, Math.round((goal.savedAmount / goal.targetAmount) * 100));
+
+  const IconComponent = useMemo(() => {
+    const iconData = goalIcons.find(i => i.name === (goal.icon as unknown as string));
+    return iconData ? iconData.icon : Target;
+  }, [goal.icon]);
 
   return (
     <Card className="flex flex-col transition-all hover:shadow-lg">
       <CardHeader>
         <CardTitle className="flex items-center gap-3">
-          <goal.icon className="w-7 h-7 text-primary" />
+          <IconComponent className="w-7 h-7 text-primary" />
           <span>{goal.name}</span>
         </CardTitle>
         <CardDescription>
@@ -75,7 +81,7 @@ export default function GoalsPage() {
     }
   }, [user]);
 
-  const handleAddGoal = async (newGoalData: Omit<Goal, 'id' | 'savedAmount' | 'color'>) => {
+  const handleAddGoal = async (newGoalData: Omit<Goal, 'id' | 'savedAmount' | 'color' | 'icon'> & { icon: string; }) => {
     if (!user) return;
 
     const newId = await addGoal(user.uid, newGoalData);
@@ -84,6 +90,7 @@ export default function GoalsPage() {
       id: newId,
       savedAmount: 0,
       color: `chart-${(goals.length % 5) + 1}` as Goal['color'],
+      icon: goalIcons.find(i => i.name === newGoalData.icon)?.icon || Target,
     };
     setGoals(prevGoals => [...prevGoals, newGoal]);
     toast({

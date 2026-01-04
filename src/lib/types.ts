@@ -1,3 +1,5 @@
+import type { LucideIcon } from "lucide-react";
+
 export type User = {
   name: string;
   college: string;
@@ -36,7 +38,7 @@ export type Goal = {
   targetAmount: number;
   savedAmount: number;
   deadline: string; // ISO string
-  icon: React.ElementType;
+  icon: LucideIcon | string;
   color: 'chart-1' | 'chart-2' | 'chart-3' | 'chart-4' | 'chart-5';
 };
 

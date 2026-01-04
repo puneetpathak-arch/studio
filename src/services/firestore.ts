@@ -23,12 +23,14 @@ export const createUserDocument = async (userId: string, data: UserProfile) => {
   const userRef = doc(firestore, 'users', userId);
   const budgetRef = doc(firestore, `users/${userId}/data/budget`);
   
-  await setDoc(userRef, {
-    ...data,
-    createdAt: serverTimestamp(),
-  });
-
-  await setDoc(budgetRef, initialBudget);
+  // These can run in parallel
+  await Promise.all([
+    setDoc(userRef, {
+      ...data,
+      createdAt: serverTimestamp(),
+    }),
+    setDoc(budgetRef, initialBudget)
+  ]);
 };
 
 export const updateUserProfile = async (userId: string, data: Partial<UserProfile>) => {
@@ -87,7 +89,7 @@ export const getGoals = async (userId: string): Promise<Goal[]> => {
   return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Goal));
 };
 
-export const addGoal = async (userId: string, goalData: Omit<Goal, 'id' | 'savedAmount'>) => {
+export const addGoal = async (userId: string, goalData: Omit<Goal, 'id' | 'savedAmount' | 'icon'> & { icon: string }) => {
     const goalsColRef = collection(firestore, `users/${userId}/goals`);
     const goalPayload = {
         ...goalData,

@@ -28,18 +28,18 @@ import { useToast } from '@/hooks/use-toast';
 import type { Goal } from '@/lib/types';
 import type { LucideIcon } from 'lucide-react';
 
-const goalIcons: { name: string; icon: LucideIcon }[] = [
+export const goalIcons: { name: string; icon: LucideIcon }[] = [
   { name: 'Laptop', icon: Laptop },
   { name: 'Car', icon: Car },
   { name: 'Gift', icon: Gift },
   { name: 'Headphones', icon: Headphones },
   { name: 'Plane', icon: Plane },
-  { name: 'Savings', icon: PiggyBank },
-  { name: 'Education', icon: BookOpen },
+  { name: 'PiggyBank', icon: PiggyBank },
+  { name: 'BookOpen', icon: BookOpen },
 ];
 
 interface AddGoalDialogProps {
-    onAddGoal: (newGoal: Omit<Goal, 'id' | 'savedAmount' | 'color'>) => void;
+    onAddGoal: (newGoal: Omit<Goal, 'id' | 'savedAmount' | 'color' | 'icon'> & { icon: string; }) => void;
     children?: React.ReactNode;
     open?: boolean;
     onOpenChange?: (open: boolean) => void;
@@ -51,7 +51,7 @@ export function AddGoalDialog({ onAddGoal, children, open: controlledOpen, onOpe
   const [goalName, setGoalName] = useState('');
   const [targetAmount, setTargetAmount] = useState('');
   const [deadline, setDeadline] = useState<Date>();
-  const [selectedIcon, setSelectedIcon] = useState<LucideIcon>(() => Laptop);
+  const [selectedIconName, setSelectedIconName] = useState('Laptop');
   const { toast } = useToast();
 
   const open = controlledOpen ?? internalOpen;
@@ -62,7 +62,8 @@ export function AddGoalDialog({ onAddGoal, children, open: controlledOpen, onOpe
         setGoalName(initialData.name || '');
         setTargetAmount(initialData.targetAmount?.toString() || '');
         setDeadline(initialData.deadline ? new Date(initialData.deadline) : undefined);
-        setSelectedIcon(initialData.icon || (() => Laptop));
+        const iconName = goalIcons.find(i => i.icon === initialData.icon)?.name || 'Laptop';
+        setSelectedIconName(iconName);
     }
   }, [open, initialData]);
 
@@ -82,14 +83,14 @@ export function AddGoalDialog({ onAddGoal, children, open: controlledOpen, onOpe
       name: goalName,
       targetAmount: parseFloat(targetAmount),
       deadline: deadline.toISOString(),
-      icon: selectedIcon,
+      icon: selectedIconName,
     });
 
     // Reset form and close dialog
     setGoalName('');
     setTargetAmount('');
     setDeadline(undefined);
-    setSelectedIcon(() => Laptop);
+    setSelectedIconName('Laptop');
     setOpen(false);
   };
   
@@ -166,14 +167,14 @@ export function AddGoalDialog({ onAddGoal, children, open: controlledOpen, onOpe
                 </Label>
                 <div className="col-span-3 flex flex-wrap gap-2">
                     {goalIcons.map(({name, icon: Icon}) => {
-                        const isSelected = selectedIcon === Icon;
+                        const isSelected = selectedIconName === name;
                         return (
                              <Button
                                 key={name}
                                 type="button"
                                 variant={isSelected ? 'default' : 'outline'}
                                 size="icon"
-                                onClick={() => setSelectedIcon(() => Icon)}
+                                onClick={() => setSelectedIconName(name)}
                                 aria-label={name}
                                 className="h-12 w-12"
                             >
