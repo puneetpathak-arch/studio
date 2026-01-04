@@ -25,7 +25,7 @@ function GoalCard({ goal, onFundAdded }: { goal: Goal; onFundAdded: (goalId: str
   const percentage = Math.min(100, Math.round((goal.savedAmount / goal.targetAmount) * 100));
 
   const IconComponent = useMemo(() => {
-    const iconData = goalIcons.find(i => i.name === (goal.icon as unknown as string));
+    const iconData = goalIcons.find(i => i.name === goal.icon);
     return iconData ? iconData.icon : Target;
   }, [goal.icon]);
 
@@ -84,13 +84,19 @@ export default function GoalsPage() {
   const handleAddGoal = async (newGoalData: Omit<Goal, 'id' | 'savedAmount' | 'color' | 'icon'> & { icon: string; }) => {
     if (!user) return;
 
-    const newId = await addGoal(user.uid, newGoalData);
+    const goalToAdd = {
+        name: newGoalData.name,
+        targetAmount: newGoalData.targetAmount,
+        deadline: newGoalData.deadline,
+        icon: newGoalData.icon,
+    };
+
+    const newId = await addGoal(user.uid, goalToAdd);
     const newGoal: Goal = {
-      ...newGoalData,
+      ...goalToAdd,
       id: newId,
       savedAmount: 0,
       color: `chart-${(goals.length % 5) + 1}` as Goal['color'],
-      icon: goalIcons.find(i => i.name === newGoalData.icon)?.icon || Target,
     };
     setGoals(prevGoals => [...prevGoals, newGoal]);
     toast({

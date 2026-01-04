@@ -8,7 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { goals as initialGoals } from '@/lib/data';
 import { ArrowRight, Target } from 'lucide-react';
 import Link from 'next/link';
 import {
@@ -22,17 +21,27 @@ import type { Goal } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { AddFundsDialog } from '@/components/goals/add-funds-dialog';
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import { useUser } from '@/firebase';
+import { getGoals, addFundsToGoal } from '@/services/firestore';
+import { goalIcons } from '@/components/goals/add-goal-dialog';
+import { Skeleton } from '@/components/ui/skeleton';
 
 function GoalCard({ goal, onFundAdded }: { goal: Goal, onFundAdded: (goalId: string, amount: number) => void }) {
   const percentage = Math.round((goal.savedAmount / goal.targetAmount) * 100);
+  
+  const IconComponent = useMemo(() => {
+    const iconData = goalIcons.find(i => i.name === goal.icon);
+    return iconData ? iconData.icon : Target;
+  }, [goal.icon]);
+
   return (
     <Card
       className="flex flex-col h-full border-border"
     >
       <CardHeader className="pb-4 h-24 flex justify-center">
         <CardTitle className="flex items-center gap-2 text-lg">
-          <goal.icon
+          <IconComponent
             className="w-6 h-6 text-primary shrink-0"
           />
           <span className="font-bold">{goal.name}</span>
@@ -56,9 +65,28 @@ function GoalCard({ goal, onFundAdded }: { goal: Goal, onFundAdded: (goalId: str
 }
 
 export function GoalsCard() {
-  const [goals, setGoals] = useState(initialGoals);
+  const { user } = useUser();
+  const [goals, setGoals] = useState<Goal[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleFundAdded = (goalId: string, amount: number) => {
+  useEffect(() => {
+    if (user) {
+      const fetchGoals = async () => {
+        setLoading(true);
+        const userGoals = await getGoals(user.uid);
+        setGoals(userGoals);
+        setLoading(false);
+      };
+      fetchGoals();
+    } else {
+      setLoading(false);
+    }
+  }, [user]);
+
+
+  const handleFundAdded = async (goalId: string, amount: number) => {
+    if (!user) return;
+    await addFundsToGoal(user.uid, goalId, amount);
     setGoals(prevGoals =>
       prevGoals.map(g =>
         g.id === goalId ? { ...g, savedAmount: g.savedAmount + amount } : g
@@ -82,7 +110,8 @@ export function GoalsCard() {
         </CardDescription>
       </CardHeader>
       <CardContent className="flex-grow flex items-center px-10 md:px-6">
-        {goals.length > 0 ? (
+        {loading ? <Skeleton className="h-[200px] w-full" /> 
+        : goals.length > 0 ? (
           <Carousel
             opts={{
               align: 'start',
