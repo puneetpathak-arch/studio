@@ -18,7 +18,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
-import { GoalProgressCircle } from './goal-progress-circle';
+import { GoalProgressCircle } from '@/components/dashboard/goal-progress-circle';
 import type { Goal } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 
