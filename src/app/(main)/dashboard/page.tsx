@@ -48,7 +48,7 @@ export default function DashboardPage() {
             spent: totalSpent,
             categoryBudgets: updatedCategoryBudgets
         }));
-    }, [expenses, budget.categoryBudgets]);
+    }, [expenses]);
 
 
     const handleAddExpense = (newExpense: Omit<Expense, 'id' | 'date'>) => {
