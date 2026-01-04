@@ -4,7 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { ArrowUpRight, GraduationCap } from "lucide-react";
+import { ArrowUpRight, GraduationCap, Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 export default function ScholarshipsPage() {
   return (
@@ -12,17 +13,23 @@ export default function ScholarshipsPage() {
       <div>
         <h1 className="text-3xl font-bold font-headline flex items-center gap-2">
             <GraduationCap className="w-8 h-8"/>
-            Scholarships & Schemes
+            Scholarships & Opportunities 🎓
         </h1>
         <p className="text-muted-foreground">
-          Find financial aid opportunities to support your education.
+          Find financial aid for your education.
         </p>
       </div>
 
       <Card>
         <CardHeader>
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-             <CardTitle>Filter Opportunities</CardTitle>
+             <div className="relative w-full md:w-1/3">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                <Input 
+                    placeholder="Search scholarships..." 
+                    className="pl-10 focus:w-full transition-all duration-300"
+                />
+             </div>
             <div className="grid grid-cols-2 md:flex gap-4">
               <Select>
                 <SelectTrigger>
