@@ -19,10 +19,10 @@ export default function AnalyticsPage() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-          <QuickStatCard icon={IndianRupee} label="Avg. Daily Spend" value="₹690" />
-          <QuickStatCard icon={PieChart} label="Most Spent On" value="Mess" />
-          <QuickStatCard icon={CalendarDays} label="Highest Day" value="July 1st" />
-          <QuickStatCard icon={TrendingUp} label="Trend" value="-15%" className="text-green-600"/>
+          <QuickStatCard icon={IndianRupee} label="Avg. Daily Spend" value="₹690" gradient="from-indigo-50 to-purple-50" iconBg="from-indigo-500 via-purple-500 to-pink-500" />
+          <QuickStatCard icon={PieChart} label="Most Spent On" value="Mess" gradient="from-pink-50 to-orange-50" iconBg="from-pink-500 via-rose-500 to-orange-500" />
+          <QuickStatCard icon={CalendarDays} label="Highest Day" value="July 1st" gradient="from-green-50 to-emerald-50" iconBg="from-green-500 to-emerald-600" />
+          <QuickStatCard icon={TrendingUp} label="Trend" value="-15%" gradient="from-red-50 to-orange-50" iconBg="from-red-500 to-orange-600" className="text-green-600"/>
       </div>
       
        <div className="grid gap-6 lg:grid-cols-2">
