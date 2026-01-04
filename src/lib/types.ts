@@ -30,6 +30,8 @@ export type Goal = {
   targetAmount: number;
   savedAmount: number;
   deadline: string;
+  icon: React.ElementType;
+  color: 'chart-1' | 'chart-2' | 'chart-3' | 'chart-4' | 'chart-5';
 };
 
 export type Scholarship = {
@@ -47,7 +49,7 @@ export type Scholarship = {
 };
 
 export type Tip = {
-  id: string;
+  id:string;
   text: string;
   icon: React.ElementType;
 };

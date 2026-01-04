@@ -1,5 +1,5 @@
 import type { User, Expense, Budget, Goal, Scholarship, Tip } from './types';
-import { Bus, PiggyBank, IndianRupee } from 'lucide-react';
+import { Bus, PiggyBank, IndianRupee, Headphones, Plane } from 'lucide-react';
 
 export const user: User = {
   name: 'Rohan Sharma',
@@ -31,8 +31,8 @@ export const budget: Budget = {
 };
 
 export const goals: Goal[] = [
-    { id: 'g1', name: 'New Noise-Cancelling Headphones', targetAmount: 8000, savedAmount: 2500, deadline: '2024-10-31' },
-    { id: 'g2', name: 'Goa Trip with Friends', targetAmount: 12000, savedAmount: 3000, deadline: '2024-12-15' },
+    { id: 'g1', name: 'New Headphones', targetAmount: 8000, savedAmount: 2500, deadline: '2024-10-31', icon: Headphones, color: 'chart-1' },
+    { id: 'g2', name: 'Goa Trip', targetAmount: 12000, savedAmount: 3000, deadline: '2024-12-15', icon: Plane, color: 'chart-2' },
 ];
 
 export const tips: Tip[] = [

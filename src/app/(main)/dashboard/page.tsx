@@ -17,13 +17,16 @@ export default function DashboardPage() {
       
       <div className="grid gap-6 lg:grid-cols-3">
         <BudgetSummaryCard />
-        <GoalsCard />
+        <div className="lg:col-span-2">
+          <GoalsCard />
+        </div>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
         <RecentExpensesCard />
-        <TipsCard />
-        <AiSavingsCard />
+        <div className="lg:col-span-2">
+            <AiSavingsCard />
+        </div>
       </div>
       
        <div className="grid gap-6 lg:grid-cols-2">
