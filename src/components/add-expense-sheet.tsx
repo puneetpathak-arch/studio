@@ -42,15 +42,9 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
+import type { Expense } from "@/lib/types";
 
-type Category =
-  | "Food"
-  | "Transport"
-  | "Education"
-  | "Entertainment"
-  | "Healthcare"
-  | "Shopping"
-  | "Other";
+type Category = Expense['category'];
 
 const categories: {
   name: Category;
@@ -107,13 +101,15 @@ function NumberPad({
 
 function ExpenseForm({
     setOpen,
+    onExpenseAdded,
  } : {
     setOpen: (open: boolean) => void;
+    onExpenseAdded: (expense: Omit<Expense, 'id' | 'date'>) => void;
 }) {
     const [amount, setAmount] = useState("0");
     const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
     const [date, setDate] = useState<Date | undefined>(new Date());
-    const [notes, setNotes] = useState("");
+    const [description, setDescription] = useState("");
     const { toast } = useToast();
 
     const handleKeyPress = (key: string) => {
@@ -137,21 +133,29 @@ function ExpenseForm({
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
-        if (parseFloat(amount) <= 0 || !selectedCategory) {
+        if (parseFloat(amount) <= 0 || !selectedCategory || !description) {
             toast({
                 variant: "destructive",
                 title: "Missing Information",
-                description: "Please enter an amount and select a category.",
+                description: "Please enter an amount, description, and select a category.",
             });
             return;
         }
+
+        onExpenseAdded({
+            description,
+            amount: parseFloat(amount),
+            category: selectedCategory,
+        });
+
         toast({
         title: "Expense Added",
         description: `₹${amount} for ${selectedCategory} has been recorded.`,
         });
+
         setAmount("0");
         setSelectedCategory(null);
-        setNotes("");
+        setDescription("");
         setDate(new Date());
         setOpen(false); // Close the sheet/dialog
     };
@@ -198,8 +202,8 @@ function ExpenseForm({
                {/* Optional Fields */}
               <div className="space-y-4 my-6 max-w-xs mx-auto">
                  <div className="grid w-full items-center gap-1.5">
-                    <Label htmlFor="description" className="text-sm">Note (Optional)</Label>
-                    <Textarea id="description" placeholder="What was this for?" value={notes} onChange={(e) => setNotes(e.target.value)} />
+                    <Label htmlFor="description" className="text-sm">Description</Label>
+                    <Textarea id="description" placeholder="What was this for?" value={description} onChange={(e) => setDescription(e.target.value)} required/>
                 </div>
                 <div className="grid w-full items-center gap-1.5">
                   <Label htmlFor="date-popover-trigger" className="text-sm">Date</Label>
@@ -238,7 +242,7 @@ function ExpenseForm({
     )
 }
 
-export function AddExpenseSheet({ children }: { children: React.ReactNode }) {
+export function AddExpenseSheet({ children, onExpenseAdded }: { children: React.ReactNode; onExpenseAdded: (expense: Omit<Expense, 'id' | 'date'>) => void; }) {
   const [open, setOpen] = useState(false);
   const isMobile = useIsMobile();
   
@@ -250,7 +254,7 @@ export function AddExpenseSheet({ children }: { children: React.ReactNode }) {
                 <SheetHeader className="p-6 pb-0 text-center">
                     <SheetTitle className="text-xl md:text-2xl">Add a New Expense</SheetTitle>
                 </SheetHeader>
-                <ExpenseForm setOpen={setOpen} />
+                <ExpenseForm setOpen={setOpen} onExpenseAdded={onExpenseAdded} />
             </SheetContent>
         </Sheet>
     );
@@ -264,7 +268,7 @@ export function AddExpenseSheet({ children }: { children: React.ReactNode }) {
              <DialogTitle>Add a New Expense</DialogTitle>
           </DialogHeader>
           <div className="max-h-[80vh] overflow-y-auto">
-            <ExpenseForm setOpen={setOpen} />
+            <ExpenseForm setOpen={setOpen} onExpenseAdded={onExpenseAdded} />
           </div>
       </DialogContent>
     </Dialog>

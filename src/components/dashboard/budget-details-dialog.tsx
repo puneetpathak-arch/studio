@@ -19,9 +19,8 @@ import {
 } from '@/components/ui/table';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
-import { budget } from '@/lib/data';
 import { cn } from '@/lib/utils';
-import type { CategoryBudget } from '@/lib/types';
+import type { CategoryBudget, Budget } from '@/lib/types';
 
 function getProgressColor(percentage: number): string {
   if (percentage > 90) return 'bg-destructive';
@@ -64,7 +63,7 @@ function CategoryRow({ categoryBudget }: { categoryBudget: CategoryBudget }) {
   );
 }
 
-export function BudgetDetailsDialog() {
+export function BudgetDetailsDialog({ budget }: { budget: Budget }) {
   return (
     <Dialog>
       <DialogTrigger asChild>

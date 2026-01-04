@@ -6,16 +6,19 @@ import { BudgetSummaryCard } from "@/components/dashboard/budget-summary-card";
 import { GoalsCard } from "@/app/(main)/dashboard/goals-card";
 import { RecentExpensesCard } from "@/components/dashboard/recent-expenses-card";
 import { AiSavingsCard } from "@/components/dashboard/ai-savings-card";
-import { user, goals, tips } from "@/lib/data";
+import { user, goals, tips, expenses as initialExpenses, budget as initialBudget } from "@/lib/data";
 import { QuickStatCard } from "@/components/dashboard/quick-stat-card";
-import { TrendingUp, Target, Sparkles, BarChart, Lightbulb } from "lucide-react";
+import { TrendingUp, Target, Sparkles } from "lucide-react";
 import { TipsCard } from "@/components/dashboard/tips-card";
 import { AddExpenseSheet } from "@/components/add-expense-sheet";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+import type { Expense, Budget } from "@/lib/types";
 
 export default function DashboardPage() {
     const [greeting, setGreeting] = useState('');
+    const [expenses, setExpenses] = useState<Expense[]>(initialExpenses);
+    const [budget, setBudget] = useState<Budget>(initialBudget);
 
     useEffect(() => {
         const hour = new Date().getHours();
@@ -27,6 +30,32 @@ export default function DashboardPage() {
             setGreeting('Good Evening');
         }
     }, []);
+
+    useEffect(() => {
+        const totalSpent = expenses.reduce((acc, exp) => acc + exp.amount, 0);
+        const updatedCategoryBudgets = budget.categoryBudgets.map(cb => {
+            const spent = expenses
+                .filter(exp => exp.category === cb.category)
+                .reduce((acc, exp) => acc + exp.amount, 0);
+            return { ...cb, spent };
+        });
+
+        setBudget(prevBudget => ({
+            ...prevBudget,
+            spent: totalSpent,
+            categoryBudgets: updatedCategoryBudgets
+        }));
+    }, [expenses, budget.categoryBudgets]);
+
+
+    const handleAddExpense = (newExpense: Omit<Expense, 'id' | 'date'>) => {
+        const expenseToAdd: Expense = {
+            ...newExpense,
+            id: `exp-${Date.now()}`,
+            date: new Date().toISOString(),
+        };
+        setExpenses(prevExpenses => [expenseToAdd, ...prevExpenses]);
+    };
 
   return (
     <div className="flex flex-col gap-6">
@@ -43,14 +72,14 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <QuickStatCard icon={TrendingUp} label="This Week" value="₹1,860" gradient="from-indigo-50 to-purple-50" iconBg="from-indigo-500 via-purple-500 to-pink-500" />
-          <QuickStatCard icon={Sparkles} label="New Tips" value={tips.length.toString()} gradient="from-pink-50 to-orange-50" iconBg="from-pink-500 via-rose-500 to-orange-500" />
-          <QuickStatCard icon={Target} label="Active Goals" value={goals.length.toString()} gradient="from-green-50 to-emerald-50" iconBg="from-green-500 to-emerald-600" />
+          <QuickStatCard icon={TrendingUp} label="This Week" value="₹1,860" className="text-indigo-600" />
+          <QuickStatCard icon={Sparkles} label="New Tips" value={tips.length.toString()} className="text-pink-600" />
+          <QuickStatCard icon={Target} label="Active Goals" value={goals.length.toString()} className="text-green-600"/>
       </div>
       
       <div className="grid gap-6 md:grid-cols-5">
         <div className="md:col-span-3">
-            <BudgetSummaryCard />
+            <BudgetSummaryCard budget={budget} />
         </div>
         <div className="md:col-span-2">
             <GoalsCard />
@@ -59,7 +88,7 @@ export default function DashboardPage() {
 
       <div className="grid gap-6 md:grid-cols-5">
          <div className="md:col-span-3">
-            <RecentExpensesCard />
+            <RecentExpensesCard expenses={expenses} />
         </div>
         <div className="md:col-span-2">
             <AiSavingsCard />
@@ -72,7 +101,7 @@ export default function DashboardPage() {
         </div>
       </div>
        <div className="lg:hidden fixed bottom-24 right-6 z-50">
-          <AddExpenseSheet>
+          <AddExpenseSheet onExpenseAdded={handleAddExpense}>
             <Button size="icon" className="h-14 w-14 rounded-full shadow-lg">
               <Plus className="h-6 w-6" />
             </Button>

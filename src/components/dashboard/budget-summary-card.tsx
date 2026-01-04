@@ -5,15 +5,15 @@ import {
   Card,
   CardContent,
 } from '@/components/ui/card';
-import { budget } from '@/lib/data';
 import { BudgetDetailsDialog } from './budget-details-dialog';
+import type { Budget } from '@/lib/types';
 
-export function BudgetSummaryCard() {
-  const percentage = Math.round((budget.spent / budget.total) * 100);
+export function BudgetSummaryCard({ budget }: { budget: Budget }) {
+  const percentage = budget.total > 0 ? Math.round((budget.spent / budget.total) * 100) : 0;
   const remaining = budget.total - budget.spent;
 
   return (
-    <Card className="bg-white/90 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border-2 border-purple-200/50 relative overflow-hidden h-full">
+    <Card className="bg-card/60 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border-2 border-purple-200/50 relative overflow-hidden h-full">
         <div className="absolute inset-0 bg-gradient-to-br from-violet-50 via-purple-50 to-pink-50 opacity-40"></div>
         <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-br from-pink-300/20 to-orange-300/20 rounded-full blur-3xl"></div>
         
@@ -52,13 +52,13 @@ export function BudgetSummaryCard() {
             </div>
 
             <div className="w-full bg-gradient-to-r from-gray-200 via-purple-100 to-pink-100 rounded-full h-5 mb-8 overflow-hidden shadow-inner">
-                <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 h-5 rounded-full shadow-lg transition-all duration-1000 relative overflow-hidden" style={{ width: `${percentage}%` }}>
+                <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 h-5 rounded-full shadow-lg transition-all duration-1000 relative overflow-hidden" style={{ width: `${Math.min(percentage, 100)}%` }}>
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer"></div>
                 </div>
             </div>
 
             <div className="mt-auto">
-                <BudgetDetailsDialog />
+                <BudgetDetailsDialog budget={budget} />
             </div>
         </div>
     </Card>

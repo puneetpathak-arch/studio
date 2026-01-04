@@ -1,6 +1,6 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { expenses } from "@/lib/data";
+import type { Expense } from "@/lib/types";
 import { Badge } from "../ui/badge";
 import { ScrollArea } from "../ui/scroll-area";
 import { Button } from "../ui/button";
@@ -25,9 +25,9 @@ const categoryColors: { [key: string]: string } = {
     'Others': 'bg-gray-100 text-gray-800 border-gray-200',
 };
 
-export function RecentExpensesCard() {
+export function RecentExpensesCard({ expenses }: { expenses: Expense[] }) {
   return (
-    <Card>
+    <Card className="bg-card/60 backdrop-blur-xl">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
