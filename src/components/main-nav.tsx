@@ -4,15 +4,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BarChartHorizontal, GraduationCap, LayoutDashboard, User, Sparkles, Target } from "lucide-react";
-
 import { cn } from "@/lib/utils";
-import {
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-} from "@/components/ui/sidebar";
 
-const navItems = [
+export const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
   { href: "/analytics", icon: BarChartHorizontal, label: "Analytics" },
   { href: "/savings", icon: Sparkles, label: "AI Savings" },
@@ -21,26 +15,30 @@ const navItems = [
   { href: "/profile", icon: User, label: "Profile" },
 ];
 
-export function MainNav() {
+export function MainNav({ onNavItemClick }: { onNavItemClick?: () => void }) {
   const pathname = usePathname();
 
   return (
-    <SidebarMenu>
-      {navItems.map((item) => (
-        <SidebarMenuItem key={item.href}>
-          <Link href={item.href}>
-            <SidebarMenuButton
-              isActive={pathname.startsWith(item.href)}
-              tooltip={item.label}
-              className="group-data-[collapsible=icon]:justify-center"
-              size="default"
+    <>
+      {navItems.map((item) => {
+        const isActive = pathname.startsWith(item.href);
+        return (
+          <Link href={item.href} key={item.href} legacyBehavior>
+            <a
+              onClick={onNavItemClick}
+              className={cn(
+                'w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300',
+                isActive
+                  ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/50'
+                  : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+              )}
             >
-              <item.icon className={cn("text-primary h-5 w-5", pathname.startsWith(item.href) && "text-primary-foreground")}/>
-              <span className={cn(pathname.startsWith(item.href) && "text-primary-foreground")}>{item.label}</span>
-            </SidebarMenuButton>
+              <item.icon size={20} />
+              <span className="font-medium">{item.label}</span>
+            </a>
           </Link>
-        </SidebarMenuItem>
-      ))}
-    </SidebarMenu>
+        );
+      })}
+    </>
   );
 }
