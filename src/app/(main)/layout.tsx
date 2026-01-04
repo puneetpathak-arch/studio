@@ -30,7 +30,7 @@ export default function MainLayout({
       <Sidebar className="hidden md:flex">
         <SidebarHeader>
           <div className="flex items-center gap-2">
-            <PiggyBank className="w-8 h-8 text-primary" />
+            <PiggyBank className="w-8 h-8 text-sidebar-primary" />
             <h1 className="text-xl font-bold font-headline">EduFinance</h1>
           </div>
         </SidebarHeader>
@@ -38,7 +38,7 @@ export default function MainLayout({
           <MainNav />
         </SidebarContent>
         <SidebarFooter>
-          <Button variant="outline" asChild>
+          <Button variant="ghost" asChild>
              <Link href="/">Log out</Link>
           </Button>
         </SidebarFooter>

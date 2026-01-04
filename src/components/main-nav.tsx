@@ -31,9 +31,10 @@ export function MainNav() {
             <SidebarMenuButton
               isActive={pathname === item.href}
               tooltip={item.label}
+              className="group-data-[collapsible=icon]:justify-center"
             >
-              <item.icon />
-              <span>{item.label}</span>
+              <item.icon className={cn("text-sidebar-primary", pathname === item.href && "text-sidebar-primary-foreground")}/>
+              <span className={cn(pathname === item.href && "text-sidebar-primary-foreground")}>{item.label}</span>
             </SidebarMenuButton>
           </Link>
         </SidebarMenuItem>
