@@ -21,7 +21,7 @@ export function BudgetProgressCircle({ percentage }: BudgetProgressCircleProps) 
           color: color,
         }
       }}
-      className="mx-auto aspect-square h-[150px] w-[150px] relative"
+      className="mx-auto aspect-square h-full w-full max-w-[150px] relative"
     >
       <RadialBarChart
         data={chartData}
@@ -40,7 +40,7 @@ export function BudgetProgressCircle({ percentage }: BudgetProgressCircleProps) 
           animationDuration={1500}
         />
       </RadialBarChart>
-       <div className="absolute inset-0 flex flex-col items-center justify-center">
+       <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
             <span className="text-3xl font-bold" style={{ color: 'hsl(var(--chart-1))' }}>{percentage}%</span>
             <span className="text-sm text-muted-foreground">Spent</span>
         </div>
