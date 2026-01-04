@@ -43,12 +43,12 @@ function NotificationsDropdown() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-9 w-9 rounded-full">
+                <Button variant="ghost" className="relative h-9 w-9 rounded-full" aria-label={`View notifications (${unreadCount} unread)`}>
                     <Bell className="h-5 w-5" />
                     {unreadCount > 0 && (
                         <span className="absolute top-1 right-1 flex h-3 w-3">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                            <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500" aria-hidden="true"></span>
                         </span>
                     )}
                 </Button>
@@ -69,7 +69,7 @@ function NotificationsDropdown() {
                             const Icon = iconMap[notification.type];
                             return (
                                 <DropdownMenuItem key={notification.id} className="flex items-start gap-3 data-[highlighted]:bg-accent/80" style={{opacity: notification.read ? 0.6 : 1}}>
-                                    <Icon className={cn("mt-1 h-5 w-5 shrink-0", colorMap[notification.type])} />
+                                    <Icon className={cn("mt-1 h-5 w-5 shrink-0", colorMap[notification.type])} aria-hidden="true"/>
                                     <div className="flex flex-col">
                                         <p className="text-sm font-medium whitespace-normal">{notification.title}</p>
                                         <p className="text-xs text-muted-foreground whitespace-normal">{notification.description}</p>
@@ -85,7 +85,7 @@ function NotificationsDropdown() {
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="justify-center">
-                   <Link href="#" className="text-xs text-muted-foreground hover:text-primary">Mark all as read</Link>
+                   <button className="text-xs text-muted-foreground hover:text-primary">Mark all as read</button>
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
@@ -98,7 +98,7 @@ export function UserNav({ onBudget }: UserNavProps) {
         <NotificationsDropdown />
         <DropdownMenu>
         <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+            <Button variant="ghost" className="relative h-8 w-8 rounded-full" aria-label="Open user menu">
             <Avatar className={cn("h-9 w-9", onBudget && "ring-2 ring-green-500 ring-offset-2 ring-offset-background")}>
                 <AvatarImage src={user.avatarUrl} alt={`@${user.name}`} />
                 <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
@@ -116,18 +116,18 @@ export function UserNav({ onBudget }: UserNavProps) {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-            <DropdownMenuItem>
+            <DropdownMenuItem asChild>
                 <Link href="/profile" className="w-full">Profile</Link>
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem asChild>
                 <Link href="/dashboard" className="w-full">Billing</Link>
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem asChild>
                 <Link href="/dashboard" className="w-full">Settings</Link>
             </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem asChild>
             <Link href="/" className="w-full">Log out</Link>
             </DropdownMenuItem>
         </DropdownMenuContent>

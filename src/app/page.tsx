@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -89,6 +90,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={loading}
+                aria-required="true"
               />
             </div>
             <div className="space-y-2">
@@ -100,6 +102,7 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={loading}
+                aria-required="true"
               />
             </div>
             <div className="flex flex-col sm:flex-row gap-2">

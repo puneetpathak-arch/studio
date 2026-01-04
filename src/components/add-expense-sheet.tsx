@@ -91,6 +91,7 @@ function NumberPad({
         className="h-16 text-2xl font-bold transition-transform active:scale-95 flex items-center justify-center"
         onClick={onDelete}
         onLongPress={onClear}
+        aria-label="Delete last digit"
       >
         <Delete className="w-8 h-8" />
       </Button>
@@ -164,7 +165,8 @@ export function AddExpenseSheet() {
                 <Label className="text-center block mb-4">Select Category</Label>
                 <div className="grid grid-cols-4 gap-4">
                     {categories.map((cat) => (
-                    <div
+                    <button
+                        type="button"
                         key={cat.name}
                         className={cn(
                         "flex flex-col items-center justify-center p-2 rounded-lg border-2 transition-all",
@@ -173,10 +175,11 @@ export function AddExpenseSheet() {
                             : "bg-muted/50 border-transparent opacity-70"
                         )}
                         onClick={() => setSelectedCategory(cat.name)}
+                        aria-pressed={selectedCategory === cat.name}
                     >
                         <cat.icon className={cn("w-8 h-8 mb-1", cat.color)} />
                         <span className="text-xs font-medium">{cat.name}</span>
-                    </div>
+                    </button>
                     ))}
                 </div>
               </div>
@@ -193,10 +196,11 @@ export function AddExpenseSheet() {
                     <Textarea id="description" placeholder="What was this for?" value={notes} onChange={(e) => setNotes(e.target.value)} />
                 </div>
                 <div className="grid w-full items-center gap-1.5">
-                  <Label htmlFor="date">Date</Label>
+                  <Label htmlFor="date-popover-trigger">Date</Label>
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
+                        id="date-popover-trigger"
                         variant={"outline"}
                         className={cn(
                           "w-full justify-start text-left font-normal",

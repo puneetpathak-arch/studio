@@ -30,6 +30,7 @@ export function BottomNav() {
                 'inline-flex flex-col items-center justify-center px-2 hover:bg-muted',
                 isActive ? 'text-primary' : 'text-muted-foreground'
               )}
+              aria-current={isActive ? 'page' : undefined}
             >
               <item.icon className="w-6 h-6 mb-1" />
               <span className="text-xs text-center">{item.label}</span>

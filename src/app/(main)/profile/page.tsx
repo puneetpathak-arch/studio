@@ -26,6 +26,7 @@ export default function ProfilePage() {
             </Avatar>
             <Button variant="outline" size="icon" className="absolute bottom-1 right-1 h-9 w-9 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
                 <Edit className="w-4 h-4"/>
+                <span className="sr-only">Edit profile picture</span>
             </Button>
         </div>
         <div className="text-center">
@@ -76,6 +77,7 @@ export default function ProfilePage() {
                         step={1000}
                         value={[budget]}
                         onValueChange={(value) => setBudget(value[0])}
+                        aria-label="Default Monthly Budget"
                     />
                 </div>
             </div>
@@ -88,10 +90,10 @@ export default function ProfilePage() {
                 </CardTitle>
                  <div className="flex items-center justify-between rounded-lg border p-4">
                     <div>
-                        <h3 className="font-medium">Notifications</h3>
+                        <h3 className="font-medium" id="notifications-label">Notifications</h3>
                         <p className="text-sm text-muted-foreground">Receive alerts for budget limits and tips.</p>
                     </div>
-                    <Switch defaultChecked/>
+                    <Switch defaultChecked aria-labelledby="notifications-label" />
                 </div>
             </div>
 
