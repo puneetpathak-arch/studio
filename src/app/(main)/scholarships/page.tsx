@@ -110,8 +110,8 @@ export default function ScholarshipsPage() {
       
       {filteredScholarships.length > 0 ? (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {filteredScholarships.map((scholarship) => (
-            <Card key={scholarship.id} className="flex flex-col animate-fade-in-up">
+          {filteredScholarships.map((scholarship, index) => (
+            <Card key={scholarship.id} className="flex flex-col animate-fade-in-up" style={{ animationDelay: `${index * 50}ms` }}>
               <CardHeader>
                 <CardTitle>{scholarship.name}</CardTitle>
                 <CardDescription>{scholarship.provider}</CardDescription>
@@ -143,9 +143,17 @@ export default function ScholarshipsPage() {
         </div>
       ) : (
          <Card>
-            <CardContent className="p-8 text-center text-muted-foreground">
-                <p>No scholarships match your current filters.</p>
-                <p className="text-sm">Try adjusting your search or clearing the filters.</p>
+            <CardContent className="p-8 text-center text-muted-foreground space-y-4">
+                <Search className="w-16 h-16 mx-auto text-gray-300" />
+                <h3 className="text-lg font-semibold text-foreground">No scholarships found</h3>
+                <p className="text-sm">Try adjusting your filters or clearing your search.</p>
+                {hasActiveFilters && (
+                    <Button variant="default" onClick={() => {
+                        setSelectedStates([]);
+                        setSelectedCategories([]);
+                        setSearchQuery('');
+                    }}>Clear All Filters</Button>
+                )}
             </CardContent>
         </Card>
       )}
