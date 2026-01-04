@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { LayoutDashboard, BarChartHorizontal, GraduationCap, User, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { SheetTrigger } from './ui/sheet';
+import { AddExpenseSheet } from '@/components/add-expense-sheet';
 
 const navItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Home' },
@@ -28,12 +28,12 @@ export const BottomNav = forwardRef<HTMLDivElement>((props, ref) => {
           if (item.href === 'add_expense') {
             return (
               <div key={item.href} className="flex items-center justify-center">
-                <SheetTrigger asChild>
+                <AddExpenseSheet>
                     <button className="relative -top-6 flex items-center justify-center h-16 w-16 bg-gradient-to-br from-primary to-accent text-white rounded-full shadow-lg transition-transform active:scale-90 animate-bounce-on-load">
                         <item.icon className="w-8 h-8" />
                         <span className="sr-only">{item.label}</span>
                     </button>
-                </SheetTrigger>
+                </AddExpenseSheet>
               </div>
             );
           }
