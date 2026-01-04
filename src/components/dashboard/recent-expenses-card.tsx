@@ -3,38 +3,51 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { expenses } from "@/lib/data";
 import { Badge } from "../ui/badge";
 import { ScrollArea } from "../ui/scroll-area";
+import { Button } from "../ui/button";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
 const categoryColors: { [key: string]: string } = {
-    'Mess': 'bg-red-100 text-red-800',
-    'Canteen': 'bg-orange-100 text-orange-800',
-    'Groceries': 'bg-yellow-100 text-yellow-800',
-    'Travel': 'bg-green-100 text-green-800',
-    'Rent/Hostel': 'bg-blue-100 text-blue-800',
-    'Fees/Exam': 'bg-indigo-100 text-indigo-800',
-    'Recharge/Subscriptions': 'bg-purple-100 text-purple-800',
-    'Others': 'bg-gray-100 text-gray-800',
+    'Mess': 'bg-red-100 text-red-800 border-red-200',
+    'Canteen': 'bg-orange-100 text-orange-800 border-orange-200',
+    'Groceries': 'bg-yellow-100 text-yellow-800 border-yellow-200',
+    'Travel': 'bg-green-100 text-green-800 border-green-200',
+    'Rent/Hostel': 'bg-blue-100 text-blue-800 border-blue-200',
+    'Fees/Exam': 'bg-indigo-100 text-indigo-800 border-indigo-200',
+    'Recharge/Subscriptions': 'bg-purple-100 text-purple-800 border-purple-200',
+    'Others': 'bg-gray-100 text-gray-800 border-gray-200',
 };
 
 export function RecentExpensesCard() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Recent Expenses</CardTitle>
-        <CardDescription>Your last 5 transactions.</CardDescription>
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle>Recent Activity</CardTitle>
+            <CardDescription>Your last 5 transactions.</CardDescription>
+          </div>
+           <Button variant="ghost" size="sm" asChild>
+                <Link href="#">
+                    View all
+                    <ArrowRight className="w-4 h-4 ml-2"/>
+                </Link>
+            </Button>
+        </div>
       </CardHeader>
       <CardContent>
-        <ScrollArea className="h-[200px]">
+        <ScrollArea className="h-[240px]">
         {expenses.length > 0 ? (
           <ul className="space-y-4">
             {expenses.slice(0, 5).map((expense) => (
               <li key={expense.id} className="flex justify-between items-center">
                 <div>
                   <p className="font-medium">{expense.description}</p>
-                  <Badge variant="outline" className={`border-none text-xs ${categoryColors[expense.category] || categoryColors['Others']}`}>
+                  <Badge variant="outline" className={`font-normal ${categoryColors[expense.category] || categoryColors['Others']}`}>
                     {expense.category}
                   </Badge>
                 </div>
-                <p className="font-bold text-right">₹{expense.amount.toLocaleString()}</p>
+                <p className="font-bold text-right text-red-600">-₹{expense.amount.toLocaleString()}</p>
               </li>
             ))}
           </ul>

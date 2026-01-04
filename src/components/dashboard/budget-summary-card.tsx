@@ -18,7 +18,7 @@ export function BudgetSummaryCard() {
   const remaining = budget.total - budget.spent;
 
   return (
-    <Card className="lg:col-span-2 relative overflow-hidden">
+    <Card className="relative overflow-hidden h-full">
       <CardHeader className="flex flex-row items-start justify-between pb-2 z-10 relative">
         <div>
           <CardTitle>Monthly Budget</CardTitle>

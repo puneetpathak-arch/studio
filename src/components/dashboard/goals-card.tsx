@@ -26,7 +26,7 @@ function GoalCard({ goal }: { goal: Goal }) {
   const percentage = Math.round((goal.savedAmount / goal.targetAmount) * 100);
   return (
     <Card
-      className="flex flex-col border-2"
+      className="flex flex-col border-2 h-full"
       style={{ borderColor: `hsl(var(--${goal.color}))` }}
     >
       <CardHeader className="pb-2">
@@ -53,7 +53,7 @@ function GoalCard({ goal }: { goal: Goal }) {
 
 export function GoalsCard() {
   return (
-    <Card>
+    <Card className="flex flex-col">
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2">
@@ -67,7 +67,7 @@ export function GoalsCard() {
           Your progress towards your financial goals.
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex-grow flex items-center">
         {goals.length > 0 ? (
           <Carousel
             opts={{
@@ -77,8 +77,8 @@ export function GoalsCard() {
           >
             <CarouselContent>
               {goals.map((goal) => (
-                <CarouselItem key={goal.id} className="md:basis-1/2 lg:basis-1/2">
-                  <div className="p-1">
+                <CarouselItem key={goal.id} className="md:basis-full lg:basis-full">
+                  <div className="p-1 h-full">
                     <GoalCard goal={goal} />
                   </div>
                 </CarouselItem>
@@ -88,7 +88,7 @@ export function GoalsCard() {
             <CarouselNext className="hidden sm:flex" />
           </Carousel>
         ) : (
-          <div className="flex items-center justify-center h-full py-8">
+          <div className="flex items-center justify-center h-full w-full py-8">
             <p className="text-muted-foreground">No savings goals set yet.</p>
           </div>
         )}

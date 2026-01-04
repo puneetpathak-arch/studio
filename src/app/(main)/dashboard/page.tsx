@@ -44,10 +44,10 @@ export default function DashboardPage() {
       </div>
       
       <div className="grid gap-6 lg:grid-cols-3">
-        <BudgetSummaryCard />
         <div className="lg:col-span-2">
-          <GoalsCard />
+            <BudgetSummaryCard />
         </div>
+        <GoalsCard />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
