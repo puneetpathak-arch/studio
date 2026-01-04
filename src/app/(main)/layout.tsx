@@ -30,8 +30,8 @@ export default function MainLayout({
       <Sidebar className="hidden md:flex">
         <SidebarHeader>
           <div className="flex items-center gap-3 p-2">
-            <PiggyBank className="w-10 h-10 text-sidebar-primary" />
-            <h1 className="text-2xl font-bold font-headline">EduFinance</h1>
+            <PiggyBank className="w-8 h-8 text-sidebar-primary" />
+            <h1 className="text-xl font-bold font-headline">EduFinance</h1>
           </div>
         </SidebarHeader>
         <SidebarContent>
