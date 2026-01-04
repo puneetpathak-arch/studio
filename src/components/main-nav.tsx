@@ -21,7 +21,7 @@ export function MainNav({ onNavItemClick }: { onNavItemClick?: () => void }) {
   return (
     <>
       {navItems.map((item) => {
-        const isActive = pathname.startsWith(item.href);
+        const isActive = (item.href === '/dashboard' && pathname === item.href) || (item.href !== '/dashboard' && pathname.startsWith(item.href));
         return (
           <Link
             href={item.href}
@@ -30,8 +30,8 @@ export function MainNav({ onNavItemClick }: { onNavItemClick?: () => void }) {
             className={cn(
               'w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300',
               isActive
-                ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/50'
-                : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/50'
+                : 'text-gray-400 hover:bg-slate-800/50 hover:text-white'
             )}
           >
             <item.icon size={20} />

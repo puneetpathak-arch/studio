@@ -8,64 +8,64 @@ import { RecentExpensesCard } from "@/components/dashboard/recent-expenses-card"
 import { AiSavingsCard } from "@/components/dashboard/ai-savings-card";
 import { user, goals, tips } from "@/lib/data";
 import { QuickStatCard } from "@/components/dashboard/quick-stat-card";
-import { BarChart, Target, Lightbulb } from "lucide-react";
+import { TrendingUp, Target, Sparkles, BarChart, Lightbulb } from "lucide-react";
 import { TipsCard } from "@/components/dashboard/tips-card";
 
 export default function DashboardPage() {
     const [greeting, setGreeting] = useState('');
-    const [emoji, setEmoji] = useState('');
 
     useEffect(() => {
         const hour = new Date().getHours();
         if (hour < 12) {
             setGreeting('Good Morning');
-            setEmoji('☀️');
         } else if (hour < 17) {
             setGreeting('Good Afternoon');
-            setEmoji('👋');
         } else {
             setGreeting('Good Evening');
-            setEmoji('🌙');
         }
     }, []);
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="animate-fade-in-up">
-        <h1 className="text-4xl md:text-5xl font-bold text-primary">{greeting}, {user.name.split(' ')[0]}! {emoji}</h1>
-        <p className="text-muted-foreground text-base md:text-lg mt-2">Here's your financial overview for this month.</p>
+      <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-3xl shadow-2xl p-8 mb-2 text-white relative overflow-hidden">
+         <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-orange-400/10"></div>
+         <div className="absolute -right-20 -top-20 w-64 h-64 bg-yellow-400/20 rounded-full blur-3xl animate-pulse"></div>
+         <div className="absolute -left-20 -bottom-20 w-64 h-64 bg-cyan-400/20 rounded-full blur-3xl animate-pulse-slow"></div>
+         <div className="relative z-10">
+            <h1 className="text-4xl font-bold mb-2 drop-shadow-lg">
+                {greeting}, {user.name.split(' ')[0]}! 👋
+            </h1>
+            <p className="text-indigo-100 text-lg">Here's your financial overview for this month.</p>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-          <QuickStatCard icon={BarChart} label="This Week" value="₹1,860" />
-          <QuickStatCard icon={Target} label="Active Goals" value={goals.length.toString()} />
-          <QuickStatCard icon={Lightbulb} label="New Tips" value={tips.length.toString()} />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <QuickStatCard icon={TrendingUp} label="This Week" value="₹1,860" gradient="from-indigo-50 to-purple-50" iconBg="from-indigo-500 via-purple-500 to-pink-500" />
+          <QuickStatCard icon={Sparkles} label="New Tips" value={tips.length.toString()} gradient="from-pink-50 to-orange-50" iconBg="from-pink-500 via-rose-500 to-orange-500" />
+          <QuickStatCard icon={Target} label="Active Goals" value={goals.length.toString()} gradient="from-green-50 to-emerald-50" iconBg="from-green-500 to-emerald-600" />
       </div>
       
-      <div className="grid gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+      <div className="grid gap-6 lg:grid-cols-5">
+        <div className="lg:col-span-3">
             <BudgetSummaryCard />
         </div>
-        <div className="animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+        <div className="lg:col-span-2">
             <GoalsCard />
         </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-3">
-         <div className="lg:col-span-2 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+      <div className="grid gap-6 lg:grid-cols-5">
+         <div className="lg:col-span-3">
             <RecentExpensesCard />
         </div>
-        <div className="animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
+        <div className="lg:col-span-2">
             <AiSavingsCard />
         </div>
       </div>
       
-       <div className="grid gap-6 md:grid-cols-2">
-         <div className="animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
+       <div className="grid gap-6">
+         <div>
             <TipsCard />
-        </div>
-        <div className="lg:col-span-2 animate-fade-in-up" style={{ animationDelay: '0.7s' }}>
-            
         </div>
       </div>
     </div>
