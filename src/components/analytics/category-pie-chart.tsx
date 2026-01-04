@@ -42,17 +42,17 @@ export function CategoryPieChart() {
         <CardTitle>Category-wise Spending</CardTitle>
         <CardDescription>Current month's spending distribution</CardDescription>
       </CardHeader>
-      <CardContent className="h-[250px] flex items-center justify-center">
+      <CardContent className="flex items-center">
         <ChartContainer
           config={chartConfig}
-          className="h-full w-full flex items-center"
+          className="mx-auto aspect-square h-[250px]"
         >
           <PieChart>
             <ChartTooltip
                 cursor={true}
                 content={<ChartTooltipContent 
-                    formatter={(value, name) => [`₹${(value as number).toLocaleString()}`, name]}
-                    indicator="dot"
+                    formatter={(value) => `₹${(value as number).toLocaleString()}`}
+                    hideLabel
                 />}
             />
             <Pie
@@ -60,20 +60,17 @@ export function CategoryPieChart() {
               dataKey="amount"
               nameKey="category"
               innerRadius={60}
-              outerRadius={80}
-              paddingAngle={2}
-              isAnimationActive={true}
-              animationDuration={1000}
+              strokeWidth={5}
             >
                 {chartData.map((entry) => (
                     <Cell key={`cell-${entry.category}`} fill={entry.fill} />
                 ))}
             </Pie>
+             <ChartLegend
+              content={<ChartLegendContent nameKey="category" />}
+              className="-translate-y-2 flex-wrap gap-2 [&>*]:basis-1/4 [&>*]:justify-center"
+            />
           </PieChart>
-          <ChartLegend
-              content={<ChartLegendContent nameKey="category" className="flex flex-col gap-2"/>}
-              className="w-1/2"
-          />
         </ChartContainer>
       </CardContent>
     </Card>
