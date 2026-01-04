@@ -6,12 +6,11 @@ import { BudgetSummaryCard } from "@/components/dashboard/budget-summary-card";
 import { GoalsCard } from "@/components/dashboard/goals-card";
 import { RecentExpensesCard } from "@/components/dashboard/recent-expenses-card";
 import { AiSavingsCard } from "@/components/dashboard/ai-savings-card";
-import { CategoryPieChart } from "@/components/analytics/category-pie-chart";
-import { SpendingBarChart } from "@/components/analytics/spending-bar-chart";
-import { user, goals, tips, budget } from "@/lib/data";
+import { user, goals, tips } from "@/lib/data";
 import { QuickStatCard } from "@/components/dashboard/quick-stat-card";
 import { BarChart, Target, Lightbulb } from "lucide-react";
 import { AddExpenseSheet } from "@/components/add-expense-sheet";
+import { TipsCard } from "@/components/dashboard/tips-card";
 
 export default function DashboardPage() {
     const [greeting, setGreeting] = useState('');
@@ -64,10 +63,10 @@ export default function DashboardPage() {
       
        <div className="grid gap-6 lg:grid-cols-2">
          <div className="animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
-            <CategoryPieChart />
+            <TipsCard />
         </div>
-        <div className="animate-fade-in-up" style={{ animationDelay: '0.7s' }}>
-            <SpendingBarChart />
+        <div className="lg:col-span-2 animate-fade-in-up" style={{ animationDelay: '0.7s' }}>
+            
         </div>
       </div>
       <AddExpenseSheet />

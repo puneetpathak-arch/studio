@@ -3,11 +3,12 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { GraduationCap, LayoutDashboard, User } from 'lucide-react';
+import { BarChartHorizontal, GraduationCap, LayoutDashboard, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+  { href: '/analytics', icon: BarChartHorizontal, label: 'Analytics' },
   { href: '/scholarships', icon: GraduationCap, label: 'Scholarships' },
   { href: '/profile', icon: User, label: 'Profile' },
 ];
@@ -17,9 +18,9 @@ export function BottomNav() {
 
   return (
     <div className="fixed bottom-0 left-0 z-50 w-full h-16 bg-background border-t">
-      <div className="grid h-full max-w-lg grid-cols-3 mx-auto font-medium">
+      <div className="grid h-full max-w-lg grid-cols-4 mx-auto font-medium">
         {navItems.map((item) => {
-          const isActive = pathname === item.href;
+          const isActive = pathname.startsWith(item.href);
           return (
             <Link
               key={item.href}
