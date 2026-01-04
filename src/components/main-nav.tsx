@@ -29,12 +29,12 @@ export function MainNav() {
         <SidebarMenuItem key={item.href}>
           <Link href={item.href}>
             <SidebarMenuButton
-              isActive={pathname === item.href}
+              isActive={pathname.startsWith(item.href)}
               tooltip={item.label}
               className="group-data-[collapsible=icon]:justify-center"
             >
-              <item.icon className={cn("text-sidebar-primary", pathname === item.href && "text-sidebar-primary-foreground")}/>
-              <span className={cn(pathname === item.href && "text-sidebar-primary-foreground")}>{item.label}</span>
+              <item.icon className={cn("text-sidebar-primary", pathname.startsWith(item.href) && "text-sidebar-primary-foreground")}/>
+              <span className={cn(pathname.startsWith(item.href) && "text-sidebar-primary-foreground")}>{item.label}</span>
             </SidebarMenuButton>
           </Link>
         </SidebarMenuItem>
