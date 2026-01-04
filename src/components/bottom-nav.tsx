@@ -3,13 +3,13 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BarChartHorizontal, GraduationCap, LayoutDashboard, User, Sparkles } from 'lucide-react';
+import { BarChartHorizontal, GraduationCap, LayoutDashboard, User, Sparkles, Target } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
   { href: '/analytics', icon: BarChartHorizontal, label: 'Analytics' },
-  { href: '/savings', icon: Sparkles, label: 'Savings' },
+  { href: '/goals', icon: Target, label: 'Goals' },
   { href: '/scholarships', icon: GraduationCap, label: 'Scholarships' },
   { href: '/profile', icon: User, label: 'Profile' },
 ];

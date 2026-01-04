@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { goals } from '@/lib/data';
+import { goals as initialGoals } from '@/lib/data';
 import { ArrowRight, Target } from 'lucide-react';
 import Link from 'next/link';
 import {
@@ -21,8 +21,10 @@ import {
 import type { Goal } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
+import { AddFundsDialog } from '@/components/goals/add-funds-dialog';
+import { useState } from 'react';
 
-function GoalCard({ goal }: { goal: Goal }) {
+function GoalCard({ goal, onFundAdded }: { goal: Goal, onFundAdded: (goalId: string, amount: number) => void }) {
   const percentage = Math.round((goal.savedAmount / goal.targetAmount) * 100);
   return (
     <Card
@@ -47,13 +49,23 @@ function GoalCard({ goal }: { goal: Goal }) {
             <span className="font-semibold text-foreground">₹{goal.savedAmount.toLocaleString()}</span> / ₹{goal.targetAmount.toLocaleString()}
           </div>
         </div>
-        <Button size="sm" variant="outline" className="w-full">Add Funds</Button>
+        <AddFundsDialog goal={goal} onFundAdded={onFundAdded} />
       </CardContent>
     </Card>
   );
 }
 
 export function GoalsCard() {
+  const [goals, setGoals] = useState(initialGoals);
+
+  const handleFundAdded = (goalId: string, amount: number) => {
+    setGoals(prevGoals =>
+      prevGoals.map(g =>
+        g.id === goalId ? { ...g, savedAmount: g.savedAmount + amount } : g
+      )
+    );
+  };
+  
   return (
     <Card className="flex flex-col">
       <CardHeader>
@@ -61,7 +73,7 @@ export function GoalsCard() {
           <CardTitle className="flex items-center gap-2">
             Your Goals <Target className="w-5 h-5" />
           </CardTitle>
-          <Link href="#" className="flex items-center gap-1 text-sm font-medium text-primary hover:underline">
+          <Link href="/goals" className="flex items-center gap-1 text-sm font-medium text-primary hover:underline">
             See All <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
@@ -81,7 +93,7 @@ export function GoalsCard() {
               {goals.map((goal) => (
                 <CarouselItem key={goal.id} className="basis-full md:basis-1/2 pl-2">
                   <div className="p-1 h-full">
-                    <GoalCard goal={goal} />
+                    <GoalCard goal={goal} onFundAdded={handleFundAdded} />
                   </div>
                 </CarouselItem>
               ))}
