@@ -3,18 +3,21 @@
 
 import { user } from "@/lib/data";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { User as UserIcon, Edit, Wallet, Bell } from "lucide-react";
+import { User as UserIcon, Edit, Wallet, Bell, Palette, Moon, Sun, Laptop } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { useState } from "react";
 import { Switch } from "@/components/ui/switch";
 import Link from "next/link";
+import { useTheme } from "next-themes";
+import { cn } from "@/lib/utils";
 
 export default function ProfilePage() {
     const [budget, setBudget] = useState(15000);
+    const { theme, setTheme } = useTheme();
 
   return (
     <div className="flex flex-col items-center gap-8">
@@ -39,10 +42,10 @@ export default function ProfilePage() {
         <CardContent className="p-6 space-y-8">
             {/* Personal Information Section */}
             <div className="space-y-4">
-                <CardTitle className="flex items-center gap-2 text-xl border-b pb-2">
+                <h3 className="flex items-center gap-2 text-xl font-bold border-b pb-2">
                     <UserIcon className="w-5 h-5"/>
                     Personal Information
-                </CardTitle>
+                </h3>
                 <div className="grid md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                         <Label htmlFor="name" className="text-sm">Full Name</Label>
@@ -61,10 +64,10 @@ export default function ProfilePage() {
 
             {/* Budget Settings Section */}
             <div className="space-y-4">
-                 <CardTitle className="flex items-center gap-2 text-xl border-b pb-2">
+                 <h3 className="flex items-center gap-2 text-xl font-bold border-b pb-2">
                     <Wallet className="w-5 h-5"/>
                     Budget Settings
-                </CardTitle>
+                </h3>
                 <div className="space-y-2">
                     <div className="flex justify-between items-center">
                         <Label htmlFor="budget" className="text-sm">Default Monthly Budget</Label>
@@ -84,16 +87,34 @@ export default function ProfilePage() {
             
              {/* Preferences Section */}
             <div className="space-y-4">
-                <CardTitle className="flex items-center gap-2 text-xl border-b pb-2">
+                <h3 className="flex items-center gap-2 text-xl font-bold border-b pb-2">
                     <Bell className="w-5 h-5"/>
                     Preferences
-                </CardTitle>
+                </h3>
                  <div className="flex items-center justify-between rounded-lg border p-4">
                     <div>
-                        <h3 className="font-medium" id="notifications-label">Notifications</h3>
+                        <h4 className="font-medium" id="notifications-label">Notifications</h4>
                         <p className="text-sm text-muted-foreground">Receive alerts for budget limits and tips.</p>
                     </div>
                     <Switch defaultChecked aria-labelledby="notifications-label" />
+                </div>
+
+                <div className="flex items-center justify-between rounded-lg border p-4">
+                    <div>
+                        <h4 className="font-medium" id="theme-label">Theme</h4>
+                        <p className="text-sm text-muted-foreground">Choose your preferred app appearance.</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <Button variant={theme === 'light' ? 'default' : 'outline'} size="icon" onClick={() => setTheme('light')}>
+                            <Sun className="h-5 w-5" />
+                        </Button>
+                         <Button variant={theme === 'dark' ? 'default' : 'outline'} size="icon" onClick={() => setTheme('dark')}>
+                            <Moon className="h-5 w-5" />
+                        </Button>
+                         <Button variant={theme === 'system' ? 'default' : 'outline'} size="icon" onClick={() => setTheme('system')}>
+                            <Laptop className="h-5 w-5" />
+                        </Button>
+                    </div>
                 </div>
             </div>
 
