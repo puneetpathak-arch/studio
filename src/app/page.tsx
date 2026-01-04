@@ -14,7 +14,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+} from 'firebase/auth';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/firebase';
 
@@ -22,6 +25,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState('rohan.sharma@iitd.ac.in');
   const [password, setPassword] = useState('password');
   const [loading, setLoading] = useState(false);
+  const [action, setAction] = useState<'login' | 'signup' | null>(null);
   const router = useRouter();
   const auth = useAuth();
   const { toast } = useToast();
@@ -29,6 +33,7 @@ export default function LoginPage() {
   const handleLogin = async () => {
     if (!auth) return;
     setLoading(true);
+    setAction('login');
     try {
       await signInWithEmailAndPassword(auth, email, password);
       router.push('/dashboard');
@@ -39,6 +44,25 @@ export default function LoginPage() {
         description: error.message,
       });
       setLoading(false);
+      setAction(null);
+    }
+  };
+
+  const handleSignUp = async () => {
+    if (!auth) return;
+    setLoading(true);
+    setAction('signup');
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      router.push('/dashboard');
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Sign Up Failed',
+        description: error.message,
+      });
+      setLoading(false);
+      setAction(null);
     }
   };
 
@@ -78,24 +102,43 @@ export default function LoginPage() {
                 disabled={loading}
               />
             </div>
-            <Button
-              onClick={handleLogin}
-              disabled={loading || !auth}
-              className="w-full"
-              size="lg"
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Logging in...
-                </>
-              ) : (
-                'Login to Demo'
-              )}
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <Button
+                onClick={handleLogin}
+                disabled={loading || !auth}
+                className="w-full"
+                size="lg"
+              >
+                {loading && action === 'login' ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Logging in...
+                  </>
+                ) : (
+                  'Login'
+                )}
+              </Button>
+              <Button
+                onClick={handleSignUp}
+                disabled={loading || !auth}
+                className="w-full"
+                size="lg"
+                variant="outline"
+              >
+                {loading && action === 'signup' ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Signing up...
+                  </>
+                ) : (
+                  'Sign Up'
+                )}
+              </Button>
+            </div>
           </div>
           <p className="mt-4 text-xs text-center text-muted-foreground">
-            This is a demo application. Use the default credentials or create an account.
+            This is a demo application. Use the default credentials or create an
+            account.
           </p>
         </CardContent>
       </Card>
