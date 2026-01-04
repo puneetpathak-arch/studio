@@ -142,7 +142,7 @@ export function AddExpenseSheet() {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button className="fixed bottom-6 right-6 md:bottom-10 md:right-10 h-16 w-16 rounded-full bg-primary shadow-lg hover:bg-primary/90 text-primary-foreground animate-bounce-short group">
+        <Button className="fixed bottom-6 right-6 md:bottom-10 md:right-10 h-16 w-16 rounded-full bg-primary shadow-lg hover:bg-primary/90 text-primary-foreground group">
           <Plus className="h-8 w-8 transition-transform group-active:rotate-45 group-active:scale-125" />
           <span className="sr-only">Add Expense</span>
         </Button>
