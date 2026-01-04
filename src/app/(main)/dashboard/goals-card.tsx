@@ -37,12 +37,14 @@ function GoalCard({ goal }: { goal: Goal }) {
         </CardTitle>
       </CardHeader>
       <CardContent className="flex-grow flex flex-col items-center justify-center gap-4">
-        <GoalProgressCircle
-          percentage={percentage}
-          savedAmount={goal.savedAmount}
-          targetAmount={goal.targetAmount}
-          color={goal.color}
-        />
+        <div className="w-[120px] h-[120px]">
+            <GoalProgressCircle
+              percentage={percentage}
+              savedAmount={goal.savedAmount}
+              targetAmount={goal.targetAmount}
+              color={goal.color}
+            />
+        </div>
         <Button size="sm" variant="outline">Add Funds</Button>
       </CardContent>
     </Card>
