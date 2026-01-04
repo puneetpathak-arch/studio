@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation';
 import { Home, BarChartHorizontal, GraduationCap, User, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { AddExpenseSheet } from '@/components/add-expense-sheet';
+import { Button } from './ui/button';
 
 const navItems = [
   { href: '/dashboard', icon: Home, label: 'Home' },
@@ -29,10 +30,10 @@ export const BottomNav = forwardRef<HTMLDivElement>((props, ref) => {
             return (
               <div key={item.href} className="flex items-center justify-center">
                 <AddExpenseSheet>
-                    <button className="relative -top-6 flex items-center justify-center h-16 w-16 bg-gradient-to-br from-primary to-accent text-white rounded-full shadow-lg transition-transform active:scale-90 animate-bounce-on-load">
+                    <Button variant="ghost" className="relative -top-6 flex items-center justify-center h-16 w-16 bg-gradient-to-br from-primary to-accent text-white rounded-full shadow-lg transition-transform active:scale-90 animate-bounce-on-load">
                         <item.icon className="w-8 h-8" />
                         <span className="sr-only">{item.label}</span>
-                    </button>
+                    </Button>
                 </AddExpenseSheet>
               </div>
             );

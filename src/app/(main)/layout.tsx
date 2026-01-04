@@ -51,7 +51,7 @@ export default function MainLayout({
             <MainNav onNavItemClick={() => isMobileMenuOpen && setIsMobileMenuOpen(false)} />
         </nav>
 
-        <div className="relative z-10">
+        <div className="relative z-10 mt-auto">
           <div className="flex items-center gap-3 mb-4 px-2 pt-6 border-t border-slate-700/50">
             <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-full flex items-center justify-center font-bold text-lg shadow-lg shadow-purple-500/50">
               {user.name.charAt(0)}
