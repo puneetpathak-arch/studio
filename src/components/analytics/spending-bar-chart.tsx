@@ -45,7 +45,13 @@ export function SpendingBarChart() {
              <YAxis
                 tickFormatter={(value) => `₹${Number(value) / 1000}k`}
              />
-            <ChartTooltip content={<ChartTooltipContent />} />
+            <ChartTooltip 
+                cursor={false}
+                content={<ChartTooltipContent 
+                    formatter={(value) => [`₹${(value as number).toLocaleString()}`, "Spending"]}
+                    indicator="dot"
+                />} 
+            />
             <Bar dataKey="spending" fill="var(--color-spending)" radius={4} />
           </BarChart>
         </ChartContainer>
