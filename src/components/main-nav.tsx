@@ -31,9 +31,10 @@ export function MainNav() {
             <SidebarMenuButton
               isActive={pathname.startsWith(item.href)}
               tooltip={item.label}
-              className="group-data-[collapsible=icon]:justify-center"
+              className="group-data-[collapsible=icon]:justify-center text-base"
+              size="lg"
             >
-              <item.icon className={cn("text-sidebar-primary", pathname.startsWith(item.href) && "text-sidebar-primary-foreground")}/>
+              <item.icon className={cn("text-sidebar-primary h-5 w-5", pathname.startsWith(item.href) && "text-sidebar-primary-foreground")}/>
               <span className={cn(pathname.startsWith(item.href) && "text-sidebar-primary-foreground")}>{item.label}</span>
             </SidebarMenuButton>
           </Link>
