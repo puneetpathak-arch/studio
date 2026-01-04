@@ -78,10 +78,10 @@ export default {
         },
       },
       borderRadius: {
-        'xl': 'calc(var(--radius) + 4px)', // 16px
-        'lg': 'var(--radius)', // 12px
-        'md': 'calc(var(--radius) - 4px)', // 8px
-        'sm': 'calc(var(--radius) - 6px)', // 6px
+        'xl': 'calc(var(--radius) + 8px)',
+        'lg': 'var(--radius)',
+        'md': 'calc(var(--radius) - 4px)',
+        'sm': 'calc(var(--radius) - 8px)',
       },
       keyframes: {
         'accordion-down': {
@@ -99,16 +99,6 @@ export default {
           to: {
             height: '0',
           },
-        },
-        'bounce-short': {
-            '0%, 100%': {
-                transform: 'translateY(-5%)',
-                animationTimingFunction: 'cubic-bezier(0.8, 0, 1, 1)',
-            },
-            '50%': {
-                transform: 'translateY(0)',
-                animationTimingFunction: 'cubic-bezier(0, 0, 0.2, 1)',
-            },
         },
         'fade-in-up': {
             '0%': {
@@ -128,11 +118,11 @@ export default {
         'lift': {
           '0%': {
             transform: 'translateY(0)',
-            boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+            boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
           },
           '100%': {
             transform: 'translateY(-4px)',
-            boxShadow: '0 10px 15px rgba(0,0,0,0.1)'
+            boxShadow: '0 8px 15px rgba(0,0,0,0.08)'
           }
         },
         'shake': {
@@ -144,7 +134,6 @@ export default {
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
-        'bounce-short': 'bounce-short 1s ease-in-out infinite',
         'fade-in-up': 'fade-in-up 0.4s ease-in-out forwards',
         'shimmer': 'shimmer 2s linear infinite',
         'lift': 'lift 0.3s ease-out forwards',

@@ -33,7 +33,7 @@ export default function DashboardPage() {
   return (
     <div className="flex flex-col gap-6">
       <div className="animate-fade-in-up">
-        <h1 className="text-3xl font-bold">{greeting}, {user.name.split(' ')[0]}! {emoji}</h1>
+        <h1 className="text-3xl font-bold text-primary">{greeting}, {user.name.split(' ')[0]}! {emoji}</h1>
         <p className="text-muted-foreground text-base">Here's your financial overview for this month.</p>
       </div>
 
@@ -53,10 +53,10 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
-         <div className="animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+         <div className="lg:col-span-2 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
             <RecentExpensesCard />
         </div>
-        <div className="lg:col-span-2 animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
+        <div className="animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
             <AiSavingsCard />
         </div>
       </div>

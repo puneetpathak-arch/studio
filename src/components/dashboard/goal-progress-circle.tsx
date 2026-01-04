@@ -37,7 +37,7 @@ export function GoalProgressCircle({
         >
           <cell
             key="value"
-            fill={`hsl(var(--${color}))`}
+            fill="hsl(var(--foreground))"
             className="transition-all duration-500"
           />
           <cell

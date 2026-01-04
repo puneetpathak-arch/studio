@@ -11,14 +11,7 @@ interface BudgetProgressCircleProps {
 export function BudgetProgressCircle({ percentage }: BudgetProgressCircleProps) {
   const chartData = [{ name: 'spent', value: percentage, fill: 'var(--color-spent)' }];
 
-  let color;
-  if (percentage <= 70) {
-    color = 'hsl(var(--chart-2))'; // Green
-  } else if (percentage <= 90) {
-    color = 'hsl(var(--chart-5))'; // Orange
-  } else {
-    color = 'hsl(var(--destructive))'; // Red
-  }
+  const color = "hsl(var(--chart-1))";
 
   return (
     <ChartContainer
@@ -28,29 +21,25 @@ export function BudgetProgressCircle({ percentage }: BudgetProgressCircleProps) 
           color: color,
         }
       }}
-      className="mx-auto aspect-square h-[180px] w-[180px]"
+      className="mx-auto aspect-square h-[120px] w-[120px]"
     >
       <RadialBarChart
         data={chartData}
         startAngle={-270}
         endAngle={90}
-        innerRadius={110}
-        outerRadius={140}
-        barSize={12}
-        cy="55%"
+        innerRadius={70}
+        outerRadius={80}
+        barSize={10}
+        cy="50%"
       >
         <RadialBar
           dataKey="value"
           background={{ fill: 'hsl(var(--muted))' }}
-          cornerRadius={6}
+          cornerRadius={5}
           isAnimationActive={true}
           animationDuration={1500}
         />
       </RadialBarChart>
-      <div className="absolute inset-0 flex flex-col items-center justify-center top-1/2 -translate-y-1/2 mt-3">
-        <span className="text-4xl font-bold" style={{ color }}>{percentage}%</span>
-        <span className="text-sm text-muted-foreground">Spent</span>
-      </div>
     </ChartContainer>
   );
 }

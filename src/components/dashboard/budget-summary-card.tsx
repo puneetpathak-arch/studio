@@ -36,11 +36,11 @@ export function BudgetSummaryCard() {
                 <span className="text-5xl font-bold">
                   ₹{budget.spent.toLocaleString()}
                 </span>
-             </div>
-             <span className="text-lg text-muted-foreground">
+                 <span className="text-lg text-muted-foreground">
                   / ₹{budget.total.toLocaleString()}
               </span>
-            <p className="text-sm text-muted-foreground mt-4 flex items-center gap-2">
+             </div>
+            <p className="text-sm text-muted-foreground mt-2 flex items-center gap-2">
               <IndianRupee className="w-4 h-4" />
               {percentage > 100
                 ? `You are ₹${(
@@ -54,8 +54,12 @@ export function BudgetSummaryCard() {
                 </Button>
              </div>
           </div>
-          <div className="flex items-center justify-center">
+          <div className="flex items-center justify-center gap-4">
             <BudgetProgressCircle percentage={percentage} />
+             <div className="flex flex-col items-center justify-center">
+                <span className="text-3xl font-bold" style={{ color: 'hsl(var(--chart-1))' }}>{percentage}%</span>
+                <span className="text-sm text-muted-foreground">Spent</span>
+            </div>
           </div>
         </div>
       </CardContent>

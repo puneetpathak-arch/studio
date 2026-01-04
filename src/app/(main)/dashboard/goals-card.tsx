@@ -26,14 +26,12 @@ function GoalCard({ goal }: { goal: Goal }) {
   const percentage = Math.round((goal.savedAmount / goal.targetAmount) * 100);
   return (
     <Card
-      className="flex flex-col border-2 h-full"
-      style={{ borderColor: `hsl(var(--${goal.color}))` }}
+      className="flex flex-col h-full border-primary"
     >
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 text-lg">
           <goal.icon
-            className="w-6 h-6"
-            style={{ color: `hsl(var(--${goal.color}))` }}
+            className="w-6 h-6 text-primary"
           />
           <span className="font-bold">{goal.name}</span>
         </CardTitle>
@@ -43,7 +41,7 @@ function GoalCard({ goal }: { goal: Goal }) {
           percentage={percentage}
           savedAmount={goal.savedAmount}
           targetAmount={goal.targetAmount}
-          color={goal.color}
+          color={'chart-1'}
         />
         <Button size="sm" variant="outline">Add Funds</Button>
       </CardContent>

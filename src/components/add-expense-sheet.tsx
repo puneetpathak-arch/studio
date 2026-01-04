@@ -147,7 +147,7 @@ export function AddExpenseSheet() {
           <span className="sr-only">Add Expense</span>
         </Button>
       </SheetTrigger>
-      <SheetContent side="bottom" className="rounded-t-[1.5rem] h-[90vh] flex flex-col">
+      <SheetContent side="bottom" className="rounded-t-2xl h-[90vh] flex flex-col">
         <SheetHeader className="text-center">
           <SheetTitle className="text-2xl">Add a New Expense</SheetTitle>
         </SheetHeader>
