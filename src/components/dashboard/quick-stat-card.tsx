@@ -22,7 +22,7 @@ export function QuickStatCard({ icon: Icon, label, value, gradient, iconBg, clas
             </div>
             <div>
                 <p className="text-gray-600 text-sm font-semibold uppercase tracking-wide">{label}</p>
-                <p className={cn("text-4xl font-bold bg-gradient-to-r bg-clip-text text-transparent", iconBg.replace('via','from'))}>{value}</p>
+                <p className={cn("text-4xl font-bold", className)}>{value}</p>
             </div>
         </div>
     </div>
