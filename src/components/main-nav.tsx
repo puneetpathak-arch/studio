@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Bot, BarChartHorizontal, GraduationCap, LayoutDashboard, User, Sparkles, Target } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "./ui/sidebar";
 
 export const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
@@ -20,26 +21,30 @@ export function MainNav({ onNavItemClick }: { onNavItemClick?: () => void }) {
   const pathname = usePathname();
 
   return (
-    <>
+    <SidebarMenu>
       {navItems.map((item) => {
         const isActive = (item.href === '/dashboard' && pathname === item.href) || (item.href !== '/dashboard' && pathname.startsWith(item.href));
         return (
-          <Link
-            href={item.href}
-            key={item.href}
-            onClick={onNavItemClick}
-            className={cn(
-              'w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300',
-              isActive
-                ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/50'
-                : 'text-gray-400 hover:bg-slate-800/50 hover:text-white'
-            )}
-          >
-            <item.icon size={20} />
-            <span className="font-medium">{item.label}</span>
-          </Link>
+          <SidebarMenuItem key={item.href}>
+             <Link href={item.href} legacyBehavior passHref>
+                <SidebarMenuButton
+                    onClick={onNavItemClick}
+                    isActive={isActive}
+                    className={cn(
+                    'w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300',
+                    isActive
+                        ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/50'
+                        : 'text-gray-400 hover:bg-slate-800/50 hover:text-white'
+                    )}
+                    tooltip={item.label}
+                >
+                    <item.icon size={20} />
+                    <span className="font-medium">{item.label}</span>
+                </SidebarMenuButton>
+            </Link>
+          </SidebarMenuItem>
         );
       })}
-    </>
+    </SidebarMenu>
   );
 }

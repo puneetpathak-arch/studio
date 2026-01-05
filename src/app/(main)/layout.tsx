@@ -1,4 +1,3 @@
-
 'use client';
 
 import * as React from 'react';
@@ -26,7 +25,7 @@ export default function MainLayout({
   const { user, loading } = useUser();
   const auth = useAuth();
   const router = useRouter();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(isMobile ? false : true);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -76,18 +75,18 @@ export default function MainLayout({
         }}></div>
       </div>
 
-      <Sidebar collapsible="icon" className="bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 text-white p-2 shadow-2xl relative z-10 border-r border-indigo-500/20 hidden md:flex">
+      <Sidebar collapsible="icon" className="bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 text-white p-2 shadow-2xl relative z-10 border-r border-indigo-500/20">
           <SidebarHeader className="flex items-center gap-3 mb-4 p-2 relative z-10">
             <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/50 animate-float">
               <PiggyBank className="w-6 h-6" />
             </div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+            <span className="text-2xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent group-data-[state=collapsed]:hidden">
               EduFinance
             </span>
           </SidebarHeader>
           <SidebarContent>
             <SidebarMenu>
-              <MainNav onNavItemClick={() => setOpen(false)} />
+              <MainNav onNavItemClick={() => isMobile && setOpen(false)} />
             </SidebarMenu>
           </SidebarContent>
           <SidebarFooter>
@@ -96,7 +95,7 @@ export default function MainLayout({
                 <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-full flex items-center justify-center font-bold text-lg shadow-lg shadow-purple-500/50">
                   {user.displayName?.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase()}
                 </div>
-                <div className="flex-1 overflow-hidden">
+                <div className="flex-1 overflow-hidden group-data-[state=collapsed]:hidden">
                   <p className="font-semibold text-sm truncate">{user.displayName || user.email}</p>
                   <p className="text-gray-400 text-xs truncate">{user.email}</p>
                 </div>
