@@ -11,7 +11,7 @@ import { Bot, Loader2, Send, User as UserIcon, Wallet, Target, IndianRupee } fro
 import { useUser } from '@/firebase';
 import type { Expense, Goal } from '@/lib/types';
 import { getExpenses, getBudget, getGoals } from '@/services/firestore';
-import { getFinancialAdvice, FinancialContext } from '@/ai/flows/ai-advisor-flow';
+import { getFinancialAdvice, FinancialAdviceInput } from '@/ai/flows/ai-advisor-flow';
 import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -36,16 +36,9 @@ export default function AdvisorPage() {
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState('');
     const [loading, setLoading] = useState(false);
-    const [financialContext, setFinancialContext] = useState<FinancialContext | null>(null);
+    const [financialContext, setFinancialContext] = useState<Omit<FinancialAdviceInput, 'question'> | null>(null);
     const [dataLoading, setDataLoading] = useState(true);
     const scrollAreaRef = useRef<HTMLDivElement>(null);
-
-    const convertTimestamp = (date: any): string => {
-        if (typeof date === 'string') return date;
-        if (date && typeof date.toDate === 'function') return date.toDate().toISOString();
-        if (date instanceof Date) return date.toISOString();
-        return new Date().toISOString();
-    }
 
     const fetchData = useCallback(async () => {
         if (!user) return;
@@ -56,35 +49,14 @@ export default function AdvisorPage() {
                 getBudget(user.uid),
                 getGoals(user.uid),
             ]);
-
-            // Convert all potential Firestore Timestamps to serializable ISO strings
-            const expenses: Expense[] = rawExpenses.map((e: any) => ({
-                id: e.id,
-                description: e.description,
-                amount: e.amount,
-                category: e.category,
-                date: convertTimestamp(e.date),
-            }));
-
-            const goals: Goal[] = rawGoals.map((g: any) => ({
-                id: g.id,
-                name: g.name,
-                targetAmount: g.targetAmount,
-                savedAmount: g.savedAmount,
-                deadline: convertTimestamp(g.deadline),
-                icon: g.icon,
-                color: g.color,
-                lastFundedDate: g.lastFundedDate ? convertTimestamp(g.lastFundedDate) : undefined,
-            }));
-
-
-            const totalSpent = expenses.reduce((sum, exp) => sum + exp.amount, 0);
+            
+            const totalSpent = rawExpenses.reduce((sum, exp) => sum + exp.amount, 0);
 
             setFinancialContext({
                 monthlyIncome: budget?.total ?? 0,
                 monthlyExpenses: totalSpent,
-                savingsGoals: goals,
-                recentTransactions: expenses.slice(0, 10),
+                savingsGoalsJSON: JSON.stringify(rawGoals),
+                recentTransactionsJSON: JSON.stringify(rawExpenses.slice(0, 10)),
             });
         } catch (error) {
             console.error("Error fetching financial context:", error);
@@ -118,7 +90,7 @@ export default function AdvisorPage() {
         try {
             const advice = await getFinancialAdvice({
                 question: input,
-                context: financialContext,
+                ...financialContext,
             });
             const assistantMessage: Message = { role: 'assistant', content: advice.response };
             setMessages(prev => [...prev, assistantMessage]);
@@ -152,7 +124,7 @@ export default function AdvisorPage() {
                         <>
                            <StatCard icon={IndianRupee} label="Monthly Income" value={`₹${financialContext?.monthlyIncome.toLocaleString()}`} color="bg-green-100 text-green-800" />
                            <StatCard icon={IndianRupee} label="Total Monthly Expenses" value={`₹${financialContext?.monthlyExpenses.toLocaleString()}`} color="bg-red-100 text-red-800" />
-                           <StatCard icon={Target} label="Active Savings Goals" value={financialContext?.savingsGoals.length.toString() ?? '0'} color="bg-blue-100 text-blue-800" />
+                           <StatCard icon={Target} label="Active Savings Goals" value={JSON.parse(financialContext?.savingsGoalsJSON || '[]').length.toString() ?? '0'} color="bg-blue-100 text-blue-800" />
                         </>
                     )}
                 </CardContent>

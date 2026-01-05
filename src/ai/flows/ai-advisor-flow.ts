@@ -11,45 +11,16 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
-import type { Expense, Goal } from '@/lib/types';
-
-// Define schemas for complex types
-const GoalSchema = z.object({
-    id: z.string(),
-    name: z.string(),
-    targetAmount: z.number(),
-    savedAmount: z.number(),
-    deadline: z.string().describe("The goal's deadline in ISO 8601 format."),
-    icon: z.string(),
-    color: z.string(),
-    lastFundedDate: z.string().optional().describe("The date the goal was last funded in ISO 8601 format."),
-});
-
-const ExpenseSchema = z.object({
-    id: z.string(),
-    description: z.string(),
-    amount: z.number(),
-    category: z.string(),
-    date: z.string().describe("The date of the expense in ISO 8601 format."),
-});
-
-
-const FinancialContextSchema = z.object({
-    monthlyIncome: z.number().describe("The student's total monthly income or allowance."),
-    monthlyExpenses: z.number().describe("The student's total spending for the current month."),
-    savingsGoals: z.array(GoalSchema).describe("A list of the student's current savings goals."),
-    recentTransactions: z.array(ExpenseSchema).describe("A list of the student's most recent transactions."),
-});
-export type FinancialContext = z.infer<typeof FinancialContextSchema>;
-
 
 const FinancialAdviceInputSchema = z.object({
   question: z.string().describe("The student's specific question about their finances."),
-  context: FinancialContextSchema.describe("The student's overall financial situation."),
+  monthlyIncome: z.number().describe("The student's total monthly income or allowance."),
+  monthlyExpenses: z.number().describe("The student's total spending for the current month."),
+  savingsGoalsJSON: z.string().describe("A JSON string representing an array of the student's current savings goals."),
+  recentTransactionsJSON: z.string().describe("A JSON string representing an array of the student's most recent transactions."),
 });
 
 export type FinancialAdviceInput = z.infer<typeof FinancialAdviceInputSchema>;
-
 
 const FinancialAdviceOutputSchema = z.object({
   response: z.string().describe('A helpful, conversational, and actionable response to the student\'s question, formatted as a single string. Use markdown for lists or emphasis.'),
@@ -72,10 +43,10 @@ You are chatting with a student who has asked for financial advice. Use the prov
 Keep your answers concise and to the point. If you provide a list, use markdown bullet points.
 
 **Student's Financial Context:**
-- Monthly Income/Allowance: ₹{{context.monthlyIncome}}
-- Total Monthly Expenses: ₹{{context.monthlyExpenses}}
-- Savings Goals: {{JSON.stringify context.savingsGoals}}
-- Recent Transactions: {{JSON.stringify context.recentTransactions}}
+- Monthly Income/Allowance: ₹{{monthlyIncome}}
+- Total Monthly Expenses: ₹{{monthlyExpenses}}
+- Savings Goals: {{{savingsGoalsJSON}}}
+- Recent Transactions: {{{recentTransactionsJSON}}}
 
 **Student's Question:**
 "{{{question}}}"
