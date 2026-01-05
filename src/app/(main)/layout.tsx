@@ -1,13 +1,11 @@
+
 'use client';
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { PiggyBank, LogOut } from "lucide-react";
+import { PiggyBank } from "lucide-react";
 import { MainNav } from "@/components/main-nav";
-import Link from 'next/link';
-import { user as mockUser } from '@/lib/data';
 import { AddExpenseSheet } from '@/components/add-expense-sheet';
-import { Button } from '@/components/ui/button';
 import { BottomNav } from '@/components/bottom-nav';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useAuth, useUser } from '@/firebase';
@@ -15,6 +13,9 @@ import { signOut } from 'firebase/auth';
 import { addExpense } from '@/services/firestore';
 import type { Expense } from '@/lib/types';
 import { useEffect } from 'react';
+import { SidebarProvider, Sidebar, SidebarTrigger, SidebarContent, SidebarHeader, SidebarMenu, SidebarFooter } from '@/components/ui/sidebar';
+import { DashboardHeader } from '@/components/dashboard-header';
+import { UserNav } from '@/components/user-nav';
 
 
 export default function MainLayout({
@@ -26,6 +27,7 @@ export default function MainLayout({
   const { user, loading } = useUser();
   const auth = useAuth();
   const router = useRouter();
+  const [open, setOpen] = React.useState(false);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -61,6 +63,7 @@ export default function MainLayout({
   }
 
   return (
+    <SidebarProvider open={open} onOpenChange={setOpen}>
     <div className="min-h-screen bg-gradient-to-br from-violet-100 via-pink-100 to-orange-100 flex relative overflow-hidden">
       {/* Animated Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -74,47 +77,44 @@ export default function MainLayout({
         }}></div>
       </div>
 
-      {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex lg:flex-col w-72 bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 text-white p-6 shadow-2xl relative z-10 border-r border-indigo-500/20">
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-600/5 to-purple-600/5 pointer-events-none"></div>
-        
-        <div className="flex items-center gap-3 mb-10 relative z-10">
-          <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/50 animate-float">
-             <PiggyBank className="w-6 h-6" />
-          </div>
-          <span className="text-2xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-            EduFinance
-          </span>
-        </div>
-
-        <nav className="flex-grow space-y-2 relative z-10">
-            <MainNav onNavItemClick={() => {}} />
-        </nav>
-
-        <div className="relative z-10 mt-auto">
-          <div className="flex items-center gap-3 mb-4 px-2 pt-6 border-t border-slate-700/50">
-            <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-full flex items-center justify-center font-bold text-lg shadow-lg shadow-purple-500/50">
-              {user.displayName?.charAt(0) || user.email?.charAt(0).toUpperCase()}
+      <Sidebar collapsible="icon" className="bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 text-white p-2 shadow-2xl relative z-10 border-r border-indigo-500/20">
+          <SidebarHeader className="flex items-center gap-3 mb-4 p-2 relative z-10">
+            <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/50 animate-float">
+              <PiggyBank className="w-6 h-6" />
             </div>
-            <div className="flex-1">
-              <p className="font-semibold text-sm">{user.displayName || user.email}</p>
-              <p className="text-gray-400 text-xs">{user.email}</p>
+            <span className="text-2xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+              EduFinance
+            </span>
+          </SidebarHeader>
+          <SidebarContent>
+            <SidebarMenu>
+              <MainNav onNavItemClick={() => setOpen(false)} />
+            </SidebarMenu>
+          </SidebarContent>
+          <SidebarFooter>
+             <div className="relative z-10 mt-auto">
+              <div className="flex items-center gap-3 mb-4 px-2 pt-6 border-t border-slate-700/50">
+                <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-full flex items-center justify-center font-bold text-lg shadow-lg shadow-purple-500/50">
+                  {user.displayName?.charAt(0) || user.email?.charAt(0).toUpperCase()}
+                </div>
+                <div className="flex-1 overflow-hidden">
+                  <p className="font-semibold text-sm truncate">{user.displayName || user.email}</p>
+                  <p className="text-gray-400 text-xs truncate">{user.email}</p>
+                </div>
+              </div>
             </div>
-          </div>
-           <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-red-500/10 hover:text-red-400 transition-all">
-                <LogOut size={20} />
-                <span className="font-medium">Log out</span>
-            </button>
-        </div>
-      </aside>
+          </SidebarFooter>
+        </Sidebar>
       
       {isMobile && <BottomNav onAddExpense={handleAddExpense} />}
 
       <div className="flex-1 flex flex-col">
+        <DashboardHeader />
         <main className="flex-1 p-4 md:p-6 lg:p-8 pb-24 lg:pb-8">
             {children}
         </main>
       </div>
     </div>
+    </SidebarProvider>
   );
 }
