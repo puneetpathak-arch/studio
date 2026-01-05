@@ -30,7 +30,7 @@ function GoalCard({ goal, onFundAdded }: { goal: Goal; onFundAdded: (goalId: str
   }, [goal.icon]);
 
   return (
-    <Card className="flex flex-col transition-all hover:shadow-lg">
+    <Card className="flex flex-col transition-all hover:shadow-lg bg-card/70">
       <CardHeader>
         <CardTitle className="flex items-center gap-3">
           <IconComponent className="w-7 h-7 text-primary" />
@@ -86,8 +86,10 @@ export default function GoalsPage() {
   }, [user, toast]);
 
   useEffect(() => {
-    fetchGoals();
-  }, [fetchGoals]);
+    if(user) {
+        fetchGoals();
+    }
+  }, [user, fetchGoals]);
 
 
   const handleAddGoal = async (newGoalData: Omit<Goal, 'id' | 'savedAmount' | 'color' | 'icon'> & { icon: string; }) => {
@@ -100,17 +102,12 @@ export default function GoalsPage() {
     }
 
     try {
-      const newId = await addGoal(user.uid, goalPayload);
-      const newGoal: Goal = {
-        ...goalPayload,
-        id: newId,
-      };
-
-      setGoals(prevGoals => [...prevGoals, newGoal]);
+      await addGoal(user.uid, goalPayload);
       toast({
         title: "Goal Added!",
-        description: `Your new goal "${newGoal.name}" has been created.`,
+        description: `Your new goal "${newGoalData.name}" has been created.`,
       })
+      fetchGoals(); // Refetch goals to show the new one
     } catch(e) {
        toast({
         variant: "destructive",
@@ -156,7 +153,7 @@ export default function GoalsPage() {
 
       {loading ? (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
-            {[...Array(3)].map((_, i) => <Skeleton key={i} className="h-[300px] w-full" />)}
+            {[...Array(3)].map((_, i) => <Skeleton key={i} className="h-[320px] w-full" />)}
           </div>
       ) : goals.length > 0 ? (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
@@ -167,11 +164,11 @@ export default function GoalsPage() {
           ))}
         </div>
       ) : (
-        <Card className="flex flex-col items-center justify-center text-center p-12 space-y-4 bg-card/80 backdrop-blur-sm border-dashed">
-            <Target className="w-16 h-16 text-muted-foreground/70"/>
+        <Card className="flex flex-col items-center justify-center text-center p-12 space-y-4 bg-card border border-border">
+            <Target className="w-16 h-16 text-muted-foreground/80"/>
             <CardHeader className="p-0">
-                <CardTitle className="text-foreground">No Goals Yet</CardTitle>
-                <CardDescription className="text-foreground/80">
+                <CardTitle className="text-foreground font-bold">No Goals Yet</CardTitle>
+                <CardDescription className="text-muted-foreground">
                     Create a savings goal to get started on your financial journey.
                 </CardDescription>
             </CardHeader>
@@ -188,5 +185,3 @@ export default function GoalsPage() {
     </div>
   );
 }
-
-    
