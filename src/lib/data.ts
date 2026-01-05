@@ -1,5 +1,6 @@
 
 import type { User, Scholarship, Tip, Notification } from './types';
+import { ShieldCheck, ShoppingCart, UtensilsCrossed, BookOpen, Coffee } from 'lucide-react';
 
 export const user: User = {
   name: 'Rohan Sharma',
@@ -7,7 +8,33 @@ export const user: User = {
   avatarUrl: 'https://picsum.photos/seed/100/100/100',
 };
 
-export const tips: Tip[] = [];
+export const tips: Tip[] = [
+  {
+    id: 't1',
+    text: 'Always ask for a student discount when shopping, even for online subscriptions.',
+    icon: ShieldCheck,
+  },
+  {
+    id: 't2',
+    text: 'Review your monthly subscriptions. Cancel any you haven\'t used in the last month.',
+    icon: ShoppingCart,
+  },
+  {
+    id: 't3',
+    text: 'Try to eat most of your meals from the mess. It\'s almost always cheaper than the canteen or outside.',
+    icon: UtensilsCrossed,
+  },
+  {
+    id: 't4',
+    text: 'Buy used textbooks or use the library instead of purchasing new ones for every course.',
+    icon: BookOpen,
+  },
+  {
+      id: 't5',
+      text: 'Limit expensive coffee habits. Making your own can save you a significant amount over a semester.',
+      icon: Coffee,
+  }
+];
 
 export const scholarships: Scholarship[] = [
     {
