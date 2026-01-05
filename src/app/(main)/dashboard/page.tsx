@@ -1,14 +1,15 @@
+
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { BudgetSummaryCard } from '@/components/dashboard/budget-summary-card';
 import { GoalsCard } from '@/app/(main)/dashboard/goals-card';
 import { RecentExpensesCard } from '@/components/dashboard/recent-expenses-card';
 import { AiSavingsCard } from '@/components/dashboard/ai-savings-card';
-import { user as mockUser, tips, goals as initialGoals } from '@/lib/data';
+import { user as mockUser, tips } from '@/lib/data';
 import { initialBudget } from '@/lib/initial-data';
 import { QuickStatCard } from '@/components/dashboard/quick-stat-card';
-import { TrendingUp, Target, Sparkles } from 'lucide-react';
+import { TrendingUp, Target, Sparkles, Loader2 } from 'lucide-react';
 import { TipsCard } from '@/components/dashboard/tips-card';
 import { AddExpenseSheet } from '@/components/add-expense-sheet';
 import { Button } from '@/components/ui/button';
@@ -17,17 +18,47 @@ import type { Expense, Budget, Goal } from '@/lib/types';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { startOfWeek, isWithinInterval } from 'date-fns';
 import { useUser } from '@/firebase';
-import { getExpenses, addExpense, getBudget, updateBudget } from '@/services/firestore';
+import { getExpenses, addExpense, getBudget, getGoals, addFundsToGoal, addGoal as addGoalService } from '@/services/firestore';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useToast } from '@/hooks/use-toast';
 
 export default function DashboardPage() {
-    const { user } = useUser();
+    const { user, loading: userLoading } = useUser();
     const [greeting, setGreeting] = useState('');
     const [expenses, setExpenses] = useState<Expense[]>([]);
-    const [goals, setGoals] = useState<Goal[]>(initialGoals);
-    const [budget, setBudget] = useState<Budget | null>(initialBudget);
-    const [loading, setLoading] = useState(false);
+    const [goals, setGoals] = useState<Goal[]>([]);
+    const [budget, setBudget] = useState<Budget | null>(null);
+    const [loading, setLoading] = useState(true);
     const isMobile = useIsMobile();
+    const { toast } = useToast();
+
+    const fetchData = useCallback(async () => {
+        if (!user) return;
+        setLoading(true);
+        try {
+            const [userExpenses, userBudget, userGoals] = await Promise.all([
+                getExpenses(user.uid),
+                getBudget(user.uid),
+                getGoals(user.uid)
+            ]);
+            setExpenses(userExpenses);
+            setBudget(userBudget);
+            setGoals(userGoals);
+        } catch (error) {
+            console.error("Error fetching dashboard data:", error);
+            toast({
+                variant: 'destructive',
+                title: 'Error',
+                description: 'Could not load your financial data.'
+            });
+        } finally {
+            setLoading(false);
+        }
+    }, [user, toast]);
+
+    useEffect(() => {
+        fetchData();
+    }, [fetchData]);
 
     useEffect(() => {
         const hour = new Date().getHours();
@@ -36,10 +67,13 @@ export default function DashboardPage() {
         else setGreeting('Good Evening');
     }, []);
 
-     const handleAddExpense = async (newExpense: Omit<Expense, 'id' | 'date'>) => {
+    const handleAddExpense = async (newExpense: Omit<Expense, 'id' | 'date'>) => {
+        if (!user) return;
+        const newId = await addExpense(user.uid, newExpense);
+        
         const expenseToAdd: Expense = {
             ...newExpense,
-            id: new Date().toISOString(), // Mock ID
+            id: newId, 
             date: new Date().toISOString(),
         };
         setExpenses(prevExpenses => [expenseToAdd, ...prevExpenses]);
@@ -61,7 +95,6 @@ export default function DashboardPage() {
 
 
     const weeklySpend = useMemo(() => {
-        if (!expenses) return 0;
         const today = new Date();
         const start = startOfWeek(today);
         return expenses
@@ -70,6 +103,14 @@ export default function DashboardPage() {
     }, [expenses]);
 
     const userName = user?.displayName || mockUser.name.split(' ')[0];
+
+  if (userLoading) {
+      return (
+          <div className="flex justify-center items-center h-full">
+             <Loader2 className="w-12 h-12 animate-spin text-primary" />
+          </div>
+      );
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -100,7 +141,7 @@ export default function DashboardPage() {
             )}
         </div>
         <div className="md:col-span-2">
-            <GoalsCard />
+            <GoalsCard goals={goals} loading={loading} onDataChange={fetchData} />
         </div>
       </div>
 
@@ -130,3 +171,5 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+    

@@ -1,22 +1,49 @@
+
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { SpendingBarChart } from "@/components/analytics/spending-bar-chart";
 import { BarChartHorizontal, IndianRupee, PieChart, TrendingUp, CalendarDays, Loader2 } from "lucide-react";
 import { QuickStatCard } from "@/components/dashboard/quick-stat-card";
 import { CategoryPieChart } from '@/components/analytics/category-pie-chart';
-import { Skeleton } from "@/components/ui/skeleton";
 import { useUser } from '@/firebase';
-import { initialBudget } from '@/lib/initial-data';
 import type { Budget, Expense } from '@/lib/types';
 import { startOfWeek, isWithinInterval, format } from 'date-fns';
-
+import { getExpenses, getBudget } from '@/services/firestore';
+import { useToast } from '@/hooks/use-toast';
 
 export default function AnalyticsPage() {
   const { user } = useUser();
-  const [budget, setBudget] = useState<Budget | null>(initialBudget);
+  const [budget, setBudget] = useState<Budget | null>(null);
   const [expenses, setExpenses] = useState<Expense[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
+
+  const fetchData = useCallback(async () => {
+    if (!user) return;
+    setLoading(true);
+    try {
+        const [userExpenses, userBudget] = await Promise.all([
+            getExpenses(user.uid),
+            getBudget(user.uid)
+        ]);
+        setExpenses(userExpenses);
+        setBudget(userBudget);
+    } catch (error) {
+        console.error("Error fetching analytics data:", error);
+        toast({
+            variant: 'destructive',
+            title: 'Error',
+            description: 'Could not load your analytics data.'
+        });
+    } finally {
+        setLoading(false);
+    }
+  }, [user, toast]);
+
+  useEffect(() => {
+      fetchData();
+  }, [fetchData]);
 
 
   const { avgDailySpend, mostSpentCategory, highestSpendingDay } = useMemo(() => {
@@ -96,3 +123,5 @@ export default function AnalyticsPage() {
     </div>
   );
 }
+
+    

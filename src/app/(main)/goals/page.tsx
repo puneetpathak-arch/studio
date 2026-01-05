@@ -1,6 +1,7 @@
+
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import {
   Card,
   CardContent,
@@ -12,14 +13,13 @@ import {
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import type { Goal } from '@/lib/types';
-import { Target, Plus } from 'lucide-react';
+import { Target, Plus, Loader2 } from 'lucide-react';
 import { AddGoalDialog, goalIcons } from '@/components/goals/add-goal-dialog';
 import { AddFundsDialog } from '@/components/goals/add-funds-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { useUser } from '@/firebase';
-import { goals as mockGoals } from '@/lib/data';
+import { getGoals, addGoal, addFundsToGoal } from '@/services/firestore';
 import { Skeleton } from '@/components/ui/skeleton';
-import type { LucideIcon } from 'lucide-react';
 
 function GoalCard({ goal, onFundAdded }: { goal: Goal; onFundAdded: (goalId: string, amount: number) => void; }) {
   const percentage = Math.min(100, Math.round((goal.savedAmount / goal.targetAmount) * 100));
@@ -63,19 +63,48 @@ function GoalCard({ goal, onFundAdded }: { goal: Goal; onFundAdded: (goalId: str
 
 export default function GoalsPage() {
   const { user } = useUser();
-  const [goals, setGoals] = useState<Goal[]>(mockGoals);
-  const [loading, setLoading] = useState(false);
+  const [goals, setGoals] = useState<Goal[]>([]);
+  const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+
+  const fetchGoals = useCallback(async () => {
+    if (!user) return;
+    setLoading(true);
+    try {
+      const userGoals = await getGoals(user.uid);
+      setGoals(userGoals);
+    } catch (error) {
+      console.error("Error fetching goals:", error);
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Could not load your goals.'
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, [user, toast]);
+
+  useEffect(() => {
+    fetchGoals();
+  }, [fetchGoals]);
+
 
   const handleAddGoal = async (newGoalData: Omit<Goal, 'id' | 'savedAmount' | 'color' | 'icon'> & { icon: string; }) => {
     if (!user) return;
-
-    const newGoal: Goal = {
+    
+    const goalPayload = {
       ...newGoalData,
-      id: new Date().toISOString(), // Mock ID
       savedAmount: 0,
       color: `chart-${(goals.length % 5) + 1}` as Goal['color'],
+    }
+
+    const newId = await addGoal(user.uid, goalPayload);
+    const newGoal: Goal = {
+      ...goalPayload,
+      id: newId,
     };
+
     setGoals(prevGoals => [...prevGoals, newGoal]);
     toast({
       title: "Goal Added!",
@@ -85,6 +114,7 @@ export default function GoalsPage() {
 
   const handleFundAdded = async (goalId: string, amount: number) => {
     if (!user) return;
+    addFundsToGoal(user.uid, goalId, amount);
     setGoals(prevGoals =>
       prevGoals.map(g =>
         g.id === goalId ? { ...g, savedAmount: g.savedAmount + amount } : g
@@ -146,3 +176,5 @@ export default function GoalsPage() {
     </div>
   );
 }
+
+    

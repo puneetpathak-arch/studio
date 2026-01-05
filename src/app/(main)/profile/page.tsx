@@ -1,6 +1,7 @@
+
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useUser } from "@/firebase";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
@@ -10,51 +11,94 @@ import { Input } from "@/components/ui/input";
 import { User as UserIcon, Edit, Wallet, Bell, LogOut, Loader2 } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
-import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
 import type { Budget, UserProfile } from "@/lib/types";
 import { signOut } from "firebase/auth";
 import { useAuth } from "@/firebase";
 import { useRouter } from "next/navigation";
-import { initialBudget } from "@/lib/initial-data";
+import { getUserDocument, updateUserProfile, updateBudget } from "@/services/firestore";
+import { updateProfile as updateFirebaseProfile } from 'firebase/auth';
+
 
 export default function ProfilePage() {
     const { user, loading: userLoading } = useUser();
     const auth = useAuth();
     const router = useRouter();
     const [profile, setProfile] = useState<UserProfile>({ displayName: '', college: '' });
-    const [budget, setBudget] = useState<Budget | null>(initialBudget);
+    const [budget, setBudget] = useState<Budget | null>(null);
     const [budgetAmount, setBudgetAmount] = useState(15000);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const { toast } = useToast();
 
+    const fetchProfileData = useCallback(async () => {
+        if (!user) return;
+        setLoading(true);
+        try {
+            const userDoc = await getUserDocument(user.uid);
+            if (userDoc) {
+                setProfile({
+                    displayName: userDoc.displayName || user.displayName || '',
+                    college: userDoc.college || ''
+                });
+                if (userDoc.budget) {
+                    setBudget(userDoc.budget);
+                    setBudgetAmount(userDoc.budget.total);
+                }
+            }
+        } catch (error) {
+            console.error("Error fetching profile data:", error);
+            toast({
+                variant: 'destructive',
+                title: 'Error',
+                description: 'Could not load your profile data.'
+            });
+        } finally {
+            setLoading(false);
+        }
+    }, [user, toast]);
+
     useEffect(() => {
         if (user) {
-            setProfile({
-                displayName: user.displayName || '',
-                college: '' // This would be fetched from a user profile document
-            });
-            if (budget) {
-                setBudgetAmount(budget.total);
-            }
-            setLoading(false);
+            fetchProfileData();
         } else if (!userLoading) {
             setLoading(false);
         }
-    }, [user, userLoading, budget]);
+    }, [user, userLoading, fetchProfileData]);
 
     const handleSaveChanges = async () => {
-        if (!user) return;
+        if (!user || !budget) return;
         setSaving(true);
-        // Mock saving
-        setTimeout(() => {
+        try {
+            const profileUpdatePromise = updateUserProfile(user.uid, {
+                displayName: profile.displayName,
+                college: profile.college,
+            });
+
+            if (auth?.currentUser && auth.currentUser.displayName !== profile.displayName) {
+                await updateFirebaseProfile(auth.currentUser, { displayName: profile.displayName });
+            }
+
+            const budgetUpdatePromise = budgetAmount !== budget.total
+                ? updateBudget(user.uid, { ...budget, total: budgetAmount })
+                : Promise.resolve();
+
+            await Promise.all([profileUpdatePromise, budgetUpdatePromise]);
+
             toast({
                 title: "Profile Updated",
                 description: "Your changes have been saved successfully.",
             });
+        } catch (error) {
+            console.error("Error saving profile:", error);
+            toast({
+                variant: "destructive",
+                title: "Uh oh! Something went wrong.",
+                description: "Could not save your changes.",
+            });
+        } finally {
             setSaving(false);
-        }, 1000);
+        }
     };
     
     const handleLogout = async () => {
@@ -171,3 +215,5 @@ export default function ProfilePage() {
     </div>
   );
 }
+
+    

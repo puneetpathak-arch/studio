@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   Card,
   CardContent,
@@ -22,8 +22,7 @@ import { AddGoalDialog } from '@/components/goals/add-goal-dialog';
 import type { Expense, Goal } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { useUser } from '@/firebase';
-import { goals as mockGoals } from '@/lib/data';
-
+import { getExpenses, getGoals, addGoal as addGoalService } from '@/services/firestore';
 
 function SuggestionCard({
   suggestion,
@@ -71,13 +70,39 @@ export default function SavingsPage() {
   const { user } = useUser();
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [expenses, setExpenses] = useState<Expense[]>([]);
-  const [goals, setGoals] = useState<Goal[]>(mockGoals);
+  const [goals, setGoals] = useState<Goal[]>([]);
   const [loading, setLoading] = useState(false);
-  const [dataLoading, setDataLoading] = useState(false);
+  const [dataLoading, setDataLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isAddGoalDialogOpen, setIsAddGoalDialogOpen] = useState(false);
   const [initialGoalData, setInitialGoalData] = useState<Partial<Omit<Goal, 'id' | 'savedAmount' | 'color'>> | undefined>();
   const { toast } = useToast();
+
+  const fetchData = useCallback(async () => {
+    if (!user) return;
+    setDataLoading(true);
+    try {
+        const [userExpenses, userGoals] = await Promise.all([
+            getExpenses(user.uid),
+            getGoals(user.uid)
+        ]);
+        setExpenses(userExpenses);
+        setGoals(userGoals);
+    } catch (error) {
+        console.error("Error fetching data for savings page:", error);
+        toast({
+            variant: 'destructive',
+            title: 'Error',
+            description: 'Could not load your data.'
+        });
+    } finally {
+        setDataLoading(false);
+    }
+  }, [user, toast]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const handleGenerateSuggestions = async () => {
     if (expenses.length === 0) {
@@ -114,21 +139,25 @@ export default function SavingsPage() {
 
   const handleAddGoalClick = (suggestion: Suggestion) => {
     setInitialGoalData({
-      name: suggestion.insight,
+      name: `Save on ${suggestion.insight}`,
       targetAmount: suggestion.potentialMonthlySavings,
+      deadline: new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString(),
     });
     setIsAddGoalDialogOpen(true);
   };
 
-  const handleAddGoal = async (newGoalData: Omit<Goal, 'id' | 'savedAmount' | 'color'>) => {
+  const handleAddGoal = async (newGoalData: Omit<Goal, 'id' | 'savedAmount' | 'color' | 'icon'> & { icon: string }) => {
     if (!user) return;
 
-    const newGoal: Goal = {
-      ...newGoalData,
-      id: new Date().toISOString(), // Mock ID
-      savedAmount: 0,
-      color: `chart-${(goals.length % 5) + 1}` as Goal['color'],
+    const goalPayload = {
+        ...newGoalData,
+        savedAmount: 0,
+        color: `chart-${(goals.length % 5) + 1}` as Goal['color'],
     };
+
+    const newId = await addGoalService(user.uid, goalPayload);
+    const newGoal = { ...goalPayload, id: newId };
+    
     setGoals(prevGoals => [...prevGoals, newGoal]);
     toast({
       title: "Goal Added!",
@@ -184,10 +213,11 @@ export default function SavingsPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button onClick={handleGenerateSuggestions} disabled={loading || dataLoading} size="lg">
+              <Button onClick={handleGenerateSuggestions} disabled={loading || dataLoading || expenses.length === 0} size="lg">
                 <Sparkles className="mr-2 h-5 w-5" />
                 Generate My Tips
               </Button>
+               {expenses.length === 0 && !dataLoading && <p className="text-xs text-muted-foreground mt-2">Please add some expenses first.</p>}
             </CardContent>
           </Card>
         )}
@@ -201,3 +231,5 @@ export default function SavingsPage() {
     </div>
   );
 }
+
+    

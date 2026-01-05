@@ -18,14 +18,14 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel';
 import type { Goal } from '@/lib/types';
-import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { AddFundsDialog } from '@/components/goals/add-funds-dialog';
-import { useState, useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useUser } from '@/firebase';
-import { goals as mockGoals } from '@/lib/data';
 import { goalIcons } from '@/components/goals/add-goal-dialog';
 import { Skeleton } from '@/components/ui/skeleton';
+import { addFundsToGoal } from '@/services/firestore';
+
 
 function GoalCard({ goal, onFundAdded }: { goal: Goal, onFundAdded: (goalId: string, amount: number) => void }) {
   const percentage = Math.round((goal.savedAmount / goal.targetAmount) * 100);
@@ -64,18 +64,20 @@ function GoalCard({ goal, onFundAdded }: { goal: Goal, onFundAdded: (goalId: str
   );
 }
 
-export function GoalsCard() {
+interface GoalsCardProps {
+    goals: Goal[];
+    loading: boolean;
+    onDataChange: () => void;
+}
+
+export function GoalsCard({ goals, loading, onDataChange }: GoalsCardProps) {
   const { user } = useUser();
-  const [goals, setGoals] = useState<Goal[]>(mockGoals);
-  const [loading, setLoading] = useState(false);
 
   const handleFundAdded = async (goalId: string, amount: number) => {
     if (!user) return;
-    setGoals(prevGoals =>
-      prevGoals.map(g =>
-        g.id === goalId ? { ...g, savedAmount: g.savedAmount + amount } : g
-      )
-    );
+    addFundsToGoal(user.uid, goalId, amount);
+    // Trigger parent component to refetch data
+    onDataChange();
   };
   
   return (
@@ -123,3 +125,5 @@ export function GoalsCard() {
     </Card>
   );
 }
+
+    
