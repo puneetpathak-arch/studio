@@ -21,14 +21,14 @@ export const scholarships: Scholarship[] = [
             category: ['SC'],
             income: '₹2.5 Lakh p.a.'
         },
-        link: 'https://scholarships.gov.in/'
+        link: 'https://scholarships.gov.in/pms-sc-gj/pms-sc-help.html'
     },
     {
         id: 's2',
         name: 'Merit Cum Means Scholarship for Professional and Technical Courses',
         provider: 'Ministry of Minority Affairs',
         amount: '₹20,000 p.a. + Fees',
-        deadline: '2026-09-30',
+        deadline: '2026-10-31',
         eligibility: {
             state: ['All India'],
             category: ['Minority'],
@@ -41,7 +41,7 @@ export const scholarships: Scholarship[] = [
         name: 'Mukhyamantri Medhavi Vidyarthi Yojana (MMVY)',
         provider: 'Government of Madhya Pradesh',
         amount: 'Full Course Fee',
-        deadline: '2026-08-31',
+        deadline: '2026-07-31',
         eligibility: {
             state: ['Madhya Pradesh'],
             category: ['General', 'OBC', 'SC', 'ST'],
@@ -53,7 +53,7 @@ export const scholarships: Scholarship[] = [
         name: 'Pragati Scholarship for Girl Students',
         provider: 'AICTE',
         amount: '₹50,000 p.a.',
-        deadline: '2026-11-15',
+        deadline: '2026-11-30',
         eligibility: {
             state: ['All India'],
             category: ['Girl Students'],
@@ -65,7 +65,7 @@ export const scholarships: Scholarship[] = [
         name: 'Chief Minister\'s Scholarship Scheme',
         provider: 'Government of Haryana',
         amount: 'Upto ₹12,000 p.a.',
-        deadline: '2026-11-20',
+        deadline: '2026-11-30',
         eligibility: {
             state: ['Haryana'],
             category: ['General', 'SC', 'OBC'],
