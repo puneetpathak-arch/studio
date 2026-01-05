@@ -97,7 +97,12 @@ export function AddGoalDialog({ onAddGoal, children, open: controlledOpen, onOpe
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       {children && <DialogTrigger asChild>{children}</DialogTrigger>}
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent 
+        className="sm:max-w-[425px]"
+        onInteractOutside={(e) => {
+            e.preventDefault();
+        }}
+      >
         <DialogHeader>
           <DialogTitle>Create a New Savings Goal</DialogTitle>
           <DialogDescription>
