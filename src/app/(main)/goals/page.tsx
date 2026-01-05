@@ -107,7 +107,7 @@ export default function GoalsPage() {
         title: "Goal Added!",
         description: `Your new goal "${newGoalData.name}" has been created.`,
       })
-      fetchGoals(); // Refetch goals to show the new one
+      await fetchGoals(); // Refetch goals to show the new one
     } catch(e) {
        toast({
         variant: "destructive",

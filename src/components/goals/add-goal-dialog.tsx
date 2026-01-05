@@ -39,7 +39,7 @@ export const goalIcons: { name: string; icon: LucideIcon }[] = [
 ];
 
 interface AddGoalDialogProps {
-    onAddGoal: (newGoal: Omit<Goal, 'id' | 'savedAmount' | 'color' | 'icon'> & { icon: string; }) => void;
+    onAddGoal: (newGoal: Omit<Goal, 'id' | 'savedAmount' | 'color' | 'icon'> & { icon: string; }) => Promise<void>;
     children?: React.ReactNode;
     open?: boolean;
     onOpenChange?: (open: boolean) => void;
@@ -68,7 +68,7 @@ export function AddGoalDialog({ onAddGoal, children, open: controlledOpen, onOpe
   }, [open, initialData]);
 
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!goalName || !targetAmount || !deadline) {
       toast({
@@ -79,7 +79,7 @@ export function AddGoalDialog({ onAddGoal, children, open: controlledOpen, onOpe
       return;
     }
 
-    onAddGoal({
+    await onAddGoal({
       name: goalName,
       targetAmount: parseFloat(targetAmount),
       deadline: deadline.toISOString(),
