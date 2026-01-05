@@ -182,13 +182,19 @@ export const addGoal = async (userId: string, goalData: Omit<Goal, 'id'>) => {
 
 export const addFundsToGoal = (userId: string, goalId: string, amount: number) => {
     const goalRef = doc(firestore, `users/${userId}/goals`, goalId);
-    updateDoc(goalRef, {
+    const updatePayload = {
         savedAmount: increment(amount),
-    }).catch(async (serverError) => {
+        lastFundedDate: new Date().toISOString(),
+        updatedAt: serverTimestamp(),
+    };
+    updateDoc(goalRef, updatePayload).catch(async (serverError) => {
         const permissionError = new FirestorePermissionError({
             path: goalRef.path,
             operation: 'update',
-            requestResourceData: { savedAmount: `increment(${amount})` },
+            requestResourceData: { 
+                savedAmount: `increment(${amount})`,
+                lastFundedDate: updatePayload.lastFundedDate,
+            },
         });
         errorEmitter.emit('permission-error', permissionError);
     });

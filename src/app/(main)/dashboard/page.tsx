@@ -15,7 +15,7 @@ import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import type { Expense, Budget, Goal } from '@/lib/types';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { startOfWeek, isWithinInterval, getMonth, getYear } from 'date-fns';
+import { startOfWeek, isWithinInterval, getMonth, getYear, differenceInDays } from 'date-fns';
 import { useUser } from '@/firebase';
 import { getExpenses, addExpense, getBudget, getGoals, addFundsToGoal } from '@/services/firestore';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -182,23 +182,45 @@ export default function DashboardPage() {
     }, [expenses]);
     
     const financialHealthScore = useMemo(() => {
-        if (!calculatedBudget || !budget) return 0;
-
-        // 1. Budget Score (60 points)
-        const budgetRatio = calculatedBudget.spent / calculatedBudget.total;
-        let budgetScore = 0;
-        if (budgetRatio <= 1) {
-            budgetScore = (1 - budgetRatio) * 60;
-        } // If over budget, score is 0
-
-        // 2. Savings Score (40 points)
-        const totalSaved = goals.reduce((sum, goal) => sum + goal.savedAmount, 0);
+        if (!calculatedBudget || !budget || !goals) return 0;
+        
         const income = budget.total;
-        // Target 10% savings rate for full points
-        const savingsRatio = income > 0 ? totalSaved / income : 0;
-        const savingsScore = Math.min((savingsRatio / 0.1) * 40, 40);
+        if (income <= 0) return 0;
 
-        return Math.round(budgetScore + savingsScore);
+        // 1. Spending Discipline (50 points)
+        const spendingRatio = calculatedBudget.spent / income;
+        let spendingScore = 0;
+        if (spendingRatio <= 0.8) {
+            spendingScore = 50;
+        } else if (spendingRatio <= 1) {
+            // Score decreases from 50 to 0 as spending goes from 80% to 100%
+            spendingScore = (1 - (spendingRatio - 0.8) / 0.2) * 50;
+        }
+
+        // 2. Savings Rate (30 points)
+        const totalSaved = goals.reduce((sum, goal) => sum + goal.savedAmount, 0);
+        const savingsRate = totalSaved / income;
+        const targetSavingsRate = 0.15; // 15% is a good goal for students
+        const savingsScore = Math.min((savingsRate / targetSavingsRate) * 30, 30);
+
+        // 3. Savings Consistency (20 points)
+        const mostRecentFunding = goals.reduce((latest, goal) => {
+            if (!goal.lastFundedDate) return latest;
+            const goalDate = new Date(goal.lastFundedDate);
+            return goalDate > latest ? goalDate : latest;
+        }, new Date(0));
+        
+        let consistencyScore = 0;
+        if (mostRecentFunding > new Date(0)) {
+            const daysSinceFunding = differenceInDays(new Date(), mostRecentFunding);
+            if (daysSinceFunding <= 7) {
+                consistencyScore = 20; // Saved in the last week
+            } else if (daysSinceFunding <= 30) {
+                consistencyScore = 10; // Saved in the last month
+            }
+        }
+        
+        return Math.round(spendingScore + savingsScore + consistencyScore);
     }, [calculatedBudget, goals, budget]);
 
 

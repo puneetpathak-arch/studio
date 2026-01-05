@@ -34,13 +34,14 @@ export type CategoryBudget = {
 };
 
 export type Goal = {
-  id: string;
+  id:string;
   name: string;
   targetAmount: number;
   savedAmount: number;
   deadline: string; // ISO string
   icon: string;
   color: 'chart-1' | 'chart-2' | 'chart-3' | 'chart-4' | 'chart-5';
+  lastFundedDate?: string; // ISO string
 };
 
 export type Scholarship = {
