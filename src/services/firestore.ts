@@ -1,6 +1,5 @@
 
 import {
-  getFirestore,
   doc,
   setDoc,
   getDoc,
@@ -62,6 +61,7 @@ export const getUserDocument = async (userId: string): Promise<UserProfile | nul
         if (userSnap.exists()) {
             return userSnap.data() as UserProfile;
         } else {
+            console.warn(`No user document found for uid: ${userId}`);
             return null;
         }
     } catch (serverError) {
@@ -81,6 +81,8 @@ export const getBudget = async (userId: string): Promise<Budget> => {
     if (userDoc && userDoc.budget) {
         return userDoc.budget;
     }
+    // If no budget, create one
+    await updateBudget(userId, initialBudget);
     return initialBudget;
 };
 
@@ -155,7 +157,7 @@ export const getGoals = async (userId: string): Promise<Goal[]> => {
   }
 };
 
-export const addGoal = async (userId: string, goalData: Omit<Goal, 'id' | 'savedAmount' | 'color' | 'icon'> & { icon: string }) => {
+export const addGoal = async (userId: string, goalData: Omit<Goal, 'id' | 'savedAmount' | 'color' >) => {
     const goalsColRef = collection(firestore, `users/${userId}/goals`);
     const goalPayload = {
         ...goalData,
