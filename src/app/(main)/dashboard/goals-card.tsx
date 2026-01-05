@@ -23,7 +23,7 @@ import { Progress } from '@/components/ui/progress';
 import { AddFundsDialog } from '@/components/goals/add-funds-dialog';
 import { useState, useEffect, useMemo } from 'react';
 import { useUser } from '@/firebase';
-import { getGoals, addFundsToGoal } from '@/services/firestore';
+import { goals as mockGoals } from '@/lib/data';
 import { goalIcons } from '@/components/goals/add-goal-dialog';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -66,27 +66,11 @@ function GoalCard({ goal, onFundAdded }: { goal: Goal, onFundAdded: (goalId: str
 
 export function GoalsCard() {
   const { user } = useUser();
-  const [goals, setGoals] = useState<Goal[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (user) {
-      const fetchGoals = async () => {
-        setLoading(true);
-        const userGoals = await getGoals(user.uid);
-        setGoals(userGoals);
-        setLoading(false);
-      };
-      fetchGoals();
-    } else {
-      setLoading(false);
-    }
-  }, [user]);
-
+  const [goals, setGoals] = useState<Goal[]>(mockGoals);
+  const [loading, setLoading] = useState(false);
 
   const handleFundAdded = async (goalId: string, amount: number) => {
     if (!user) return;
-    await addFundsToGoal(user.uid, goalId, amount);
     setGoals(prevGoals =>
       prevGoals.map(g =>
         g.id === goalId ? { ...g, savedAmount: g.savedAmount + amount } : g

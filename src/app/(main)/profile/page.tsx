@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useUser } from "@/firebase";
-import { getBudget, updateBudget, updateUserProfile } from "@/services/firestore";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -17,13 +16,14 @@ import type { Budget, UserProfile } from "@/lib/types";
 import { signOut } from "firebase/auth";
 import { useAuth } from "@/firebase";
 import { useRouter } from "next/navigation";
+import { initialBudget } from "@/lib/initial-data";
 
 export default function ProfilePage() {
     const { user, loading: userLoading } = useUser();
     const auth = useAuth();
     const router = useRouter();
     const [profile, setProfile] = useState<UserProfile>({ displayName: '', college: '' });
-    const [budget, setBudget] = useState<Budget | null>(null);
+    const [budget, setBudget] = useState<Budget | null>(initialBudget);
     const [budgetAmount, setBudgetAmount] = useState(15000);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -31,54 +31,30 @@ export default function ProfilePage() {
 
     useEffect(() => {
         if (user) {
-            const fetchProfileData = async () => {
-                setLoading(true);
-                const userBudget = await getBudget(user.uid);
-                // In a real app, you'd fetch the user profile from Firestore as well.
-                // For now, we'll use the auth display name.
-                setProfile({
-                    displayName: user.displayName || '',
-                    college: '' // This would be fetched from a user profile document
-                });
-                
-                if (userBudget) {
-                    setBudget(userBudget);
-                    setBudgetAmount(userBudget.total);
-                }
-                setLoading(false);
-            };
-            fetchProfileData();
+            setProfile({
+                displayName: user.displayName || '',
+                college: '' // This would be fetched from a user profile document
+            });
+            if (budget) {
+                setBudgetAmount(budget.total);
+            }
+            setLoading(false);
         } else if (!userLoading) {
             setLoading(false);
         }
-    }, [user, userLoading]);
+    }, [user, userLoading, budget]);
 
     const handleSaveChanges = async () => {
         if (!user) return;
         setSaving(true);
-        try {
-            // Update auth profile
-            await updateUserProfile(user.uid, { displayName: profile.displayName });
-            
-            // Update budget in Firestore
-            if (budget) {
-                const updatedBudgetData: Budget = { ...budget, total: budgetAmount };
-                await updateBudget(user.uid, updatedBudgetData);
-            }
+        // Mock saving
+        setTimeout(() => {
             toast({
                 title: "Profile Updated",
                 description: "Your changes have been saved successfully.",
             });
-        } catch (error) {
-            console.error("Failed to save changes:", error);
-            toast({
-                variant: "destructive",
-                title: "Error",
-                description: "Failed to save changes. Please try again.",
-            });
-        } finally {
             setSaving(false);
-        }
+        }, 1000);
     };
     
     const handleLogout = async () => {

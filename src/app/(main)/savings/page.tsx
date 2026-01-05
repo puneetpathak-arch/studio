@@ -22,7 +22,8 @@ import { AddGoalDialog } from '@/components/goals/add-goal-dialog';
 import type { Expense, Goal } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { useUser } from '@/firebase';
-import { getExpenses, getGoals, addGoal } from '@/services/firestore';
+import { goals as mockGoals } from '@/lib/data';
+
 
 function SuggestionCard({
   suggestion,
@@ -70,34 +71,16 @@ export default function SavingsPage() {
   const { user } = useUser();
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [expenses, setExpenses] = useState<Expense[]>([]);
-  const [goals, setGoals] = useState<Goal[]>([]);
+  const [goals, setGoals] = useState<Goal[]>(mockGoals);
   const [loading, setLoading] = useState(false);
-  const [dataLoading, setDataLoading] = useState(true);
+  const [dataLoading, setDataLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isAddGoalDialogOpen, setIsAddGoalDialogOpen] = useState(false);
   const [initialGoalData, setInitialGoalData] = useState<Partial<Omit<Goal, 'id' | 'savedAmount' | 'color'>> | undefined>();
   const { toast } = useToast();
 
-  useEffect(() => {
-    if (user) {
-      const fetchData = async () => {
-        setDataLoading(true);
-        const [userExpenses, userGoals] = await Promise.all([
-          getExpenses(user.uid),
-          getGoals(user.uid)
-        ]);
-        setExpenses(userExpenses);
-        setGoals(userGoals);
-        setDataLoading(false);
-      };
-      fetchData();
-    } else {
-      setDataLoading(false);
-    }
-  }, [user]);
-
   const handleGenerateSuggestions = async () => {
-    if (!user || expenses.length === 0) {
+    if (expenses.length === 0) {
         toast({
             variant: 'destructive',
             title: 'Not enough data',
@@ -140,10 +123,9 @@ export default function SavingsPage() {
   const handleAddGoal = async (newGoalData: Omit<Goal, 'id' | 'savedAmount' | 'color'>) => {
     if (!user) return;
 
-    const newId = await addGoal(user.uid, newGoalData);
     const newGoal: Goal = {
       ...newGoalData,
-      id: newId,
+      id: new Date().toISOString(), // Mock ID
       savedAmount: 0,
       color: `chart-${(goals.length % 5) + 1}` as Goal['color'],
     };

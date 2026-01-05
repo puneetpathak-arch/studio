@@ -21,35 +21,23 @@ import { FirestorePermissionError } from '@/firebase/errors';
 
 const { firestore } = initializeFirebase();
 
-// User Profile
-export const createUserDocument = (userId: string, data: UserProfile) => {
-  const userRef = doc(firestore, 'users', userId);
-  const budgetRef = doc(firestore, `users/${userId}/data/budget`);
-  
-  // These can run in parallel
-  const userPromise = setDoc(userRef, {
-      ...data,
-      createdAt: serverTimestamp(),
-    }).catch(async (serverError) => {
-      const permissionError = new FirestorePermissionError({
-        path: userRef.path,
-        operation: 'create',
-        requestResourceData: data,
-      });
-      errorEmitter.emit('permission-error', permissionError);
-    });
+// User Profile & Budget (Single Document)
+export const createUserDocument = (userId: string, data: Partial<UserProfile>) => {
+    const userRef = doc(firestore, 'users', userId);
+    const userData = {
+        ...data,
+        budget: initialBudget,
+        createdAt: serverTimestamp(),
+    };
 
-  const budgetPromise = setDoc(budgetRef, initialBudget)
-    .catch(async (serverError) => {
+    setDoc(userRef, userData).catch(async (serverError) => {
         const permissionError = new FirestorePermissionError({
-            path: budgetRef.path,
+            path: userRef.path,
             operation: 'create',
-            requestResourceData: initialBudget,
+            requestResourceData: userData,
         });
         errorEmitter.emit('permission-error', permissionError);
     });
-    
-  return Promise.all([userPromise, budgetPromise]);
 };
 
 export const updateUserProfile = (userId: string, data: Partial<UserProfile>) => {
@@ -67,43 +55,45 @@ export const updateUserProfile = (userId: string, data: Partial<UserProfile>) =>
     });
 }
 
+export const getUserDocument = async (userId: string): Promise<UserProfile | null> => {
+    const userRef = doc(firestore, 'users', userId);
+    try {
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()) {
+            return userSnap.data() as UserProfile;
+        } else {
+            return null;
+        }
+    } catch (serverError) {
+        const permissionError = new FirestorePermissionError({
+            path: userRef.path,
+            operation: 'get',
+        });
+        errorEmitter.emit('permission-error', permissionError);
+        throw serverError;
+    }
+}
+
+
 // Budget
 export const getBudget = async (userId: string): Promise<Budget> => {
-  const budgetRef = doc(firestore, `users/${userId}/data/budget`);
-  const budgetSnap = await getDoc(budgetRef).catch(serverError => {
-    const permissionError = new FirestorePermissionError({
-      path: budgetRef.path,
-      operation: 'get',
-    });
-    errorEmitter.emit('permission-error', permissionError);
-    throw serverError; // re-throw to be caught by caller
-  });
-
-  if (budgetSnap.exists()) {
-    return budgetSnap.data() as Budget;
-  }
-  // If no budget, create one
-  setDoc(budgetRef, initialBudget).catch(async (serverError) => {
-    const permissionError = new FirestorePermissionError({
-        path: budgetRef.path,
-        operation: 'create',
-        requestResourceData: initialBudget,
-    });
-    errorEmitter.emit('permission-error', permissionError);
-  });
-  return initialBudget;
+    const userDoc = await getUserDocument(userId);
+    if (userDoc && userDoc.budget) {
+        return userDoc.budget;
+    }
+    return initialBudget;
 };
 
 export const updateBudget = (userId: string, budget: Budget) => {
-  const budgetRef = doc(firestore, `users/${userId}/data/budget`);
-  setDoc(budgetRef, budget, { merge: true }).catch(async (serverError) => {
-    const permissionError = new FirestorePermissionError({
-        path: budgetRef.path,
-        operation: 'update',
-        requestResourceData: budget,
+    const userRef = doc(firestore, 'users', userId);
+    updateDoc(userRef, { budget }).catch(async (serverError) => {
+        const permissionError = new FirestorePermissionError({
+            path: userRef.path,
+            operation: 'update',
+            requestResourceData: { budget },
+        });
+        errorEmitter.emit('permission-error', permissionError);
     });
-    errorEmitter.emit('permission-error', permissionError);
-  });
 };
 
 
@@ -126,8 +116,6 @@ export const addExpense = async (userId: string, expenseData: Omit<Expense, 'id'
         requestResourceData: expensePayload,
     });
     errorEmitter.emit('permission-error', permissionError);
-    // Return a dummy id or handle it as you see fit, since the operation failed.
-    // Here we're rethrowing so the caller knows it failed.
     throw serverError;
   }
 };

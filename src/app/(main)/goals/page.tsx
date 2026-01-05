@@ -17,7 +17,7 @@ import { AddGoalDialog, goalIcons } from '@/components/goals/add-goal-dialog';
 import { AddFundsDialog } from '@/components/goals/add-funds-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { useUser } from '@/firebase';
-import { getGoals, addGoal, addFundsToGoal } from '@/services/firestore';
+import { goals as mockGoals } from '@/lib/data';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { LucideIcon } from 'lucide-react';
 
@@ -63,38 +63,16 @@ function GoalCard({ goal, onFundAdded }: { goal: Goal; onFundAdded: (goalId: str
 
 export default function GoalsPage() {
   const { user } = useUser();
-  const [goals, setGoals] = useState<Goal[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [goals, setGoals] = useState<Goal[]>(mockGoals);
+  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
-
-  useEffect(() => {
-    if (user) {
-      const fetchGoals = async () => {
-        setLoading(true);
-        const userGoals = await getGoals(user.uid);
-        setGoals(userGoals);
-        setLoading(false);
-      };
-      fetchGoals();
-    } else {
-        setLoading(false);
-    }
-  }, [user]);
 
   const handleAddGoal = async (newGoalData: Omit<Goal, 'id' | 'savedAmount' | 'color' | 'icon'> & { icon: string; }) => {
     if (!user) return;
 
-    const goalToAdd = {
-        name: newGoalData.name,
-        targetAmount: newGoalData.targetAmount,
-        deadline: newGoalData.deadline,
-        icon: newGoalData.icon,
-    };
-
-    const newId = await addGoal(user.uid, goalToAdd);
     const newGoal: Goal = {
-      ...goalToAdd,
-      id: newId,
+      ...newGoalData,
+      id: new Date().toISOString(), // Mock ID
       savedAmount: 0,
       color: `chart-${(goals.length % 5) + 1}` as Goal['color'],
     };
@@ -107,7 +85,6 @@ export default function GoalsPage() {
 
   const handleFundAdded = async (goalId: string, amount: number) => {
     if (!user) return;
-    await addFundsToGoal(user.uid, goalId, amount);
     setGoals(prevGoals =>
       prevGoals.map(g =>
         g.id === goalId ? { ...g, savedAmount: g.savedAmount + amount } : g

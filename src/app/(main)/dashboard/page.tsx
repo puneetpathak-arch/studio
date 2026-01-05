@@ -6,6 +6,7 @@ import { GoalsCard } from '@/app/(main)/dashboard/goals-card';
 import { RecentExpensesCard } from '@/components/dashboard/recent-expenses-card';
 import { AiSavingsCard } from '@/components/dashboard/ai-savings-card';
 import { user as mockUser, tips, goals as initialGoals } from '@/lib/data';
+import { initialBudget } from '@/lib/initial-data';
 import { QuickStatCard } from '@/components/dashboard/quick-stat-card';
 import { TrendingUp, Target, Sparkles } from 'lucide-react';
 import { TipsCard } from '@/components/dashboard/tips-card';
@@ -24,8 +25,8 @@ export default function DashboardPage() {
     const [greeting, setGreeting] = useState('');
     const [expenses, setExpenses] = useState<Expense[]>([]);
     const [goals, setGoals] = useState<Goal[]>(initialGoals);
-    const [budget, setBudget] = useState<Budget | null>(null);
-    const [loading, setLoading] = useState(true);
+    const [budget, setBudget] = useState<Budget | null>(initialBudget);
+    const [loading, setLoading] = useState(false);
     const isMobile = useIsMobile();
 
     useEffect(() => {
@@ -33,30 +34,12 @@ export default function DashboardPage() {
         if (hour < 12) setGreeting('Good Morning');
         else if (hour < 17) setGreeting('Good Afternoon');
         else setGreeting('Good Evening');
-
-        if (user) {
-            const fetchDashboardData = async () => {
-                setLoading(true);
-                const [userExpenses, userBudget] = await Promise.all([
-                    getExpenses(user.uid),
-                    getBudget(user.uid),
-                ]);
-                setExpenses(userExpenses);
-                setBudget(userBudget);
-                setLoading(false);
-            };
-            fetchDashboardData();
-        } else {
-            setLoading(false);
-        }
-    }, [user]);
+    }, []);
 
      const handleAddExpense = async (newExpense: Omit<Expense, 'id' | 'date'>) => {
-        if (!user) return;
-        const newId = await addExpense(user.uid, newExpense);
         const expenseToAdd: Expense = {
             ...newExpense,
-            id: newId,
+            id: new Date().toISOString(), // Mock ID
             date: new Date().toISOString(),
         };
         setExpenses(prevExpenses => [expenseToAdd, ...prevExpenses]);

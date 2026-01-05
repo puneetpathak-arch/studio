@@ -7,41 +7,17 @@ import { QuickStatCard } from "@/components/dashboard/quick-stat-card";
 import { CategoryPieChart } from '@/components/analytics/category-pie-chart';
 import { Skeleton } from "@/components/ui/skeleton";
 import { useUser } from '@/firebase';
-import { getBudget, getExpenses } from '@/services/firestore';
+import { initialBudget } from '@/lib/initial-data';
 import type { Budget, Expense } from '@/lib/types';
 import { startOfWeek, isWithinInterval, format } from 'date-fns';
 
 
 export default function AnalyticsPage() {
   const { user } = useUser();
-  const [budget, setBudget] = useState<Budget | null>(null);
+  const [budget, setBudget] = useState<Budget | null>(initialBudget);
   const [expenses, setExpenses] = useState<Expense[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (user) {
-      const fetchData = async () => {
-        setLoading(true);
-        const [userBudget, userExpenses] = await Promise.all([
-          getBudget(user.uid),
-          getExpenses(user.uid),
-        ]);
-        
-        const totalSpent = userExpenses.reduce((acc, exp) => acc + exp.amount, 0);
-        const updatedCategoryBudgets = userBudget.categoryBudgets.map(cb => {
-            const spent = userExpenses
-                .filter(exp => exp.category === cb.category)
-                .reduce((acc, exp) => acc + exp.amount, 0);
-            return { ...cb, spent };
-        });
-
-        setBudget({ ...userBudget, spent: totalSpent, categoryBudgets: updatedCategoryBudgets });
-        setExpenses(userExpenses);
-        setLoading(false);
-      };
-      fetchData();
-    }
-  }, [user]);
 
   const { avgDailySpend, mostSpentCategory, highestSpendingDay } = useMemo(() => {
     if (!expenses || expenses.length === 0) {
@@ -71,6 +47,18 @@ export default function AnalyticsPage() {
     return { avgDailySpend, mostSpentCategory, highestSpendingDay };
   }, [expenses]);
 
+  const calculatedBudget = useMemo(() => {
+    if (!budget) return null;
+    const totalSpent = expenses.reduce((acc, exp) => acc + exp.amount, 0);
+    const updatedCategoryBudgets = budget.categoryBudgets.map(cb => {
+        const spent = expenses
+            .filter(exp => exp.category === cb.category)
+            .reduce((acc, exp) => acc + exp.amount, 0);
+        return { ...cb, spent };
+    });
+    return { ...budget, spent: totalSpent, categoryBudgets: updatedCategoryBudgets };
+  }, [expenses, budget]);
+
 
   if (loading) {
     return (
@@ -99,7 +87,7 @@ export default function AnalyticsPage() {
       
        <div className="grid gap-6 md:grid-cols-2">
          <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-            <CategoryPieChart budget={budget} />
+            <CategoryPieChart budget={calculatedBudget} />
         </div>
         <div className="animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
             <SpendingBarChart expenses={expenses} />

@@ -10,6 +10,7 @@ export type UserProfile = {
     email?: string | null;
     displayName?: string | null;
     college?: string;
+    budget?: Budget;
 }
 
 export type Expense = {
