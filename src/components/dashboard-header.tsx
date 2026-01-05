@@ -10,8 +10,8 @@ export function DashboardHeader() {
   const onBudget = true; // This should be calculated based on real data
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background/80 px-4 backdrop-blur-sm md:px-6 justify-between lg:justify-end">
-      {isMobile && <SidebarTrigger />}
+    <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background/80 px-4 backdrop-blur-sm md:px-6 justify-between">
+      {isMobile ? <SidebarTrigger /> : <div />}
       
       <div className="flex items-center justify-end">
         <UserNav onBudget={onBudget} />

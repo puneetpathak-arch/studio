@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -12,7 +13,7 @@ import { signOut } from 'firebase/auth';
 import { addExpense } from '@/services/firestore';
 import type { Expense } from '@/lib/types';
 import { useEffect } from 'react';
-import { SidebarProvider, Sidebar, SidebarContent, SidebarHeader, SidebarMenu, SidebarFooter } from '@/components/ui/sidebar';
+import { SidebarProvider, Sidebar, SidebarContent, SidebarHeader, SidebarFooter } from '@/components/ui/sidebar';
 import { DashboardHeader } from '@/components/dashboard-header';
 
 
@@ -61,11 +62,11 @@ export default function MainLayout({
   }
 
   return (
-    <SidebarProvider open={open} onOpenChange={setOpen}>
-      <div className="min-h-screen w-full bg-background text-foreground flex">
+     <SidebarProvider open={!isMobile} onOpenChange={setOpen}>
+      <div className="min-h-screen w-full bg-background text-foreground flex flex-col md:flex-row">
         <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]"></div>
 
-        <Sidebar className="bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 text-white p-2 shadow-2xl z-10 border-r border-indigo-500/20">
+        <Sidebar className="bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 text-white p-2 shadow-2xl z-10 border-r border-indigo-500/20 md:flex hidden">
             <SidebarHeader className="flex items-center gap-3 mb-4 p-2">
               <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/50 animate-float">
                 <PiggyBank className="w-6 h-6" />
@@ -94,14 +95,14 @@ export default function MainLayout({
             </SidebarFooter>
         </Sidebar>
         
-        {isMobile && <BottomNav onAddExpense={handleAddExpense} />}
-
         <div className="flex-1 flex flex-col">
           <DashboardHeader />
           <main className="flex-1 p-4 md:p-6 lg:p-8 pb-24 md:pb-8">
               {children}
           </main>
         </div>
+        
+        {isMobile && <BottomNav onAddExpense={handleAddExpense} />}
       </div>
     </SidebarProvider>
   );
