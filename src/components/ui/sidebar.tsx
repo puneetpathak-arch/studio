@@ -9,10 +9,8 @@ import { PanelLeft } from "lucide-react"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Skeleton } from "@/components/ui/skeleton"
 import {
   Tooltip,
   TooltipContent,
@@ -78,7 +76,7 @@ const SidebarProvider = React.forwardRef<
         <TooltipProvider delayDuration={0}>
           <div
             className={cn(
-              "group/sidebar-wrapper flex min-h-svh w-full",
+              "group/sidebar-wrapper flex w-full",
               className
             )}
             ref={ref}
@@ -121,7 +119,8 @@ const Sidebar = React.forwardRef<
       <div
         ref={ref}
         className={cn(
-          "w-72 flex-col transition-all duration-300 ease-in-out",
+          "bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 text-white p-2 shadow-2xl z-10 border-r border-indigo-500/20 md:flex flex-col hidden h-screen sticky top-0",
+          "w-72 transition-all duration-300 ease-in-out",
           className
         )}
         {...props}
@@ -167,7 +166,7 @@ const SidebarHeader = React.forwardRef<
     <div
       ref={ref}
       data-sidebar="header"
-      className={cn("flex flex-col gap-2 p-4", className)}
+      className={cn("flex flex-col gap-2 p-2", className)}
       {...props}
     />
   )
@@ -182,7 +181,7 @@ const SidebarFooter = React.forwardRef<
     <div
       ref={ref}
       data-sidebar="footer"
-      className={cn("mt-auto flex flex-col gap-2 p-4", className)}
+      className={cn("mt-auto flex flex-col gap-2 p-2", className)}
       {...props}
     />
   )
@@ -213,7 +212,7 @@ const SidebarContent = React.forwardRef<
       ref={ref}
       data-sidebar="content"
       className={cn(
-        "flex min-h-0 flex-1 flex-col gap-2 overflow-auto p-4",
+        "flex min-h-0 flex-1 flex-col gap-2 overflow-auto",
         className
       )}
       {...props}
@@ -229,7 +228,7 @@ const SidebarMenu = React.forwardRef<
   <ul
     ref={ref}
     data-sidebar="menu"
-    className={cn("flex w-full min-w-0 flex-col gap-1", className)}
+    className={cn("flex w-full min-w-0 flex-col gap-1 px-2", className)}
     {...props}
   />
 ))
