@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { Bot, PiggyBank } from "lucide-react";
+import { PiggyBank } from "lucide-react";
 import { MainNav } from "@/components/main-nav";
 import { AddExpenseSheet } from '@/components/add-expense-sheet';
 import { BottomNav } from '@/components/bottom-nav';
@@ -13,7 +13,7 @@ import { signOut } from 'firebase/auth';
 import { addExpense } from '@/services/firestore';
 import type { Expense } from '@/lib/types';
 import { useEffect } from 'react';
-import { SidebarProvider, Sidebar, SidebarTrigger, SidebarContent, SidebarHeader, SidebarMenu, SidebarFooter } from '@/components/ui/sidebar';
+import { SidebarProvider, Sidebar, SidebarContent, SidebarHeader, SidebarMenu, SidebarFooter } from '@/components/ui/sidebar';
 import { DashboardHeader } from '@/components/dashboard-header';
 
 
@@ -76,7 +76,7 @@ export default function MainLayout({
         }}></div>
       </div>
 
-      <Sidebar collapsible="icon" className="bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 text-white p-2 shadow-2xl relative z-10 border-r border-indigo-500/20">
+      <Sidebar collapsible="icon" className="bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 text-white p-2 shadow-2xl relative z-10 border-r border-indigo-500/20 hidden md:flex">
           <SidebarHeader className="flex items-center gap-3 mb-4 p-2 relative z-10">
             <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/50 animate-float">
               <PiggyBank className="w-6 h-6" />
