@@ -157,6 +157,7 @@ export function AddGoalDialog({ onAddGoal, children, open: controlledOpen, onOpe
                       onSelect={setDeadline}
                       initialFocus
                       disabled={(date) => date < new Date()}
+                      required
                     />
                   </PopoverContent>
                 </Popover>
