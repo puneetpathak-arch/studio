@@ -13,7 +13,7 @@ import { signOut } from 'firebase/auth';
 import { addExpense } from '@/services/firestore';
 import type { Expense } from '@/lib/types';
 import { useEffect } from 'react';
-import { SidebarProvider, Sidebar, SidebarContent, SidebarHeader, SidebarFooter } from '@/components/ui/sidebar';
+import { SidebarProvider, Sidebar, SidebarContent, SidebarHeader, SidebarFooter, SidebarMenu } from '@/components/ui/sidebar';
 import { DashboardHeader } from '@/components/dashboard-header';
 
 
@@ -63,7 +63,7 @@ export default function MainLayout({
 
   return (
      <SidebarProvider open={!isMobile} onOpenChange={setOpen}>
-      <div className="min-h-screen w-full bg-background text-foreground flex flex-col md:flex-row">
+      <div className="min-h-screen w-full bg-background text-foreground flex md:flex-row">
         <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]"></div>
 
         <Sidebar className="bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 text-white p-2 shadow-2xl z-10 border-r border-indigo-500/20 md:flex hidden">
