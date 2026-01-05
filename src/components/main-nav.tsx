@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BarChartHorizontal, GraduationCap, LayoutDashboard, User, Sparkles, Target } from "lucide-react";
+import { Bot, BarChartHorizontal, GraduationCap, LayoutDashboard, User, Sparkles, Target } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const navItems = [
@@ -11,6 +11,7 @@ export const navItems = [
   { href: "/analytics", icon: BarChartHorizontal, label: "Analytics" },
   { href: "/savings", icon: Sparkles, label: "AI Savings" },
   { href: "/goals", icon: Target, label: "Goals" },
+  { href: "/advisor", icon: Bot, label: "AI Advisor" },
   { href: "/scholarships", icon: GraduationCap, label: "Scholarships" },
   { href: "/profile", icon: User, label: "Profile" },
 ];

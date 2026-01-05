@@ -4,7 +4,7 @@
 import { forwardRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, BarChartHorizontal, GraduationCap, User, Plus } from 'lucide-react';
+import { Home, BarChartHorizontal, GraduationCap, User, Plus, Bot } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { AddExpenseSheet } from '@/components/add-expense-sheet';
 import { Button } from './ui/button';
@@ -14,7 +14,7 @@ const navItems = [
   { href: '/dashboard', icon: Home, label: 'Home' },
   { href: '/analytics', icon: BarChartHorizontal, label: 'Analytics' },
   { href: 'add_expense', icon: Plus, label: 'Add' },
-  { href: '/scholarships', icon: GraduationCap, label: 'Scholarships' },
+  { href: '/advisor', icon: Bot, label: 'Advisor' },
   { href: '/profile', icon: User, label: 'Profile' },
 ];
 

@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { PiggyBank } from "lucide-react";
+import { Bot, PiggyBank } from "lucide-react";
 import { MainNav } from "@/components/main-nav";
 import { AddExpenseSheet } from '@/components/add-expense-sheet';
 import { BottomNav } from '@/components/bottom-nav';
