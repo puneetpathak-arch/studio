@@ -26,7 +26,7 @@ export function MainNav({ onNavItemClick }: { onNavItemClick?: () => void }) {
         const isActive = (item.href === '/dashboard' && pathname === item.href) || (item.href !== '/dashboard' && pathname.startsWith(item.href));
         return (
           <SidebarMenuItem key={item.href}>
-             <Link href={item.href} legacyBehavior passHref>
+             <Link href={item.href}>
                 <SidebarMenuButton
                     onClick={onNavItemClick}
                     isActive={isActive}
