@@ -62,7 +62,7 @@ export default function MainLayout({
 
   return (
     <SidebarProvider open={open} onOpenChange={setOpen}>
-    <div className="min-h-screen bg-gradient-to-br from-violet-100 via-pink-100 to-orange-100 flex relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-violet-100 via-pink-100 to-orange-100 flex items-start relative overflow-hidden">
       {/* Animated Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-gradient-to-br from-indigo-400/40 via-purple-400/30 to-pink-400/20 rounded-full blur-3xl animate-float"></div>
