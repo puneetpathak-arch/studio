@@ -138,13 +138,14 @@ export default function SavingsPage() {
   };
 
   const handleAddGoalClick = (suggestion: Suggestion) => {
-    // Truncate the insight to a reasonable length
-    const truncatedInsight = suggestion.insight.length > 25
-      ? `${suggestion.insight.substring(0, 25)}...`
-      : suggestion.insight;
-      
+    // Extract a keyword from the insight, like "Canteen", "Transport", etc.
+    const insightKeywords = ['canteen', 'transport', 'food', 'shopping', 'entertainment', 'education'];
+    const lowerInsight = suggestion.insight.toLowerCase();
+    const keyword = insightKeywords.find(k => lowerInsight.includes(k)) || 'Savings';
+    const goalName = `Save on ${keyword.charAt(0).toUpperCase() + keyword.slice(1)}`;
+
     setInitialGoalData({
-      name: `Save on ${truncatedInsight}`,
+      name: goalName,
       targetAmount: suggestion.potentialMonthlySavings,
       deadline: new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString(),
     });
