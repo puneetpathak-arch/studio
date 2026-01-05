@@ -1,6 +1,6 @@
 # EduFinance - Student Financial Wellness App
 
-EduFinance is a Next.js web application designed to help Indian college students manage their finances effectively. It provides tools for expense tracking, budget planning, goal setting, and discovering scholarships, all tailored to the student lifestyle.
+EduFinance is a Next.js web application designed to help Indian college students manage their finances effectively. It provides tools for expense tracking, budget planning, goal setting, and discovering scholarships, all tailored to the student lifestyle. All user data is securely stored and managed using Firebase.
 
 This project was bootstrapped with [Firebase Studio](https://firebase.google.com/studio).
 
@@ -10,11 +10,16 @@ College students in India often struggle with managing their finances, from dail
 
 ## Features
 
+- **Secure Authentication**: Safe and secure user login and signup using Firebase Authentication.
+- **Persistent Data Storage**: All user data, including expenses, goals, and budgets, is securely stored in a personal Firestore database.
 - **Dashboard Overview**: A central hub to view your current spending against your monthly budget, track savings goals, and see recent transactions.
+- **Financial Health Score**: A gamified score (1-100) that gives you a quick snapshot of your financial habits based on spending discipline, savings rate, and consistency.
 - **Expense Tracking**: Easily log expenses with predefined student-centric categories.
 - **Budget & Goal Planning**: Set monthly budgets (overall and per-category) and define short-term savings goals with visual progress tracking.
 - **Visual Analytics**: Interactive charts to visualize spending patterns, including category-wise breakdowns and weekly spending trends.
-- **AI-Powered Suggestions**: Get personalized savings tips based on your spending habits, powered by Google's Gemini model.
+- **AI-Powered Intelligence**:
+    - **AI Savings Suggestions**: Get personalized savings tips based on your spending habits.
+    - **AI Financial Advisor**: A conversational chatbot that provides tailored financial advice based on your real-time financial context.
 - **Scholarship Directory**: A filterable list of relevant national and state-level scholarships and schemes to help manage educational expenses.
 - **Responsive Design**: A mobile-first interface that works beautifully on all devices.
 
@@ -23,11 +28,12 @@ College students in India often struggle with managing their finances, from dail
 - **Framework**: Next.js (App Router)
 - **Styling**: Tailwind CSS with shadcn/ui components
 - **Language**: TypeScript
-- **AI**: Google AI (via Genkit)
+- **Backend & Database**: Firebase (Authentication, Firestore)
+- **Generative AI**: Google AI (via Genkit)
 - **Charts**: Recharts
 - **Deployment**: Firebase App Hosting
 
-This stack was chosen for its rapid development capabilities, excellent performance, and suitability for a small team in a hackathon setting. Next.js with Server Components and a pre-built component library like shadcn/ui allows for building a feature-rich, production-quality UI very quickly.
+This stack was chosen for its rapid development capabilities, excellent performance, and suitability for building a full-stack application quickly.
 
 ## Getting Started
 
@@ -35,6 +41,7 @@ This stack was chosen for its rapid development capabilities, excellent performa
 
 - Node.js (v20 or later)
 - npm
+- A Firebase project
 
 ### Installation
 
@@ -54,6 +61,7 @@ This stack was chosen for its rapid development capabilities, excellent performa
     ```
     GOOGLE_API_KEY=your_google_api_key_here
     ```
+5. **Configure Firebase**: Open the `src/firebase/config.ts` file and replace the placeholder `firebaseConfig` object with the configuration from your own Firebase project. You can find this in your Firebase project settings.
 
 ### Running the Development Server
 
@@ -83,16 +91,22 @@ This will start the local Genkit development server, which the Next.js app will 
 │   │   │   ├── dashboard
 │   │   │   ├── scholarships
 │   │   │   └── layout.tsx  # Main layout with sidebar and header
-│   │   ├── page.tsx        # Login page
+│   │   ├── page.tsx        # Login/Landing page
 │   │   └── layout.tsx      # Root layout
 │   ├── components
 │   │   ├── dashboard       # Components specific to the dashboard
 │   │   ├── ui              # Reusable shadcn/ui components
 │   │   └── ...             # Other shared components
 │   ├── lib
-│   │   ├── data.ts         # Mock data for the application
+│   │   ├── data.ts         # Mock/static data for the application
 │   │   ├── types.ts        # TypeScript type definitions
 │   │   └── utils.ts
+│   ├── firebase
+│   │   ├── config.ts       # Firebase project configuration
+│   │   ├── index.ts        # Firebase initialization
+│   │   └── ...
+│   ├── services
+│   │   └── firestore.ts    # Functions for interacting with Firestore
 │   ├── ai
 │   │   ├── flows           # Genkit AI flows
 │   │   └── genkit.ts
