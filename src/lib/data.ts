@@ -15,26 +15,26 @@ export const scholarships: Scholarship[] = [
         name: 'Post Matric Scholarship for SC Students',
         provider: 'Ministry of Social Justice & Empowerment',
         amount: 'Upto ₹13,500 p.a.',
-        deadline: '2024-12-31',
+        deadline: '2024-11-30',
         eligibility: {
             state: ['All India'],
             category: ['SC'],
             income: '₹2.5 Lakh p.a.'
         },
-        link: 'https://scholarships.gov.in/fresh/newstdRegfrmInstruction'
+        link: 'https://scholarships.gov.in/'
     },
     {
         id: 's2',
         name: 'Merit Cum Means Scholarship for Professional and Technical Courses',
         provider: 'Ministry of Minority Affairs',
         amount: '₹20,000 p.a. + Fees',
-        deadline: '2024-11-30',
+        deadline: '2024-10-31',
         eligibility: {
             state: ['All India'],
             category: ['Minority'],
             income: '₹2.5 Lakh p.a.'
         },
-        link: 'https://scholarships.gov.in/fresh/newstdRegfrmInstruction'
+        link: 'https://scholarships.gov.in/'
     },
     {
         id: 's3',
@@ -53,7 +53,7 @@ export const scholarships: Scholarship[] = [
         name: 'Pragati Scholarship for Girl Students',
         provider: 'AICTE',
         amount: '₹50,000 p.a.',
-        deadline: '2024-11-30',
+        deadline: '2024-12-15',
         eligibility: {
             state: ['All India'],
             category: ['Girl Students'],
