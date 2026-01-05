@@ -44,11 +44,23 @@ export default function AdvisorPage() {
         if (!user) return;
         setDataLoading(true);
         try {
-            const [expenses, budget, goals] = await Promise.all([
+            const [rawExpenses, budget, rawGoals] = await Promise.all([
                 getExpenses(user.uid),
                 getBudget(user.uid),
                 getGoals(user.uid),
             ]);
+
+            // Convert Firestore Timestamps to serializable ISO strings
+            const expenses = rawExpenses.map(e => ({
+                ...e,
+                date: new Date(e.date).toISOString(),
+            }));
+            const goals = rawGoals.map(g => ({
+                ...g,
+                deadline: new Date(g.deadline).toISOString(),
+                lastFundedDate: g.lastFundedDate ? new Date(g.lastFundedDate).toISOString() : undefined
+            }));
+
 
             const totalSpent = expenses.reduce((sum, exp) => sum + exp.amount, 0);
 

@@ -11,7 +11,7 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
-import type { Goal, Expense } from '@/lib/types';
+import type { Expense, Goal } from '@/lib/types';
 
 // Define schemas for complex types
 const GoalSchema = z.object({
@@ -19,9 +19,10 @@ const GoalSchema = z.object({
     name: z.string(),
     targetAmount: z.number(),
     savedAmount: z.number(),
-    deadline: z.string(),
+    deadline: z.string().describe("The goal's deadline in ISO 8601 format."),
     icon: z.string(),
     color: z.string(),
+    lastFundedDate: z.string().optional().describe("The date the goal was last funded in ISO 8601 format."),
 });
 
 const ExpenseSchema = z.object({
@@ -29,7 +30,7 @@ const ExpenseSchema = z.object({
     description: z.string(),
     amount: z.number(),
     category: z.string(),
-    date: z.string(),
+    date: z.string().describe("The date of the expense in ISO 8601 format."),
 });
 
 
