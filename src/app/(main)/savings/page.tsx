@@ -161,13 +161,15 @@ export default function SavingsPage() {
     };
 
     const newId = await addGoalService(user.uid, goalPayload);
-    const newGoal = { ...goalPayload, id: newId };
-    
-    setGoals(prevGoals => [...prevGoals, newGoal]);
-    toast({
-      title: "Goal Added!",
-      description: `Your new goal "${newGoal.name}" has been created.`,
-    });
+    if (newId) {
+        const newGoal = { ...goalPayload, id: newId };
+        
+        setGoals(prevGoals => [...prevGoals, newGoal]);
+        toast({
+          title: "Goal Added!",
+          description: `Your new goal "${newGoal.name}" has been created.`,
+        });
+    }
   };
 
   return (
