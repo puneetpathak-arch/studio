@@ -138,8 +138,13 @@ export default function SavingsPage() {
   };
 
   const handleAddGoalClick = (suggestion: Suggestion) => {
+    // Truncate the insight to a reasonable length
+    const truncatedInsight = suggestion.insight.length > 25
+      ? `${suggestion.insight.substring(0, 25)}...`
+      : suggestion.insight;
+      
     setInitialGoalData({
-      name: `Save on ${suggestion.insight}`,
+      name: `Save on ${truncatedInsight}`,
       targetAmount: suggestion.potentialMonthlySavings,
       deadline: new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString(),
     });
@@ -231,5 +236,3 @@ export default function SavingsPage() {
     </div>
   );
 }
-
-    
