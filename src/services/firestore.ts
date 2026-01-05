@@ -25,7 +25,7 @@ export const createUserDocument = (userId: string, data: Partial<UserProfile>) =
     const userRef = doc(firestore, 'users', userId);
     const userData = {
         ...data,
-        budget: initialBudget,
+        budget: initialBudget, // Set initial budget on creation
         createdAt: serverTimestamp(),
     };
 
@@ -33,7 +33,7 @@ export const createUserDocument = (userId: string, data: Partial<UserProfile>) =
         const permissionError = new FirestorePermissionError({
             path: userRef.path,
             operation: 'create',
-            requestResourceData: data,
+            requestResourceData: userData,
         });
         errorEmitter.emit('permission-error', permissionError);
     });
@@ -41,14 +41,16 @@ export const createUserDocument = (userId: string, data: Partial<UserProfile>) =
 
 export const updateUserProfile = (userId: string, data: Partial<UserProfile>) => {
     const userRef = doc(firestore, 'users', userId);
-    updateDoc(userRef, {
+    const updateData = {
         ...data,
         updatedAt: serverTimestamp(),
-    }).catch(async (serverError) => {
+    };
+    // Use set with merge instead of update for robustness
+    setDoc(userRef, updateData, { merge: true }).catch(async (serverError) => {
         const permissionError = new FirestorePermissionError({
             path: userRef.path,
             operation: 'update',
-            requestResourceData: data,
+            requestResourceData: updateData,
         });
         errorEmitter.emit('permission-error', permissionError);
     });
@@ -81,14 +83,15 @@ export const getBudget = async (userId: string): Promise<Budget> => {
     if (userDoc && userDoc.budget) {
         return userDoc.budget;
     }
-    // If no budget, create one
+    // If no budget, create one using the robust updateBudget function
     await updateBudget(userId, initialBudget);
     return initialBudget;
 };
 
 export const updateBudget = (userId: string, budget: Budget) => {
     const userRef = doc(firestore, 'users', userId);
-    updateDoc(userRef, { budget }).catch(async (serverError) => {
+    // Use set with merge to safely create or update the budget field
+    setDoc(userRef, { budget }, { merge: true }).catch(async (serverError) => {
         const permissionError = new FirestorePermissionError({
             path: userRef.path,
             operation: 'update',
@@ -157,11 +160,10 @@ export const getGoals = async (userId: string): Promise<Goal[]> => {
   }
 };
 
-export const addGoal = async (userId: string, goalData: Omit<Goal, 'id' | 'savedAmount' | 'color' >) => {
+export const addGoal = async (userId: string, goalData: Omit<Goal, 'id'>) => {
     const goalsColRef = collection(firestore, `users/${userId}/goals`);
     const goalPayload = {
         ...goalData,
-        savedAmount: 0,
         createdAt: serverTimestamp(),
     };
     try {
