@@ -26,6 +26,7 @@ import { goalIcons } from '@/components/goals/add-goal-dialog';
 import { Skeleton } from '@/components/ui/skeleton';
 import { addFundsToGoal as addFundsToGoalService } from '@/services/firestore';
 import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
 
 function GoalCard({ goal, onFundAdded }: { goal: Goal, onFundAdded: (goalId: string, amount: number) => void }) {
   const percentage = Math.round((goal.savedAmount / goal.targetAmount) * 100);
@@ -40,11 +41,11 @@ function GoalCard({ goal, onFundAdded }: { goal: Goal, onFundAdded: (goalId: str
       className="flex flex-col h-full border-border"
     >
       <CardHeader className="pb-4 h-24 flex justify-center">
-        <CardTitle className="flex items-center gap-2 text-lg">
+        <CardTitle className="flex items-start gap-2 text-lg">
           <IconComponent
-            className="w-6 h-6 text-primary shrink-0"
+            className="w-6 h-6 text-primary shrink-0 mt-1"
           />
-          <span className="font-bold">{goal.name}</span>
+          <span className="font-bold truncate" title={goal.name}>{goal.name}</span>
         </CardTitle>
       </CardHeader>
       <CardContent className="flex-grow flex flex-col justify-center gap-4">
