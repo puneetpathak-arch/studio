@@ -24,6 +24,11 @@ import { useToast } from '@/hooks/use-toast';
 import { useUser } from '@/firebase';
 import { getExpenses, getGoals, addGoal as addGoalService } from '@/services/firestore';
 
+// Helper to serialize Firestore data
+const serializeFirestoreData = (data: any[]): any[] => {
+    return JSON.parse(JSON.stringify(data));
+};
+
 function SuggestionCard({
   suggestion,
   onDismiss,
@@ -82,12 +87,13 @@ export default function SavingsPage() {
     if (!user) return;
     setDataLoading(true);
     try {
-        const [userExpenses, userGoals] = await Promise.all([
+        const [rawExpenses, rawGoals] = await Promise.all([
             getExpenses(user.uid),
             getGoals(user.uid)
         ]);
-        setExpenses(userExpenses);
-        setGoals(userGoals);
+        // Serialize the data to convert Timestamps to strings
+        setExpenses(serializeFirestoreData(rawExpenses));
+        setGoals(serializeFirestoreData(rawGoals));
     } catch (error) {
         console.error("Error fetching data for savings page:", error);
         toast({
@@ -119,8 +125,8 @@ export default function SavingsPage() {
     setSuggestions([]);
     try {
       const result = await getSavingsSuggestions({
-        spendingData: JSON.stringify(expenses),
-        knownTips: JSON.stringify(knownTips.map(t => t.text)),
+        spendingData: expenses,
+        knownTips: knownTips.map(t => t.text),
       });
       setSuggestions(result.suggestions);
     } catch (err) {
@@ -163,13 +169,11 @@ export default function SavingsPage() {
 
     const newId = await addGoalService(user.uid, goalPayload);
     if (newId) {
-        const newGoal = { ...goalPayload, id: newId };
-        
-        setGoals(prevGoals => [...prevGoals, newGoal]);
-        toast({
-          title: "Goal Added!",
-          description: `Your new goal "${newGoal.name}" has been created.`,
-        });
+      await fetchData(); // Refetch all data to ensure UI is up-to-date
+      toast({
+        title: "Goal Added!",
+        description: `Your new goal "${newGoalData.name}" has been created.`,
+      });
     }
   };
 
@@ -239,3 +243,5 @@ export default function SavingsPage() {
     </div>
   );
 }
+
+    

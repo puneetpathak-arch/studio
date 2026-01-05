@@ -11,10 +11,11 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import type { Expense } from '@/lib/types';
 
 const SavingsSuggestionsInputSchema = z.object({
-  spendingData: z.string().describe("A JSON string of the student's recent expenses."),
-  knownTips: z.string().describe('A JSON string of generic saving tips to provide context.'),
+  spendingData: z.custom<Expense[]>().describe("An array of the student's recent expense objects."),
+  knownTips: z.array(z.string()).describe('An array of generic saving tips to provide context.'),
 });
 
 export type SavingsSuggestionsInput = z.infer<typeof SavingsSuggestionsInputSchema>;
@@ -54,9 +55,9 @@ For each area, provide:
 
 Also consider the contextual knownTips to guide your suggestions.
 
-Spending Data: {{{spendingData}}}
+Spending Data: {{{jsonEncode spendingData}}}
 
-Known Tips and Tricks: {{{knownTips}}}
+Known Tips and Tricks: {{{jsonEncode knownTips}}}
 
 Generate a JSON object containing an array of 2-3 suggestion objects.
 `,
@@ -74,7 +75,10 @@ const savingsSuggestionsFlow = ai.defineFlow(
       return output!;
     } catch (error) {
       console.error('Error in savingsSuggestionsFlow:', error);
-      throw new Error('Failed to generate savings suggestions.');
+      // Re-throw a more user-friendly error or a specific error type
+      throw new Error('Failed to generate savings suggestions due to an internal error.');
     }
   }
 );
+
+    
