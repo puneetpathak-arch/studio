@@ -102,12 +102,14 @@ export default function GoalsPage() {
     }
 
     try {
-      await addGoal(user.uid, goalPayload);
-      toast({
-        title: "Goal Added!",
-        description: `Your new goal "${newGoalData.name}" has been created.`,
-      })
-      await fetchGoals(); // Refetch goals to show the new one
+      const newGoalId = await addGoal(user.uid, goalPayload);
+      if (newGoalId) {
+        toast({
+          title: "Goal Added!",
+          description: `Your new goal "${newGoalData.name}" has been created.`,
+        });
+        await fetchGoals(); // Refetch goals to show the new one
+      }
     } catch(e) {
        toast({
         variant: "destructive",
@@ -164,7 +166,7 @@ export default function GoalsPage() {
           ))}
         </div>
       ) : (
-        <Card className="flex flex-col items-center justify-center text-center p-12 space-y-4 bg-card border border-border">
+        <Card className="flex flex-col items-center justify-center text-center p-12 space-y-4 bg-white border border-border rounded-xl">
             <Target className="w-16 h-16 text-muted-foreground/80"/>
             <CardHeader className="p-0">
                 <CardTitle className="text-foreground font-bold">No Goals Yet</CardTitle>
