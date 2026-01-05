@@ -99,27 +99,39 @@ export default function GoalsPage() {
       color: `chart-${(goals.length % 5) + 1}` as Goal['color'],
     }
 
-    const newId = await addGoal(user.uid, goalPayload);
-    const newGoal: Goal = {
-      ...goalPayload,
-      id: newId,
-    };
+    try {
+      const newId = await addGoal(user.uid, goalPayload);
+      const newGoal: Goal = {
+        ...goalPayload,
+        id: newId,
+      };
 
-    setGoals(prevGoals => [...prevGoals, newGoal]);
-    toast({
-      title: "Goal Added!",
-      description: `Your new goal "${newGoal.name}" has been created.`,
-    })
+      setGoals(prevGoals => [...prevGoals, newGoal]);
+      toast({
+        title: "Goal Added!",
+        description: `Your new goal "${newGoal.name}" has been created.`,
+      })
+    } catch(e) {
+       toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Could not add your goal."
+      });
+    }
   };
 
   const handleFundAdded = async (goalId: string, amount: number) => {
     if (!user) return;
-    addFundsToGoal(user.uid, goalId, amount);
-    setGoals(prevGoals =>
-      prevGoals.map(g =>
-        g.id === goalId ? { ...g, savedAmount: g.savedAmount + amount } : g
-      )
-    );
+    try {
+        await addFundsToGoal(user.uid, goalId, amount);
+        fetchGoals();
+    } catch(e) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Could not add funds to your goal."
+      });
+    }
   };
 
   return (
@@ -155,11 +167,11 @@ export default function GoalsPage() {
           ))}
         </div>
       ) : (
-        <Card className="flex flex-col items-center justify-center text-center p-12 space-y-4">
-            <Target className="w-16 h-16 text-muted-foreground/50"/>
+        <Card className="flex flex-col items-center justify-center text-center p-12 space-y-4 bg-card/80 backdrop-blur-sm border-dashed">
+            <Target className="w-16 h-16 text-muted-foreground/70"/>
             <CardHeader className="p-0">
-                <CardTitle>No Goals Yet</CardTitle>
-                <CardDescription>
+                <CardTitle className="text-foreground">No Goals Yet</CardTitle>
+                <CardDescription className="text-foreground/80">
                     Create a savings goal to get started on your financial journey.
                 </CardDescription>
             </CardHeader>
