@@ -25,6 +25,22 @@ const categoryColors: { [key: string]: string } = {
     'Others': 'bg-gray-100 text-gray-800 border-gray-200',
 };
 
+function RecentExpensesSkeleton() {
+    return (
+        <div className="space-y-4">
+            {[...Array(5)].map((_, i) => (
+                <div key={i} className="flex justify-between items-center">
+                    <div className="flex-1 min-w-0 space-y-2">
+                        <Skeleton className="h-4 w-3/4" />
+                        <Skeleton className="h-5 w-16 rounded-full" />
+                    </div>
+                    <Skeleton className="h-6 w-20" />
+                </div>
+            ))}
+        </div>
+    );
+}
+
 export function RecentExpensesCard({ expenses, loading }: { expenses: Expense[] | null, loading: boolean }) {
   return (
     <Card className="bg-card/60 backdrop-blur-xl">
@@ -45,9 +61,7 @@ export function RecentExpensesCard({ expenses, loading }: { expenses: Expense[] 
       <CardContent>
         <ScrollArea className="h-[240px]">
         {loading ? (
-            <div className="space-y-4">
-                {[...Array(5)].map((_, i) => <Skeleton key={i} className="h-10 w-full" />)}
-            </div>
+            <RecentExpensesSkeleton />
         ) : expenses && expenses.length > 0 ? (
           <ul className="space-y-4">
             {expenses.slice(0, 5).map((expense) => (

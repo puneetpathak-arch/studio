@@ -24,8 +24,8 @@ import { useMemo } from 'react';
 import { useUser } from '@/firebase';
 import { goalIcons } from '@/components/goals/add-goal-dialog';
 import { Skeleton } from '@/components/ui/skeleton';
-import { addFundsToGoal } from '@/services/firestore';
-
+import { addFundsToGoal as addFundsToGoalService } from '@/services/firestore';
+import { useToast } from '@/hooks/use-toast';
 
 function GoalCard({ goal, onFundAdded }: { goal: Goal, onFundAdded: (goalId: string, amount: number) => void }) {
   const percentage = Math.round((goal.savedAmount / goal.targetAmount) * 100);
@@ -64,6 +64,28 @@ function GoalCard({ goal, onFundAdded }: { goal: Goal, onFundAdded: (goalId: str
   );
 }
 
+function GoalsCardSkeleton() {
+    return (
+        <Card className="flex flex-col">
+            <CardHeader>
+                <div className="flex items-center justify-between">
+                    <Skeleton className="h-6 w-32" />
+                    <Skeleton className="h-4 w-20" />
+                </div>
+                <Skeleton className="h-4 w-48" />
+            </CardHeader>
+            <CardContent className="flex-grow flex items-center px-10 md:px-6">
+                <div className="w-full space-y-4">
+                    <div className="flex justify-center">
+                        <Skeleton className="h-24 w-24 rounded-full" />
+                    </div>
+                     <Skeleton className="h-10 w-full" />
+                </div>
+            </CardContent>
+        </Card>
+    )
+}
+
 interface GoalsCardProps {
     goals: Goal[];
     loading: boolean;
@@ -72,12 +94,20 @@ interface GoalsCardProps {
 
 export function GoalsCard({ goals, loading, onDataChange }: GoalsCardProps) {
   const { user } = useUser();
+  const { toast } = useToast();
 
   const handleFundAdded = async (goalId: string, amount: number) => {
     if (!user) return;
-    addFundsToGoal(user.uid, goalId, amount);
-    // Trigger parent component to refetch data
-    onDataChange();
+    try {
+      await addFundsToGoalService(user.uid, goalId, amount);
+      onDataChange();
+    } catch(e) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Could not add funds to your goal."
+      });
+    }
   };
   
   return (
@@ -96,7 +126,7 @@ export function GoalsCard({ goals, loading, onDataChange }: GoalsCardProps) {
         </CardDescription>
       </CardHeader>
       <CardContent className="flex-grow flex items-center px-10 md:px-6">
-        {loading ? <Skeleton className="h-[200px] w-full" /> 
+        {loading ? <GoalsCardSkeleton />
         : goals.length > 0 ? (
           <Carousel
             opts={{
@@ -125,5 +155,3 @@ export function GoalsCard({ goals, loading, onDataChange }: GoalsCardProps) {
     </Card>
   );
 }
-
-    

@@ -7,7 +7,6 @@ import { GoalsCard } from '@/app/(main)/dashboard/goals-card';
 import { RecentExpensesCard } from '@/components/dashboard/recent-expenses-card';
 import { AiSavingsCard } from '@/components/dashboard/ai-savings-card';
 import { user as mockUser, tips } from '@/lib/data';
-import { initialBudget } from '@/lib/initial-data';
 import { QuickStatCard } from '@/components/dashboard/quick-stat-card';
 import { TrendingUp, Target, Sparkles, Loader2 } from 'lucide-react';
 import { TipsCard } from '@/components/dashboard/tips-card';
@@ -18,9 +17,68 @@ import type { Expense, Budget, Goal } from '@/lib/types';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { startOfWeek, isWithinInterval } from 'date-fns';
 import { useUser } from '@/firebase';
-import { getExpenses, addExpense, getBudget, getGoals, addFundsToGoal, addGoal as addGoalService } from '@/services/firestore';
+import { getExpenses, addExpense, getBudget, getGoals } from '@/services/firestore';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
+import { Card, CardHeader, CardContent } from '@/components/ui/card';
+
+function BudgetSummarySkeleton() {
+    return (
+        <Card className="bg-card/60 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border-2 border-purple-200/50 relative overflow-hidden h-full">
+            <div className="relative z-10 flex flex-col h-full">
+                <div className="flex items-start justify-between mb-6">
+                    <div>
+                        <Skeleton className="h-9 w-48 mb-2" />
+                        <Skeleton className="h-5 w-64" />
+                    </div>
+                    <Skeleton className="w-20 h-20 rounded-2xl" />
+                </div>
+                <div className="flex-grow mb-6">
+                    <Skeleton className="h-12 w-3/4 mb-3" />
+                    <Skeleton className="h-7 w-1/2" />
+                </div>
+                <Skeleton className="h-5 w-full mb-8" />
+                <div className="mt-auto">
+                    <Skeleton className="h-12 w-full rounded-xl" />
+                </div>
+            </div>
+        </Card>
+    );
+}
+
+function QuickStatsSkeleton() {
+    return (
+        <>
+            <div className="bg-white/90 backdrop-blur-xl rounded-2xl p-4 md:p-6 shadow-xl border-2 border-indigo-200/50">
+                 <div className="relative z-10 flex items-center gap-4">
+                    <Skeleton className="w-12 h-12 md:w-16 md:h-16 rounded-2xl" />
+                    <div className="space-y-2">
+                        <Skeleton className="h-4 w-20" />
+                        <Skeleton className="h-8 w-28" />
+                    </div>
+                </div>
+            </div>
+            <div className="bg-white/90 backdrop-blur-xl rounded-2xl p-4 md:p-6 shadow-xl border-2 border-indigo-200/50">
+                 <div className="relative z-10 flex items-center gap-4">
+                    <Skeleton className="w-12 h-12 md:w-16 md:h-16 rounded-2xl" />
+                    <div className="space-y-2">
+                        <Skeleton className="h-4 w-16" />
+                        <Skeleton className="h-8 w-12" />
+                    </div>
+                </div>
+            </div>
+            <div className="bg-white/90 backdrop-blur-xl rounded-2xl p-4 md:p-6 shadow-xl border-2 border-indigo-200/50">
+                 <div className="relative z-10 flex items-center gap-4">
+                    <Skeleton className="w-12 h-12 md:w-16 md:h-16 rounded-2xl" />
+                    <div className="space-y-2">
+                        <Skeleton className="h-4 w-20" />
+                        <Skeleton className="h-8 w-16" />
+                    </div>
+                </div>
+            </div>
+        </>
+    );
+}
 
 export default function DashboardPage() {
     const { user, loading: userLoading } = useUser();
@@ -57,8 +115,10 @@ export default function DashboardPage() {
     }, [user, toast]);
 
     useEffect(() => {
-        fetchData();
-    }, [fetchData]);
+        if(user) {
+            fetchData();
+        }
+    }, [user, fetchData]);
 
     useEffect(() => {
         const hour = new Date().getHours();
@@ -69,14 +129,25 @@ export default function DashboardPage() {
 
     const handleAddExpense = async (newExpense: Omit<Expense, 'id' | 'date'>) => {
         if (!user) return;
-        const newId = await addExpense(user.uid, newExpense);
         
-        const expenseToAdd: Expense = {
-            ...newExpense,
-            id: newId, 
-            date: new Date().toISOString(),
-        };
-        setExpenses(prevExpenses => [expenseToAdd, ...prevExpenses]);
+        try {
+            const newId = await addExpense(user.uid, newExpense);
+            
+            const expenseToAdd: Expense = {
+                ...newExpense,
+                id: newId, 
+                date: new Date().toISOString(),
+            };
+            setExpenses(prevExpenses => [expenseToAdd, ...prevExpenses]);
+            fetchData(); // Refetch all data to ensure consistency
+        } catch (error) {
+            console.error("Error adding expense:", error);
+            toast({
+                variant: 'destructive',
+                title: 'Error',
+                description: 'Could not add your expense.'
+            });
+        }
     };
 
     const calculatedBudget = useMemo(() => {
@@ -127,15 +198,21 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <QuickStatCard icon={TrendingUp} label="This Week" value={`₹${weeklySpend.toLocaleString()}`} className="text-indigo-600" />
-          <QuickStatCard icon={Sparkles} label="New Tips" value={tips.length.toString()} className="text-pink-600" />
-          <QuickStatCard icon={Target} label="Active Goals" value={goals.length.toString()} className="text-green-600"/>
+         {loading ? (
+             <QuickStatsSkeleton />
+         ) : (
+            <>
+                <QuickStatCard icon={TrendingUp} label="This Week" value={`₹${weeklySpend.toLocaleString()}`} className="text-indigo-600" />
+                <QuickStatCard icon={Sparkles} label="New Tips" value={tips.length.toString()} className="text-pink-600" />
+                <QuickStatCard icon={Target} label="Active Goals" value={goals.length.toString()} className="text-green-600"/>
+            </>
+         )}
       </div>
       
       <div className="grid gap-6 md:grid-cols-5">
         <div className="md:col-span-3">
              {loading || !calculatedBudget ? (
-              <Skeleton className="h-[400px] w-full" />
+              <BudgetSummarySkeleton />
             ) : (
               <BudgetSummaryCard budget={calculatedBudget} />
             )}
@@ -149,7 +226,7 @@ export default function DashboardPage() {
          <div className="md:col-span-3">
             <RecentExpensesCard expenses={expenses} loading={loading} />
         </div>
-        <div className="md-col-span-2">
+        <div className="md:col-span-2">
             <AiSavingsCard />
         </div>
       </div>
@@ -171,5 +248,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-
-    
