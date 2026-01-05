@@ -12,6 +12,13 @@ export function BudgetSummaryCard({ budget }: { budget: Budget }) {
   const percentage = budget.total > 0 ? Math.round((budget.spent / budget.total) * 100) : 0;
   const remaining = budget.total - budget.spent;
 
+  const getEmoji = () => {
+    if (percentage > 100) return '😥';
+    if (percentage > 75) return '🤔';
+    if (percentage > 50) return '👍';
+    return '🎉';
+  };
+
   return (
     <Card className="bg-card/60 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border-2 border-purple-200/50 relative overflow-hidden h-full">
         <div className="absolute inset-0 bg-gradient-to-br from-violet-50 via-purple-50 to-pink-50 opacity-40"></div>
@@ -41,11 +48,11 @@ export function BudgetSummaryCard({ budget }: { budget: Budget }) {
                  <p className="text-gray-700 flex items-center gap-2 text-lg font-medium">
                   {percentage > 100 ? (
                       <>
-                        <span className="text-red-500 font-bold text-xl">₹{Math.abs(remaining).toLocaleString()}</span> over budget
+                        <span className="text-red-500 font-bold text-xl">₹{Math.abs(remaining).toLocaleString()}</span> over budget {getEmoji()}
                       </>
                   ) : (
                      <>
-                        <span className="text-green-600 font-bold text-xl">₹{remaining.toLocaleString()}</span> remaining this month 🎉
+                        <span className="text-green-600 font-bold text-xl">₹{remaining.toLocaleString()}</span> remaining this month {getEmoji()}
                      </>
                   )}
                 </p>
