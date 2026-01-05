@@ -15,7 +15,7 @@ export const scholarships: Scholarship[] = [
         name: 'Post Matric Scholarship for SC Students',
         provider: 'Ministry of Social Justice & Empowerment',
         amount: 'Upto ₹13,500 p.a.',
-        deadline: '2024-11-30',
+        deadline: '2026-10-31',
         eligibility: {
             state: ['All India'],
             category: ['SC'],
@@ -28,7 +28,7 @@ export const scholarships: Scholarship[] = [
         name: 'Merit Cum Means Scholarship for Professional and Technical Courses',
         provider: 'Ministry of Minority Affairs',
         amount: '₹20,000 p.a. + Fees',
-        deadline: '2024-10-31',
+        deadline: '2026-09-30',
         eligibility: {
             state: ['All India'],
             category: ['Minority'],
@@ -41,7 +41,7 @@ export const scholarships: Scholarship[] = [
         name: 'Mukhyamantri Medhavi Vidyarthi Yojana (MMVY)',
         provider: 'Government of Madhya Pradesh',
         amount: 'Full Course Fee',
-        deadline: '2025-01-15',
+        deadline: '2026-08-31',
         eligibility: {
             state: ['Madhya Pradesh'],
             category: ['General', 'OBC', 'SC', 'ST'],
@@ -53,7 +53,7 @@ export const scholarships: Scholarship[] = [
         name: 'Pragati Scholarship for Girl Students',
         provider: 'AICTE',
         amount: '₹50,000 p.a.',
-        deadline: '2024-12-15',
+        deadline: '2026-11-15',
         eligibility: {
             state: ['All India'],
             category: ['Girl Students'],
@@ -65,7 +65,7 @@ export const scholarships: Scholarship[] = [
         name: 'Chief Minister\'s Scholarship Scheme',
         provider: 'Government of Haryana',
         amount: 'Upto ₹12,000 p.a.',
-        deadline: '2024-12-20',
+        deadline: '2026-11-20',
         eligibility: {
             state: ['Haryana'],
             category: ['General', 'SC', 'OBC'],
