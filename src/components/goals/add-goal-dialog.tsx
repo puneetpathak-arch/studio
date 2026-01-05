@@ -15,15 +15,9 @@ import {
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Calendar } from '@/components/ui/calendar';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
-import { format } from 'date-fns';
-import { CalendarIcon, Plus, Laptop, Car, Gift, Headphones, Plane, PiggyBank, BookOpen } from 'lucide-react';
+import { format, parseISO } from 'date-fns';
+import { Laptop, Car, Gift, Headphones, Plane, PiggyBank, BookOpen } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import type { Goal } from '@/lib/types';
 import type { LucideIcon } from 'lucide-react';
@@ -50,7 +44,7 @@ export function AddGoalDialog({ onAddGoal, children, open: controlledOpen, onOpe
   const [internalOpen, setInternalOpen] = useState(false);
   const [goalName, setGoalName] = useState('');
   const [targetAmount, setTargetAmount] = useState('');
-  const [deadline, setDeadline] = useState<Date>();
+  const [deadline, setDeadline] = useState('');
   const [selectedIconName, setSelectedIconName] = useState('Laptop');
   const { toast } = useToast();
 
@@ -61,7 +55,7 @@ export function AddGoalDialog({ onAddGoal, children, open: controlledOpen, onOpe
     if (open && initialData) {
         setGoalName(initialData.name || '');
         setTargetAmount(initialData.targetAmount?.toString() || '');
-        setDeadline(initialData.deadline ? new Date(initialData.deadline) : undefined);
+        setDeadline(initialData.deadline ? format(parseISO(initialData.deadline), 'yyyy-MM-dd') : '');
         const iconName = goalIcons.find(i => i.icon === initialData.icon)?.name || 'Laptop';
         setSelectedIconName(iconName);
     }
@@ -82,14 +76,14 @@ export function AddGoalDialog({ onAddGoal, children, open: controlledOpen, onOpe
     await onAddGoal({
       name: goalName,
       targetAmount: parseFloat(targetAmount),
-      deadline: deadline.toISOString(),
+      deadline: new Date(deadline).toISOString(),
       icon: selectedIconName,
     });
 
     // Reset form and close dialog
     setGoalName('');
     setTargetAmount('');
-    setDeadline(undefined);
+    setDeadline('');
     setSelectedIconName('Laptop');
     setOpen(false);
   };
@@ -100,7 +94,10 @@ export function AddGoalDialog({ onAddGoal, children, open: controlledOpen, onOpe
       <DialogContent 
         className="sm:max-w-[425px]"
         onInteractOutside={(e) => {
-            e.preventDefault();
+            const target = e.target as HTMLElement;
+            if (target.closest('[data-radix-popper-content-wrapper]')) {
+                e.preventDefault();
+            }
         }}
       >
         <DialogHeader>
@@ -142,30 +139,15 @@ export function AddGoalDialog({ onAddGoal, children, open: controlledOpen, onOpe
                 <Label htmlFor="deadline" className="text-right">
                   Deadline
                 </Label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant={'outline'}
-                      className={cn(
-                        'col-span-3 justify-start text-left font-normal',
-                        !deadline && 'text-muted-foreground'
-                      )}
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {deadline ? format(deadline, 'PPP') : <span>Pick a date</span>}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={deadline}
-                      onSelect={setDeadline}
-                      initialFocus
-                      disabled={(date) => date < new Date()}
-                      required
-                    />
-                  </PopoverContent>
-                </Popover>
+                <Input
+                  id="deadline"
+                  type="date"
+                  value={deadline}
+                  onChange={(e) => setDeadline(e.target.value)}
+                  className="col-span-3"
+                  required
+                  min={new Date().toISOString().split("T")[0]}
+                />
               </div>
               <div className="grid grid-cols-4 items-start gap-4">
                  <Label className="text-right pt-2">
