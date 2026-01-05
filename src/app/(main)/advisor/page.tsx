@@ -9,7 +9,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Bot, Loader2, Send, User as UserIcon, Wallet, Target, IndianRupee } from 'lucide-react';
 import { useUser } from '@/firebase';
-import type { Budget, Expense, Goal } from '@/lib/types';
+import type { Expense, Goal } from '@/lib/types';
 import { getExpenses, getBudget, getGoals } from '@/services/firestore';
 import { getFinancialAdvice, FinancialContext } from '@/ai/flows/ai-advisor-flow';
 import { cn } from '@/lib/utils';
@@ -40,6 +40,13 @@ export default function AdvisorPage() {
     const [dataLoading, setDataLoading] = useState(true);
     const scrollAreaRef = useRef<HTMLDivElement>(null);
 
+    const convertTimestamp = (date: any): string => {
+        if (typeof date === 'string') return date;
+        if (date && typeof date.toDate === 'function') return date.toDate().toISOString();
+        if (date instanceof Date) return date.toISOString();
+        return new Date().toISOString();
+    }
+
     const fetchData = useCallback(async () => {
         if (!user) return;
         setDataLoading(true);
@@ -50,15 +57,24 @@ export default function AdvisorPage() {
                 getGoals(user.uid),
             ]);
 
-            // Convert Firestore Timestamps to serializable ISO strings
-            const expenses = rawExpenses.map(e => ({
-                ...e,
-                date: new Date(e.date).toISOString(),
+            // Convert all potential Firestore Timestamps to serializable ISO strings
+            const expenses: Expense[] = rawExpenses.map((e: any) => ({
+                id: e.id,
+                description: e.description,
+                amount: e.amount,
+                category: e.category,
+                date: convertTimestamp(e.date),
             }));
-            const goals = rawGoals.map(g => ({
-                ...g,
-                deadline: new Date(g.deadline).toISOString(),
-                lastFundedDate: g.lastFundedDate ? new Date(g.lastFundedDate).toISOString() : undefined
+
+            const goals: Goal[] = rawGoals.map((g: any) => ({
+                id: g.id,
+                name: g.name,
+                targetAmount: g.targetAmount,
+                savedAmount: g.savedAmount,
+                deadline: convertTimestamp(g.deadline),
+                icon: g.icon,
+                color: g.color,
+                lastFundedDate: g.lastFundedDate ? convertTimestamp(g.lastFundedDate) : undefined,
             }));
 
 
