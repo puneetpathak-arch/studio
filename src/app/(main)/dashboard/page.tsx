@@ -15,12 +15,13 @@ import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import type { Expense, Budget, Goal } from '@/lib/types';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { startOfWeek, isWithinInterval } from 'date-fns';
+import { startOfWeek, isWithinInterval, getMonth, getYear } from 'date-fns';
 import { useUser } from '@/firebase';
-import { getExpenses, addExpense, getBudget, getGoals } from '@/services/firestore';
+import { getExpenses, addExpense, getBudget, getGoals, addFundsToGoal } from '@/services/firestore';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
 import { Card } from '@/components/ui/card';
+import { FinancialHealthScoreCard } from '@/components/dashboard/financial-health-score-card';
 
 function BudgetSummarySkeleton() {
     return (
@@ -131,14 +132,7 @@ export default function DashboardPage() {
         if (!user) return;
         
         try {
-            const newId = await addExpense(user.uid, newExpense);
-            
-            const expenseToAdd: Expense = {
-                ...newExpense,
-                id: newId, 
-                date: new Date().toISOString(),
-            };
-            setExpenses(prevExpenses => [expenseToAdd, ...prevExpenses]);
+            await addExpense(user.uid, newExpense);
             fetchData(); // Refetch all data to ensure consistency
         } catch (error) {
             console.error("Error adding expense:", error);
@@ -146,6 +140,20 @@ export default function DashboardPage() {
                 variant: 'destructive',
                 title: 'Error',
                 description: 'Could not add your expense.'
+            });
+        }
+    };
+    
+    const handleFundAdded = async (goalId: string, amount: number) => {
+        if (!user) return;
+        try {
+            await addFundsToGoal(user.uid, goalId, amount);
+            fetchData();
+        } catch(e) {
+            toast({
+                variant: "destructive",
+                title: "Error",
+                description: "Could not add funds to your goal."
             });
         }
     };
@@ -172,6 +180,27 @@ export default function DashboardPage() {
             .filter(exp => isWithinInterval(new Date(exp.date), { start, end: today }))
             .reduce((acc, exp) => acc + exp.amount, 0);
     }, [expenses]);
+    
+    const financialHealthScore = useMemo(() => {
+        if (!calculatedBudget || !budget) return 0;
+
+        // 1. Budget Score (60 points)
+        const budgetRatio = calculatedBudget.spent / calculatedBudget.total;
+        let budgetScore = 0;
+        if (budgetRatio <= 1) {
+            budgetScore = (1 - budgetRatio) * 60;
+        } // If over budget, score is 0
+
+        // 2. Savings Score (40 points)
+        const totalSaved = goals.reduce((sum, goal) => sum + goal.savedAmount, 0);
+        const income = budget.total;
+        // Target 10% savings rate for full points
+        const savingsRatio = income > 0 ? totalSaved / income : 0;
+        const savingsScore = Math.min((savingsRatio / 0.1) * 40, 40);
+
+        return Math.round(budgetScore + savingsScore);
+    }, [calculatedBudget, goals, budget]);
+
 
     const userName = user?.displayName?.split(' ')[0] || 'there';
 
@@ -197,7 +226,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
          {loading ? (
              <QuickStatsSkeleton />
          ) : (
@@ -205,6 +234,7 @@ export default function DashboardPage() {
                 <QuickStatCard icon={TrendingUp} label="This Week" value={`₹${weeklySpend.toLocaleString()}`} className="text-indigo-600" />
                 <QuickStatCard icon={Sparkles} label="New Tips" value={tips.length.toString()} className="text-pink-600" />
                 <QuickStatCard icon={Target} label="Active Goals" value={goals.length.toString()} className="text-green-600"/>
+                <FinancialHealthScoreCard score={financialHealthScore} />
             </>
          )}
       </div>
@@ -218,7 +248,7 @@ export default function DashboardPage() {
             )}
         </div>
         <div className="md:col-span-2">
-            <GoalsCard goals={goals} loading={loading} onDataChange={fetchData} />
+            <GoalsCard goals={goals} loading={loading} onFundAdded={handleFundAdded} />
         </div>
       </div>
 

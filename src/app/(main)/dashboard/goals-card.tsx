@@ -21,12 +21,8 @@ import type { Goal } from '@/lib/types';
 import { Progress } from '@/components/ui/progress';
 import { AddFundsDialog } from '@/components/goals/add-funds-dialog';
 import { useMemo } from 'react';
-import { useUser } from '@/firebase';
 import { goalIcons } from '@/components/goals/add-goal-dialog';
 import { Skeleton } from '@/components/ui/skeleton';
-import { addFundsToGoal as addFundsToGoalService } from '@/services/firestore';
-import { useToast } from '@/hooks/use-toast';
-import { cn } from '@/lib/utils';
 
 function GoalCard({ goal, onFundAdded }: { goal: Goal, onFundAdded: (goalId: string, amount: number) => void }) {
   const percentage = Math.round((goal.savedAmount / goal.targetAmount) * 100);
@@ -90,27 +86,10 @@ function GoalsCardSkeleton() {
 interface GoalsCardProps {
     goals: Goal[];
     loading: boolean;
-    onDataChange: () => void;
+    onFundAdded: (goalId: string, amount: number) => void;
 }
 
-export function GoalsCard({ goals, loading, onDataChange }: GoalsCardProps) {
-  const { user } = useUser();
-  const { toast } = useToast();
-
-  const handleFundAdded = async (goalId: string, amount: number) => {
-    if (!user) return;
-    try {
-      await addFundsToGoalService(user.uid, goalId, amount);
-      onDataChange();
-    } catch(e) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Could not add funds to your goal."
-      });
-    }
-  };
-  
+export function GoalsCard({ goals, loading, onFundAdded }: GoalsCardProps) {
   return (
     <Card className="flex flex-col">
       <CardHeader>
@@ -139,7 +118,7 @@ export function GoalsCard({ goals, loading, onDataChange }: GoalsCardProps) {
               {goals.map((goal) => (
                 <CarouselItem key={goal.id} className="basis-full md:basis-1/2 pl-2">
                   <div className="p-1 h-full">
-                    <GoalCard goal={goal} onFundAdded={handleFundAdded} />
+                    <GoalCard goal={goal} onFundAdded={onFundAdded} />
                   </div>
                 </CarouselItem>
               ))}
