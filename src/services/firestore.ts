@@ -30,11 +30,11 @@ export const createUserDocument = (userId: string, data: Partial<UserProfile>) =
         createdAt: serverTimestamp(),
     };
 
-    setDoc(userRef, userData).catch(async (serverError) => {
+    setDoc(userRef, userData, { merge: true }).catch(async (serverError) => {
         const permissionError = new FirestorePermissionError({
             path: userRef.path,
             operation: 'create',
-            requestResourceData: userData,
+            requestResourceData: data,
         });
         errorEmitter.emit('permission-error', permissionError);
     });
