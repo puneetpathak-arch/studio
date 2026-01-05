@@ -6,7 +6,7 @@ import { BudgetSummaryCard } from '@/components/dashboard/budget-summary-card';
 import { GoalsCard } from '@/app/(main)/dashboard/goals-card';
 import { RecentExpensesCard } from '@/components/dashboard/recent-expenses-card';
 import { AiSavingsCard } from '@/components/dashboard/ai-savings-card';
-import { user as mockUser, tips } from '@/lib/data';
+import { tips } from '@/lib/data';
 import { QuickStatCard } from '@/components/dashboard/quick-stat-card';
 import { TrendingUp, Target, Sparkles, Loader2 } from 'lucide-react';
 import { TipsCard } from '@/components/dashboard/tips-card';
@@ -20,7 +20,7 @@ import { useUser } from '@/firebase';
 import { getExpenses, addExpense, getBudget, getGoals } from '@/services/firestore';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
-import { Card, CardHeader, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 
 function BudgetSummarySkeleton() {
     return (
@@ -173,7 +173,7 @@ export default function DashboardPage() {
             .reduce((acc, exp) => acc + exp.amount, 0);
     }, [expenses]);
 
-    const userName = user?.displayName || mockUser.name.split(' ')[0];
+    const userName = user?.displayName?.split(' ')[0] || 'there';
 
   if (userLoading) {
       return (

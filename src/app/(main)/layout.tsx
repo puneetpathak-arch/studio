@@ -15,7 +15,6 @@ import type { Expense } from '@/lib/types';
 import { useEffect } from 'react';
 import { SidebarProvider, Sidebar, SidebarTrigger, SidebarContent, SidebarHeader, SidebarMenu, SidebarFooter } from '@/components/ui/sidebar';
 import { DashboardHeader } from '@/components/dashboard-header';
-import { UserNav } from '@/components/user-nav';
 
 
 export default function MainLayout({
@@ -95,7 +94,7 @@ export default function MainLayout({
              <div className="relative z-10 mt-auto">
               <div className="flex items-center gap-3 mb-4 px-2 pt-6 border-t border-slate-700/50">
                 <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-full flex items-center justify-center font-bold text-lg shadow-lg shadow-purple-500/50">
-                  {user.displayName?.charAt(0) || user.email?.charAt(0).toUpperCase()}
+                  {user.displayName?.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase()}
                 </div>
                 <div className="flex-1 overflow-hidden">
                   <p className="font-semibold text-sm truncate">{user.displayName || user.email}</p>
@@ -110,7 +109,7 @@ export default function MainLayout({
 
       <div className="flex-1 flex flex-col">
         <DashboardHeader />
-        <main className="flex-1 p-4 md:p-6 lg:p-8 pb-24 lg:pb-8">
+        <main className="flex-1 p-4 md:p-6 lg:p-8 pb-24 md:pb-8">
             {children}
         </main>
       </div>

@@ -1,3 +1,4 @@
+
 'use client';
 
 import { forwardRef } from 'react';
@@ -50,18 +51,19 @@ export const BottomNav = forwardRef<HTMLDivElement, BottomNavProps>(({ onAddExpe
               className="inline-flex flex-col items-center justify-center px-2 text-center text-muted-foreground hover:bg-muted/50 transition-colors group"
             >
               <div className={cn(
-                  "p-2 rounded-full transition-transform duration-300 group-active:scale-90",
+                  "flex flex-col items-center justify-center p-2 rounded-full transition-transform duration-300 group-active:scale-90",
                   isActive && "scale-110 -translate-y-1 bg-primary/10"
               )}>
                  <item.icon className={cn("w-6 h-6 mb-1 transition-colors", isActive && 'text-primary')} />
+              
+                <span className={cn(
+                    "text-xs transition-colors",
+                    isActive ? 'font-bold text-primary' : 'text-muted-foreground'
+                )}>
+                  {item.label}
+                </span>
+                {isActive && <div className="absolute bottom-2 h-1 w-1 rounded-full bg-primary" />}
               </div>
-              <span className={cn(
-                  "text-xs transition-colors",
-                  isActive ? 'font-bold text-primary' : 'text-muted-foreground'
-              )}>
-                {item.label}
-              </span>
-               {isActive && <div className="absolute bottom-2 h-1 w-1 rounded-full bg-primary" />}
             </Link>
           );
         })}

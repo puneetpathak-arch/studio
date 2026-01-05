@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -106,6 +107,8 @@ export function UserNav({ onBudget }: UserNavProps) {
     }
   };
 
+  const userInitial = user?.displayName?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase();
+
   return (
     <div className="flex items-center gap-2">
         <NotificationsDropdown />
@@ -114,7 +117,7 @@ export function UserNav({ onBudget }: UserNavProps) {
             <Button variant="ghost" className="relative h-8 w-8 rounded-full" aria-label="Open user menu">
             <Avatar className={cn("h-9 w-9", onBudget && "ring-2 ring-green-500 ring-offset-2 ring-offset-background")}>
                 <AvatarImage src={user?.photoURL || undefined} alt={`@${user?.displayName}`} />
-                <AvatarFallback>{user?.displayName?.charAt(0) || user?.email?.charAt(0).toUpperCase()}</AvatarFallback>
+                <AvatarFallback>{userInitial}</AvatarFallback>
             </Avatar>
             </Button>
         </DropdownMenuTrigger>
